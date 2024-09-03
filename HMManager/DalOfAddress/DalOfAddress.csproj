@@ -12,5 +12,6 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ECCMain_Core\ECCMain_Core.csproj" />
+	  <ProjectReference Include="..\ModelBase\ModelBase.csproj" />
 	</ItemGroup>
 </Project>

@@ -1,15 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DalOfAddress\DalOfAddress.csproj" />
-    <ProjectReference Include="..\DrawObj\DrawObj.csproj" />
+    <PackageReference Include="SharpKml.Core" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ModelBase\ModelBase.csproj" />
   </ItemGroup>
 

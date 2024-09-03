@@ -89,5 +89,48 @@ namespace DalOfAddress
             }
             //  throw new NotImplementedException();
         }
+
+        public static List<ModelBase.Data.FPPosition> GetAll()
+        {
+            List<ModelBase.Data.FPPosition> data = new List<ModelBase.Data.FPPosition>();
+            var sQL = $"SELECT B.FPCode,B.lon,B.lat,B.baseHeight,A.Height,A.BitcoinAddr,A.CanGetScore,B.FPName FROM fpdetail A LEFT JOIN fp B ON A.FPCode=B.FPCode ORDER BY A.FPCode,A.Height ASC";
+            using (MySqlConnection con = new MySqlConnection(Connection.ConnectionStr))
+            {
+                con.Open();
+                using (MySqlTransaction tran = con.BeginTransaction())
+                {
+                    using (MySqlCommand command = new MySqlCommand(sQL, con, tran))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var fPCode = reader.GetString(0);
+                                var lon = reader.GetDouble(1);
+                                var lat = reader.GetDouble(2);
+                                var baseHeight = reader.GetInt32(3);
+                                var Height = reader.GetInt32(4);
+                                var BitcoinAddr = reader.GetString(5);
+                                var CanGetScore = reader.GetBoolean(6);
+                                var fPName = reader.GetString(7);
+                                var lineStr = $"fPCode:{fPCode}  position:{lon},{lat}  baseHeight:{baseHeight}  Height:{Height}  BitcoinAddr:{BitcoinAddr}  CanGetScore:{CanGetScore}  fPName{fPName}";
+                                data.Add(new ModelBase.Data.FPPosition()
+                                {
+                                    fPCode = fPCode,
+                                    lon = lon,
+                                    lat = lat,
+                                    Height = Height,
+                                    BitcoinAddr = BitcoinAddr,
+                                    CanGetScore = CanGetScore,
+                                    baseHeight = baseHeight,
+                                    fPName = fPName,
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            return data;
+        }
     }
 }

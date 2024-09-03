@@ -21,7 +21,8 @@ namespace DbInput
                 }
                 else if (regex.IsMatch(switchChacter))
                 {
-                    EditFP();
+                    var code = switchChacter;
+                    EditFP(code);
                     continue;
                 }
 
@@ -35,6 +36,15 @@ namespace DbInput
                         {
                             ShowAll();
                         }; break;
+                    case "DRAW":
+                        {
+                            GenerateMap();
+                        }; break;
+                    case "UPDATELINECOMMAND":
+                        {
+                            UpdateLine();
+                        }; break;
+                    case "ADDLINE": { }; break;
                     default:
                         { }; break;
                 }
@@ -43,11 +53,25 @@ namespace DbInput
             }
         }
 
-        private static void EditFP()
+        private static void UpdateLine()
+        {
+            DalOfAddress.tunel.UpdateItem();
+            //  throw new NotImplementedException();
+        }
+
+        private static void GenerateMap()
+        {
+            var pointData = DalOfAddress.FP.GetAll();
+            DrawObj.KML.Draw(pointData);
+            //   throw new NotImplementedException();
+        }
+
+        private static void EditFP(string code)
         {
             Console.WriteLine("^[A-Z]{10}\\s+\\d+\\s+[13][a-km-zA-HJ-NP-Z1-9]{25,34}\\s+[01]{1}$" + "  编辑地点");
             Console.WriteLine("^[A-Z]{10}\\s+\\d+\\s+[01]{1}$" + "  编辑地点");
             Console.WriteLine("^[Dd][Ee][Ll][Ee][Tt][Ee]\\s+[A-Z]{10}\\s+(\\d+)$" + "  删除地点");
+            Console.WriteLine("^[Aa][Dd][Dd]\\s+\\s+(\\d+)$" + "  新增地点");
             var inputValues = Console.ReadLine();
             //  inputValues.Split(' ');
 
@@ -94,6 +118,24 @@ namespace DbInput
                 }
             }
 
+            {
+                var regex = new Regex("^[Aa][Dd][Dd]\\s+(\\d+)$");
+                Match match = regex.Match(inputValues);
+                if (match.Success)
+                {
+                    string fpCode = code; // 捕获用户名
+                    int height = int.Parse(match.Groups[1].Value);  // 捕获年龄
+                    var success = DalOfAddress.FPDetail.AddItem(fpCode, height);
+                    if (success)
+                    {
+                        Console.WriteLine($"新增成功");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"新增失败");
+                    }
+                }
+            }
             //   throw new NotImplementedException();
         }
 
