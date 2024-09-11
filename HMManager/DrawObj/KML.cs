@@ -83,7 +83,7 @@ namespace DrawObj
                     Geometry = lineString,
                     Description = new Description()
                     {
-                        Text = $"{lineData[i].FPCodeFrom} {lineData[i].StartBaseHeight} {lineData[i].FPCodeTo} {lineData[i].EndBaseHeight} {"\r\n"}__{lineData[i].Detail}"
+                        Text = $"{lineData[i].FPCodeFrom} {lineData[i].StartHeight - lineData[i].StartBaseHeight} {lineData[i].FPCodeTo} {lineData[i].EndHeight - lineData[i].EndBaseHeight}  {"\r\n"} {lineData[i].Speed}  {"\r\n"}__{lineData[i].Detail}"
                     },
 
                 };
