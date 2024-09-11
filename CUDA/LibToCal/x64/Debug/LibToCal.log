@@ -1,0 +1,8 @@
+﻿  Compiling CUDA source file kernel.cu...
+  
+  E:\Project\HM_6\CUDA\LibToCal>"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\bin\nvcc.exe" -gencode=arch=compute_52,code=\"sm_52,compute_52\" --use-local-env -ccbin "D:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.38.33130\bin\HostX64\x64" -x cu   -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\include" -I"C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\include"  -G   --keep-dir x64\Debug  -maxrregcount=0   --machine 64 --compile -cudart static  -g  -DWIN32 -DWIN64 -D_DEBUG -D_CONSOLE -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MDd " -Xcompiler "/Fdx64\Debug\vc143.pdb" -o E:\Project\HM_6\CUDA\LibToCal\x64\Debug\kernel.cu.obj "E:\Project\HM_6\CUDA\LibToCal\kernel.cu" 
+  kernel.cu
+  tmpxft_000057d8_00000000-7_kernel.cudafe1.cpp
+    正在创建库 E:\Project\HM_6\CUDA\pathCal\x64\Debug\LibToCal.lib 和对象 E:\Project\HM_6\CUDA\pathCal\x64\Debug\LibToCal.exp
+LINK : warning LNK4098: 默认库“LIBCMT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+  LibToCal.vcxproj -> E:\Project\HM_6\CUDA\pathCal\x64\Debug\LibToCal.dll

@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DalOfAddress", "..\DalOfAdd
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECCMain_Core", "..\ECCMain_Core\ECCMain_Core.csproj", "{EBE3DA55-DAA3-4194-951A-1E21FC207646}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrawObj", "..\DrawObj\DrawObj.csproj", "{B8C36E8B-37D7-4372-A98F-3BF2EB25D986}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrawObj", "..\DrawObj\DrawObj.csproj", "{B8C36E8B-37D7-4372-A98F-3BF2EB25D986}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelBase", "..\ModelBase\ModelBase.csproj", "{97CDF00D-22CE-4E5A-A80B-9874534E1D2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelBase", "..\ModelBase\ModelBase.csproj", "{97CDF00D-22CE-4E5A-A80B-9874534E1D2A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonClass", "..\CommonClass\CommonClass.csproj", "{80986745-C04F-46B5-A2A1-6981055AD41D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{97CDF00D-22CE-4E5A-A80B-9874534E1D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97CDF00D-22CE-4E5A-A80B-9874534E1D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97CDF00D-22CE-4E5A-A80B-9874534E1D2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80986745-C04F-46B5-A2A1-6981055AD41D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80986745-C04F-46B5-A2A1-6981055AD41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80986745-C04F-46B5-A2A1-6981055AD41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80986745-C04F-46B5-A2A1-6981055AD41D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

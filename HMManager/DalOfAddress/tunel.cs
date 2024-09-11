@@ -440,7 +440,8 @@ WHERE
                                     EndHeight = Convert.ToInt32(reader["EndHeight"]),
                                     EndBaseHeight = Convert.ToInt32(reader["EndBaseHeight"]),
                                     FPCodeFrom = Convert.ToString(reader["FPCodeFrom"]).Trim(),
-                                    FPCodeTo = Convert.ToString(reader["FPCodeTo"]).Trim()
+                                    FPCodeTo = Convert.ToString(reader["FPCodeTo"]).Trim(),
+                                    Speed = Convert.ToInt32(reader["Speed"]),
                                 });
                             }
                         }

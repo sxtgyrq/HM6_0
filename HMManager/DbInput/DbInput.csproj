@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonClass\CommonClass.csproj" />
     <ProjectReference Include="..\DalOfAddress\DalOfAddress.csproj" />
     <ProjectReference Include="..\DrawObj\DrawObj.csproj" />
     <ProjectReference Include="..\ModelBase\ModelBase.csproj" />

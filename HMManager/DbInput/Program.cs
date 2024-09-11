@@ -12,7 +12,7 @@ namespace DbInput
                 Console.WriteLine($"" +
                     $"选择A，录入\r\n" +
                     $"选择B，绑定编码与地址\r\n" +
-                    $"选择All，查询\r\n"+
+                    $"选择All，查询\r\n" +
                     $"选择 UPDATELINECOMMAND ，补充绘制\r\n" +
                     $"选择 CONNECT ，连接线路\r\n");
                 var switchChacter = Console.ReadLine();
@@ -51,6 +51,19 @@ namespace DbInput
                         {
                             ConnectTwoPoint();
                         }; break;
+                    case "CALCULATE":
+                        {
+                            Shop.CalculateFP();
+                            Tunnel.CalculatePath();
+                        }; break;
+                    case "CHECKALLCANCONNECT":
+                        {
+                            Shop.CheckAllConnected();
+                        }; break;
+                    case "CALPATH": 
+                        {
+                            Tunnel.CalculatePath();
+                        };break;
                     default:
                         { }; break;
                 }
@@ -58,6 +71,10 @@ namespace DbInput
 
             }
         }
+
+
+
+
 
         private static void ConnectTwoPoint()
         {
