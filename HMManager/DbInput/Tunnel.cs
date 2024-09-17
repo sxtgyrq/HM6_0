@@ -45,7 +45,7 @@ namespace DbInput
 
                 List<int> costTime = new List<int>(items.Count * mCalCount);
                 List<int> lastFP = new List<int>(fpItems.Count * mCalCount);//这里用于存储最后一个地址。
-                List<int> LastRecordResultForSave = new List<int>(fpItems.Count * mCalCount);
+                                                                            //    List<int> LastRecordResultForSave = new List<int>(fpItems.Count * mCalCount);
 
                 for (int i = calIndexStarted; i < calIndexStarted + mCalCount; i++)
                 {
@@ -61,7 +61,7 @@ namespace DbInput
                         {
                             lastFP.Add(-1);
                         }
-                        LastRecordResultForSave.Add(-1);
+                        //  LastRecordResultForSave.Add(-1);
                     }
                     for (int j = 0; j < items.Count; j++)
                     {
@@ -72,8 +72,8 @@ namespace DbInput
                         costTime.Add(time);
                     }
                 }
-                var LastRecordResultForSaveArray = LastRecordResultForSave.ToArray();
-                CUDAGPU.Cal(costTime.ToArray(), lastFP.ToArray(), LastRecordResultForSaveArray, items.Count * mCalCount, fpItems.Count * mCalCount, mCalCount, startPosition.ToArray(), endPosition.ToArray());
+                //   var LastRecordResultForSaveArray = LastRecordResultForSave.ToArray();
+                CUDAGPU.Cal(costTime.ToArray(), lastFP.ToArray(), items.Count * mCalCount, fpItems.Count * mCalCount, mCalCount * 1, startPosition.ToArray(), endPosition.ToArray());
 
                 calIndexStarted += mCalCount;
             }

@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\Project\HM_6\CUDA\pathCal\x64\Debug\LibToCal.dll</FullPath>
+      <FullPath>E:\Project\HM_6\CUDA\LibToCal\LibToCal.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

@@ -417,7 +417,7 @@ FROM
 	LEFT JOIN fp B ON A.FPCodeFrom = B.FPCode
 	LEFT JOIN fp C ON A.FPCodeTo = C.FPCode 
 WHERE
-	IsUsing =1";
+	IsUsing =1 ORDER BY A.FPCodeFrom ASC,A.HeightFrom ASC,A.FPCodeTo ASC,A.HeightTo ASC;";
             using (MySqlConnection con = new MySqlConnection(Connection.ConnectionStr))
             {
                 con.Open();

@@ -4,7 +4,7 @@
 class Cal
 {
 public:
-	Cal(int* costTime, int* lastFP, int* resultForSave, int costTimeCount, int fPCount, int calUnitCount, int* startDic, int* endDic);
+	Cal(int* costTime, int* lastFP, int costTimeCount, int fPCount, int calUnitCount, int* startDic, int* endDic);
 
 	//int[] costTime, int[] lastFP, int[] resultForSave, int costTimeCount, int FPCount, int[] startDic, int[] endDic
 	//int* Cal();
@@ -22,19 +22,20 @@ private:
 	int BlockCount;//初始化√
 
 	int* CostTime;
-	int* CostTime_GPU;
+	int* CostTime_GPU = 0;
 
 	int* LastFP;
 	int* LastFP_GPU = 0;
 	int* LastFP_Out_GPU = 0;
 
 	int* StartDic;
-	int* StartDic_GPU;
+	int* StartDic_GPU = 0;
 
 	int* EndDic;
-	int* EndDic_GPU;
+	int* EndDic_GPU = 0;
 
 	int* MinStepResult_GPU;//初始化√
+	//int* MinStepResult_CALMINVALUE_GPU;//初始化√
 
 	int* MinStepResult_OnOff_GPU;//初始化√
 	//int* MinStepResult;//初始化√
@@ -44,4 +45,6 @@ private:
 	cudaError_t Reduce();
 	cudaError_t	Copy();
 	bool NotFinished();
+public:
+	int* LastFPResult;
 };
