@@ -617,7 +617,7 @@ Cal::~Cal()
 	}
 	else
 	{
-		fprintf(stderr, "~Cal() cudaDeviceReset success!");
+		//fprintf(stderr, "~Cal() cudaDeviceReset success!");
 	}
 }
 

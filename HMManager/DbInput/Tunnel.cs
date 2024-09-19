@@ -1,4 +1,6 @@
 ﻿
+using SharpKml.Dom;
+
 namespace DbInput
 {
     public class Tunnel
@@ -17,7 +19,7 @@ namespace DbInput
             var items = DalOfAddress.Tunel.GetAll();
             var fpItems = DalOfAddress.FP.GetAll();
 
-
+            List<int> resultForSave = new List<int>();
 
             Dictionary<string, int> startDic = new Dictionary<string, int>();
             for (var i = 0; i < fpItems.Count; i++)
@@ -73,60 +75,94 @@ namespace DbInput
                     }
                 }
                 //   var LastRecordResultForSaveArray = LastRecordResultForSave.ToArray();
-                CUDAGPU.Cal(costTime.ToArray(), lastFP.ToArray(), items.Count * mCalCount, fpItems.Count * mCalCount, mCalCount * 1, startPosition.ToArray(), endPosition.ToArray());
+                var CUDAResult = CUDAGPU.Cal(costTime.ToArray(), lastFP.ToArray(), items.Count * mCalCount, fpItems.Count * mCalCount, mCalCount * 1, startPosition.ToArray(), endPosition.ToArray());
+
+                for (int i = 0; i < CUDAResult.Length; i++)
+                {
+                    if (CUDAResult[i] < 0)
+                    {
+                        throw new Exception("错误的结果");
+                    }
+                    else if (CUDAResult[i] >= fpItems.Count)
+                    {
+                        throw new Exception("错误的结果");
+                    }
+                    else
+                    {
+                        resultForSave.Add(CUDAResult[i]);
+                    }
+                }
 
                 calIndexStarted += mCalCount;
             }
+            if (resultForSave.Count != fpItems.Count * fpItems.Count)
+            {
+                throw new Exception("错误的结果");
+            }
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(resultForSave);
+            File.WriteAllText("resultOrder.json", json);
 
+        }
 
-            //List<int> isBegain = new List<int>(items.Count * mCalCount);
-            //List<int> isEnded = new List<int>(items.Count * mCalCount);
+        internal static void ReadResult()
+        {
+            // throw new NotImplementedException();
+            var fpItems = DalOfAddress.FP.GetAll();
 
-            // List<int> lastFP = new List<int>(fpItems.Count * mCalCount);//这里用于存储最后一个地址。
-            //var startIndex = 0;
+            int? startIndex = null, endIndex = null;
+            var json = File.ReadAllText("resultOrder.json");
+            if (json != null)
+            {
+                List<int> Data = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(json);
 
+                while (true)
+                {
+                    Console.WriteLine($"有{fpItems.Count}出地点，请输入起始地点");
+                    var input = Console.ReadLine();
+                    if (input == null)
+                    {
+                        continue;
+                    }
+                    else if (input.ToUpper() == "EXIT")
+                    {
+                        break;
+                    }
+                    else if (startIndex == null)
+                    {
+                        startIndex = int.Parse(input);
+                        Console.WriteLine($"输入了起点{startIndex},{fpItems[startIndex.Value].lineStr}");
+                    }
+                    else if (endIndex == null)
+                    {
+                        endIndex = int.Parse(input);
+                        Console.WriteLine($"输入了终点{endIndex},{fpItems[endIndex.Value].lineStr}");
 
-            //for (var i = 0; i < items.Count; i++)
-            //{
-            //    var item = items[i];
-            //    var startKey = $"{item.FPCodeFrom}{item.StartHeight - item.StartBaseHeight}";
-            //    var endKey = $"{items[startIndex].FPCodeFrom}{items[startIndex].StartHeight - items[startIndex].StartBaseHeight}";
-            //    startPosition.Add(startDic[startKey]);
-            //    endPosition.Add(startDic[endKey]);
-            //}
+                        List<int> resultRead = new List<int>();
 
-            //for (var i = 0; i < items.Count; i++)
-            //{
-            //    var item = items[i];
-            //    if (item.Speed == 0)
-            //    {
-            //        //costTime.Add(item.sta)
-            //        throw new Exception("");
-            //    }
-            //    else
-            //    {
-            //        var l = CommonClass.Geography.getLengthOfTwoPoint.GetDistance(item.StartLat, item.StartLon, item.StartHeight, item.EndLat, item.EndLon, item.EndHeight);
-            //        var time = Convert.ToInt32(l / 1000 / item.Speed * 3600);
-            //        if (time < 1) time = 1;
-            //        costTime.Add(time);
-            //    }
-            //    if (
-            //        $"{item.FPCodeFrom}{item.StartHeight - item.StartBaseHeight}" ==
-            //        $"{items[startIndex].FPCodeFrom}{items[startIndex].StartHeight - items[startIndex].StartBaseHeight}")
-            //        isBegain.Add(1);
-            //    else
-            //        isBegain.Add(0);
+                        var insertValue = endIndex.Value;
+                        resultRead.Insert(0, insertValue);
 
-            //    isEnded.Add(0);
+                        for (int i = 0; i < fpItems.Count; i++)
+                        {
+                            insertValue = Data[fpItems.Count * startIndex.Value + insertValue];
 
+                            resultRead.Insert(0, insertValue);
+                            if (insertValue == startIndex.Value)
+                            {
+                                break;
+                            }
 
+                        }
+                        for (int i = 0; i < resultRead.Count; i++)
+                        {
+                            Console.WriteLine($"{fpItems[resultRead[i]].lineStr}");
+                        }
+                        Console.WriteLine("以上为路径");
 
-
-
-            //}
-
-            //  throw new NotImplementedException();
-
+                        startIndex = null; endIndex = null;
+                    }
+                }
+            }
         }
     }
 }

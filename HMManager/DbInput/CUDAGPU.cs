@@ -9,7 +9,7 @@ namespace DbInput
 {
     public class CUDAGPU
     {
-        internal static void Cal(int[] costTime, int[] lastFP, int costTimeCount, int FPCount, int unitCount, int[] startDic, int[] endDic)
+        internal static int[] Cal(int[] costTime, int[] lastFP, int costTimeCount, int FPCount, int unitCount, int[] startDic, int[] endDic)
         {
             var p = MCal_Create(costTime, lastFP, costTimeCount, FPCount, unitCount, startDic, endDic);
 
@@ -28,8 +28,10 @@ namespace DbInput
                 Console.Write($"{managedArray[i]} ");
             }
             Console.WriteLine("结果完毕：按回车继续");
-            Console.ReadLine();
+            //  Console.ReadLine();
             MCal_Delete(p);
+
+            return managedArray;
         }
 
         [DllImport(@"E:\Project\HM_6\CUDA\LibToCal\LibToCal.dll")]

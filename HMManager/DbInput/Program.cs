@@ -14,7 +14,7 @@ namespace DbInput
                     $"选择B，绑定编码与地址\r\n" +
                     $"选择All，查询\r\n" +
                     $"选择 UPDATELINECOMMAND ，补充绘制\r\n" +
-                    $"选择 CONNECT ，连接线路\r\n"+
+                    $"选择 CONNECT ，连接线路\r\n" +
                     $"选择 CALPATH ，GPU计算线路\r\n");
                 var switchChacter = Console.ReadLine();
                 var regex = new Regex("^[A-Z]{10}$");
@@ -61,10 +61,14 @@ namespace DbInput
                         {
                             Shop.CheckAllConnected();
                         }; break;
-                    case "CALPATH": 
+                    case "CALPATH":
                         {
                             Tunnel.CalculatePath();
-                        };break;
+                        }; break;
+                    case "READPATHRESULT":
+                        {
+                            Tunnel.ReadResult();
+                        }; break;
                     default:
                         { }; break;
                 }
