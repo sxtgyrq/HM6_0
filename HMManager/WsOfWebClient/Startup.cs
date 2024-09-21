@@ -72,7 +72,7 @@ namespace WsOfWebClient
             };
             app.UseWebSockets(webSocketOptions);
 
-            app.Map("/websocket", WebSocketF);
+            //   app.Map("/websocket", WebSocketF);
             // app.UseCors("AllowAny");
             //app.Map("/bgimg", BackGroundImg);
             //app.Map("/objdata", ObjData);
