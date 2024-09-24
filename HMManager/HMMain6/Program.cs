@@ -5,6 +5,7 @@ namespace HMMain6
     internal class Program
     {
         public static Data dt;
+        public static RoomMainF.RoomMain rm;
         static void Main(string[] args)
         {
             var version = "6.0.1";
@@ -24,10 +25,12 @@ namespace HMMain6
 
             switch (select.ToUpper())
             {
+                case "":
                 case "MAIN":
                     {
                         ServerMain();
                     }; break;
+
             }
 
 
@@ -82,11 +85,13 @@ namespace HMMain6
                     tcpPort = num;
                 }
             }
+            Program.rm = new RoomMainF.RoomMain(Program.dt);
             Thread startTcpServer = new Thread(() => Listen.IpAndPort(ip, tcpPort));
             startTcpServer.Start();
 
-            Thread startMonitorTcpServer = new Thread(() => Listen.IpAndPortMonitor(ip, 30000 - tcpPort));
-            startMonitorTcpServer.Start();
+
+            //Thread startMonitorTcpServer = new Thread(() => Listen.IpAndPortMonitor(ip, 30000 - tcpPort));
+            //startMonitorTcpServer.Start();
 
         }
     }

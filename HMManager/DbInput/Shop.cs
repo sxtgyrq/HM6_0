@@ -11,7 +11,17 @@ namespace DbInput
     {
         internal static void CalculateFP()
         {
+            var dicOfFP = CalculateFPStep_Point();
+            CalculateFPStep_Connect(dicOfFP);
+            {
+
+                // throw new NotImplementedException();
+            }
+        }
+        static Dictionary<string, int> CalculateFPStep_Point()
+        {
             var allItems = DalOfAddress.FP.GetAll();
+            Dictionary<string, int> indexOfFP = new Dictionary<string, int>();
             for (int i = 0; i < allItems.Count; i++)
             {
                 // string saveStr =  allP[i]
@@ -21,6 +31,8 @@ namespace DbInput
                 try
                 {
                     File.WriteAllText(path, SaveStr);
+                    var key = $"{allItems[i].fPCode}{allItems[i].Height}";
+                    indexOfFP.Add(key, i);
                 }
 
 
@@ -90,8 +102,33 @@ namespace DbInput
                     Console.ReadLine();
                 }
             }
-            // throw new NotImplementedException();
+
+            return indexOfFP;
         }
+
+        static void CalculateFPStep_Connect(Dictionary<string, int> dicOfFP)
+        {
+            Dictionary<int, List<int>> connections = new Dictionary<int, List<int>>();
+            var items = DalOfAddress.Tunel.GetAll();
+
+            for (var i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                var startKey = $"{item.FPCodeFrom}{item.StartHeight - item.StartBaseHeight}";
+                var endKey = $"{item.FPCodeTo}{item.EndHeight - item.EndBaseHeight}";
+                if (connections.ContainsKey(dicOfFP[startKey])) { }
+                else
+                {
+                    var listOfEnd = new List<int>();
+                    connections.Add(dicOfFP[startKey], listOfEnd);
+                }
+                connections[dicOfFP[startKey]].Add(dicOfFP[endKey]);
+            }
+            var path = $"E:\\DB\\DBPublish\\connectionsData.json";
+            var text = Newtonsoft.Json.JsonConvert.SerializeObject(connections);
+            File.WriteAllText(path, text);
+        }
+
 
         internal static void CheckAllConnected()
         {

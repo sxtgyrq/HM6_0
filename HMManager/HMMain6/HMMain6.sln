@@ -21,7 +21,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LibToCal", "..\..\CUDA\LibT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TcpFunction", "..\TcpFunction\TcpFunction.csproj", "{C27F2323-D81B-4FCE-916D-32974814DB7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WsOfWebClient", "..\WsOfWebClient\WsOfWebClient.csproj", "{5D7CCDD8-E712-4CB1-90B0-C5901CEA1C0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WsOfWebClient", "..\WsOfWebClient\WsOfWebClient.csproj", "{5D7CCDD8-E712-4CB1-90B0-C5901CEA1C0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BitCoin", "..\BitCoin\BitCoin.csproj", "{7619E32A-1993-4D3D-BAFE-4122500FFBB2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +113,14 @@ Global
 		{5D7CCDD8-E712-4CB1-90B0-C5901CEA1C0D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5D7CCDD8-E712-4CB1-90B0-C5901CEA1C0D}.Release|x64.ActiveCfg = Release|Any CPU
 		{5D7CCDD8-E712-4CB1-90B0-C5901CEA1C0D}.Release|x64.Build.0 = Release|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Debug|x64.Build.0 = Debug|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Release|x64.ActiveCfg = Release|Any CPU
+		{7619E32A-1993-4D3D-BAFE-4122500FFBB2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,7 +17,7 @@ using System.Net.Http;
 using System.Collections.Generic;
 using Microsoft.VisualBasic;
 using System.Threading;
-using SixLabors.ImageSharp.Memory;
+
 using static TcpFunction.WithHttpResponseLongConnect.ResponseObj;
 
 namespace TcpFunction

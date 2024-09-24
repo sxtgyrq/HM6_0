@@ -1288,11 +1288,24 @@
       "CommonClass/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "ModelBase": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/CommonClass.dll": {}
         },
         "runtime": {
           "bin/placeholder/CommonClass.dll": {}
+        }
+      },
+      "ModelBase/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/ModelBase.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ModelBase.dll": {}
         }
       }
     }
@@ -4179,6 +4192,11 @@
       "type": "project",
       "path": "../CommonClass/CommonClass.csproj",
       "msbuildProject": "../CommonClass/CommonClass.csproj"
+    },
+    "ModelBase/1.0.0": {
+      "type": "project",
+      "path": "../ModelBase/ModelBase.csproj",
+      "msbuildProject": "../ModelBase/ModelBase.csproj"
     }
   },
   "projectFileDependencyGroups": {

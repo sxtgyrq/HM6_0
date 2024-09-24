@@ -93,7 +93,7 @@ namespace DalOfAddress
         public static List<ModelBase.Data.FPPosition> GetAll()
         {
             List<ModelBase.Data.FPPosition> data = new List<ModelBase.Data.FPPosition>();
-            var sQL = $"SELECT B.FPCode,B.lon,B.lat,B.baseHeight,A.Height,A.BitcoinAddr,A.CanGetScore,B.FPName FROM fpdetail A LEFT JOIN fp B ON A.FPCode=B.FPCode ORDER BY A.FPCode,A.Height ASC";
+            var sQL = $"SELECT B.FPCode,B.lon,B.lat,B.baseHeight,A.Height,A.BitcoinAddr,A.CanGetScore,B.FPName,A.ObjInSceneRotation FROM fpdetail A LEFT JOIN fp B ON A.FPCode=B.FPCode ORDER BY A.FPCode,A.Height ASC";
             using (MySqlConnection con = new MySqlConnection(Connection.ConnectionStr))
             {
                 con.Open();
@@ -113,6 +113,7 @@ namespace DalOfAddress
                                 var BitcoinAddr = reader.GetString(5);
                                 var CanGetScore = reader.GetBoolean(6);
                                 var fPName = reader.GetString(7);
+                                var ObjInSceneRotation = reader.GetDouble(8);
                                 var lineStr = $"fPCode:{fPCode}  position:{lon},{lat}  baseHeight:{baseHeight}  Height:{Height}  BitcoinAddr:{BitcoinAddr}  CanGetScore:{CanGetScore}  fPName{fPName}";
                                 data.Add(new ModelBase.Data.FPPosition()
                                 {
@@ -124,6 +125,7 @@ namespace DalOfAddress
                                     CanGetScore = CanGetScore,
                                     baseHeight = baseHeight,
                                     fPName = fPName,
+                                    ObjInSceneRotation = ObjInSceneRotation
                                 });
                             }
                         }

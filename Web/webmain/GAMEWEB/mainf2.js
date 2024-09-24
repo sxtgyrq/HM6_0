@@ -99,7 +99,8 @@ var objMain =
         Teammate: null,
         NitrogenEffect: null,
         CollectCoinIcon: null,
-        GoldIngotIcon: null
+        GoldIngotIcon: null,
+        vehicle: null
     },
     shieldGroup: null,
     confusePrepareGroup: null,
@@ -694,54 +695,71 @@ var objMain =
     groupOfTaskCopy: null,
     GetPositionNotify: {
         data: null, F: function (data) {
+
             console.log(data);
-            var objInput = JSON.parse(data);
-            objMain.basePoint = objInput.fp;
-            //objMain.carsNames = objInput.carsNames;
-            objMain.indexKey = objInput.key;
-            objMain.displayName = objInput.PlayerName;
-            objMain.fpIndex = objInput.fPIndex;
-            objMain.groupNumber = objInput.groupNumber;
-            objMain.positionInStation = objInput.positionInStation;
-            //if (objMain.receivedState == 'WaitingToGetTeam') {
-            //    objMain.ws.send(received_msg);
+            var inputObj = JSON.parse(data);
+            var path = '';
+
+            objMain.indexKey = inputObj.key;
+            var vehicle = objMain.ModelInput.vehicle.clone();
+            vehicle.name = 'vehicle_' + objMain.indexKey;
+            objMain.carGroup.add(vehicle);
+
+            //if (objMain.debug == 0) {
+            //    path = 'http://127.0.0.1:11001/pic/' + inputObj.fp.fPCode + '/' + inputObj.fp.Height + '/';
             //}
-            //小车用 https://threejs.org/examples/#webgl_animation_skinning_morph
-            //小车用 基地用 https://threejs.org/examples/#webgl_animation_cloth
-            // drawFlag(); 
-            drawPoint('green', objMain.basePoint, objMain.indexKey);
-            /*画引线*/
-            objMain.mainF.drawLineOfFpToRoad(objMain.basePoint, objMain.playerGroup, 'green', objMain.indexKey);
-            objMain.mainF.drawDiamondCollected();
-            objMain.mainF.lookAtPosition(objMain.basePoint);
-            objMain.mainF.initilizeCars(objMain.basePoint, 'green', objMain.indexKey, true, objMain.positionInStation);
+            //else { }
+            //if (path != '') {
+            //    objMain.background.path = path;
+
+            //}
+            //var objInput = JSON.parse(data);
+            //objMain.basePoint = objInput.fp;
+            ////objMain.carsNames = objInput.carsNames;
+            //objMain.indexKey = objInput.key;
+            //objMain.displayName = objInput.PlayerName;
+            //objMain.fpIndex = objInput.fPIndex;
+            //objMain.groupNumber = objInput.groupNumber;
+            //objMain.positionInStation = objInput.positionInStation;
+            ////if (objMain.receivedState == 'WaitingToGetTeam') {
+            ////    objMain.ws.send(received_msg);
+            ////}
+            ////小车用 https://threejs.org/examples/#webgl_animation_skinning_morph
+            ////小车用 基地用 https://threejs.org/examples/#webgl_animation_cloth
+            //// drawFlag(); 
+            //drawPoint('green', objMain.basePoint, objMain.indexKey);
+            ///*画引线*/
+            //objMain.mainF.drawLineOfFpToRoad(objMain.basePoint, objMain.playerGroup, 'green', objMain.indexKey);
+            //objMain.mainF.drawDiamondCollected();
+            //objMain.mainF.lookAtPosition(objMain.basePoint);
+            //objMain.mainF.initilizeCars(objMain.basePoint, 'green', objMain.indexKey, true, objMain.positionInStation);
 
 
 
-            objMain.GetPositionNotify.data = null;
-            SysOperatePanel.draw();
-            currentSelectionPreparationShow.show();
-            operateStateShow.show();
+            //objMain.GetPositionNotify.data = null;
+            //SysOperatePanel.draw();
+            //currentSelectionPreparationShow.show();
+            //operateStateShow.show();
 
 
-            var startBase = new THREE.Vector3(MercatorGetXbyLongitude(objMain.basePoint.Longitude), MercatorGetZbyHeight(objMain.basePoint.Height) * objMain.heightAmplify, -MercatorGetYbyLatitude(objMain.basePoint.Latitde));
-            var animationData =
-            {
-                old: {
-                    x: objMain.controls.target.x,
-                    y: objMain.controls.target.y,
-                    z: objMain.controls.target.z,
-                    t: Date.now()
-                },
-                newT:
-                {
-                    x: startBase.x,
-                    y: startBase.y,
-                    z: startBase.z,
-                    t: Date.now() + 3000
-                }
-            };
-            objMain.camaraAnimateData = animationData;
+            //var startBase = new THREE.Vector3(MercatorGetXbyLongitude(objMain.basePoint.Longitude), MercatorGetZbyHeight(objMain.basePoint.Height) * objMain.heightAmplify, -MercatorGetYbyLatitude(objMain.basePoint.Latitde));
+            //var animationData =
+            //{
+            //    old: {
+            //        x: objMain.controls.target.x,
+            //        y: objMain.controls.target.y,
+            //        z: objMain.controls.target.z,
+            //        t: Date.now()
+            //    },
+            //    newT:
+            //    {
+            //        x: startBase.x,
+            //        y: startBase.y,
+            //        z: startBase.z,
+            //        t: Date.now() + 3000
+            //    }
+            //};
+            //objMain.camaraAnimateData = animationData;
 
         }, otherData: []
     },
@@ -949,91 +967,112 @@ var objMain =
     {
         path: '',
         change: function () {
-            if (/^[A-Z]{10}$/.test(this.path)) {
-                //if (objMain.background.backgroundData[this.path] == undefined)
-                {
-                    var cubeTextureLoader = new THREE.CubeTextureLoader();
-                    //http://yrqmodeldata.oss-cn-beijing.aliyuncs.com/fpbgimg/IJZJBCUKEK/nx.jpg
-                    if (objMain.debug != 2)
-                        cubeTextureLoader.setPath('http://127.0.0.1:11001/bgimg/' + this.path + '/');
-                    else
-                        cubeTextureLoader.setPath('https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/fpbgimg/' + this.path + '/');
-                    // window.location.hostname + '/bgimg?key=1&y=2&p=px'
-                    cubeTextureLoader.load(
-                        [
-                            "px.jpg", "nx.jpg",
-                            "py.jpg", "ny.jpg",
-                            "pz.jpg", "nz.jpg"], function (newTexture) {
-                                objMain.scene.background.images[0] = newTexture.images[0]; // px
-                                objMain.scene.background.images[1] = newTexture.images[1]; // nx
-                                objMain.scene.background.images[2] = newTexture.images[2]; // py
-                                objMain.scene.background.images[3] = newTexture.images[3]; // ny
-                                objMain.scene.background.images[4] = newTexture.images[4]; // pz
-                                objMain.scene.background.images[5] = newTexture.images[5]; // nz
-                                objMain.scene.background.needsUpdate = true;
-                                cubeTextureLoader = null;
-                            });
-                    // objMain.background.backgroundData[this.path] = cubeTexture;
-                }
-                //objMain.scene.background = objMain.background.backgroundData[this.path];
-                //delete objMain.background.backgroundData[this.path];
-            }
-            else {
-                switch (this.path) {
-                    case '':
-                        {
-                            //if (objMain.background.backgroundData['main'] == undefined)
-                            {
-                                var cubeTextureLoader = new THREE.CubeTextureLoader();
-                                cubeTextureLoader.setPath('Pic/');
-                                cubeTextureLoader.load([
-                                    "px.jpg", "nx.jpg",
-                                    "py.jpg", "ny.jpg",
-                                    "pz.jpg", "nz.jpg"
-                                ], function (newTexture) {
-                                    objMain.scene.background.images[0] = newTexture.images[0]; // px
-                                    objMain.scene.background.images[1] = newTexture.images[1]; // nx
-                                    objMain.scene.background.images[2] = newTexture.images[2]; // py
-                                    objMain.scene.background.images[3] = newTexture.images[3]; // ny
-                                    objMain.scene.background.images[4] = newTexture.images[4]; // pz
-                                    objMain.scene.background.images[5] = newTexture.images[5]; // nz
-                                    objMain.scene.background.needsUpdate = true;
-                                    cubeTextureLoader = null;
-                                });
-                                //objMain.background.backgroundData['main'] = cubeTexture;
-                                //objMain.scene.background = objMain.background.backgroundData['main'];
-                            }
-                            /* objMain.scene.background = objMain.background.backgroundData['main'];*/
-                            //delete objMain.background.backgroundData['main']; 
-                        }; break;
-                    default:
-                        {
-                            //if (objMain.background.backgroundData[this.path] == undefined)
-                            {
-                                var cubeTextureLoader = new THREE.CubeTextureLoader();
-                                cubeTextureLoader.setPath('Pic/' + this.path + '/');
-                                cubeTextureLoader.load([
-                                    "px.jpg", "nx.jpg",
-                                    "py.jpg", "ny.jpg",
-                                    "pz.jpg", "nz.jpg"
-                                ], function (newTexture) {
-                                    objMain.scene.background.images[0] = newTexture.images[0]; // px
-                                    objMain.scene.background.images[1] = newTexture.images[1]; // nx
-                                    objMain.scene.background.images[2] = newTexture.images[2]; // py
-                                    objMain.scene.background.images[3] = newTexture.images[3]; // ny
-                                    objMain.scene.background.images[4] = newTexture.images[4]; // pz
-                                    objMain.scene.background.images[5] = newTexture.images[5]; // nz
-                                    objMain.scene.background.needsUpdate = true;
-                                    cubeTextureLoader = null;
-                                });
-                                //  objMain.background.backgroundData[this.path] = cubeTexture;
-                            }
-                            //objMain.scene.background = objMain.background.backgroundData[this.path];
-                            //delete objMain.background.backgroundData[this.path];
 
-                        }; break;
-                }
+            {
+                var cubeTextureLoader = new THREE.CubeTextureLoader();
+                cubeTextureLoader.setPath(this.path);
+                cubeTextureLoader.load([
+                    "px.jpg", "nx.jpg",
+                    "py.jpg", "ny.jpg",
+                    "pz.jpg", "nz.jpg"
+                ], function (newTexture) {
+                    objMain.scene.background.images[0] = newTexture.images[0]; // px
+                    objMain.scene.background.images[1] = newTexture.images[1]; // nx
+                    objMain.scene.background.images[2] = newTexture.images[2]; // py
+                    objMain.scene.background.images[3] = newTexture.images[3]; // ny
+                    objMain.scene.background.images[4] = newTexture.images[4]; // pz
+                    objMain.scene.background.images[5] = newTexture.images[5]; // nz
+                    objMain.scene.background.needsUpdate = true;
+                    cubeTextureLoader = null;
+                });
+                //  objMain.background.backgroundData[this.path] = cubeTexture;
             }
+
+            //if (/^[A-Z]{10}$/.test(this.path)) {
+            //    //if (objMain.background.backgroundData[this.path] == undefined)
+            //    {
+            //        var cubeTextureLoader = new THREE.CubeTextureLoader();
+            //        //http://yrqmodeldata.oss-cn-beijing.aliyuncs.com/fpbgimg/IJZJBCUKEK/nx.jpg
+            //        if (objMain.debug != 2)
+            //            cubeTextureLoader.setPath(this.path);
+            //        else
+            //            cubeTextureLoader.setPath('https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/fpbgimg/' + this.path + '/');
+            //        // window.location.hostname + '/bgimg?key=1&y=2&p=px'
+            //        cubeTextureLoader.load(
+            //            [
+            //                "px.jpg", "nx.jpg",
+            //                "py.jpg", "ny.jpg",
+            //                "pz.jpg", "nz.jpg"], function (newTexture) {
+            //                    objMain.scene.background.images[0] = newTexture.images[0]; // px
+            //                    objMain.scene.background.images[1] = newTexture.images[1]; // nx
+            //                    objMain.scene.background.images[2] = newTexture.images[2]; // py
+            //                    objMain.scene.background.images[3] = newTexture.images[3]; // ny
+            //                    objMain.scene.background.images[4] = newTexture.images[4]; // pz
+            //                    objMain.scene.background.images[5] = newTexture.images[5]; // nz
+            //                    objMain.scene.background.needsUpdate = true;
+            //                    cubeTextureLoader = null;
+            //                });
+            //        // objMain.background.backgroundData[this.path] = cubeTexture;
+            //    }
+            //    //objMain.scene.background = objMain.background.backgroundData[this.path];
+            //    //delete objMain.background.backgroundData[this.path];
+            //}
+            //else {
+            //    switch (this.path) {
+            //        case '':
+            //            {
+            //                //if (objMain.background.backgroundData['main'] == undefined)
+            //                {
+            //                    var cubeTextureLoader = new THREE.CubeTextureLoader();
+            //                    cubeTextureLoader.setPath('Pic/');
+            //                    cubeTextureLoader.load([
+            //                        "px.jpg", "nx.jpg",
+            //                        "py.jpg", "ny.jpg",
+            //                        "pz.jpg", "nz.jpg"
+            //                    ], function (newTexture) {
+            //                        objMain.scene.background.images[0] = newTexture.images[0]; // px
+            //                        objMain.scene.background.images[1] = newTexture.images[1]; // nx
+            //                        objMain.scene.background.images[2] = newTexture.images[2]; // py
+            //                        objMain.scene.background.images[3] = newTexture.images[3]; // ny
+            //                        objMain.scene.background.images[4] = newTexture.images[4]; // pz
+            //                        objMain.scene.background.images[5] = newTexture.images[5]; // nz
+            //                        objMain.scene.background.needsUpdate = true;
+            //                        cubeTextureLoader = null;
+            //                    });
+            //                    //objMain.background.backgroundData['main'] = cubeTexture;
+            //                    //objMain.scene.background = objMain.background.backgroundData['main'];
+            //                }
+            //                /* objMain.scene.background = objMain.background.backgroundData['main'];*/
+            //                //delete objMain.background.backgroundData['main']; 
+            //            }; break;
+            //        default:
+            //            {
+            //                //if (objMain.background.backgroundData[this.path] == undefined)
+            //                {
+            //                    var cubeTextureLoader = new THREE.CubeTextureLoader();
+            //                    cubeTextureLoader.setPath('Pic/' + this.path + '/');
+            //                    cubeTextureLoader.load([
+            //                        "px.jpg", "nx.jpg",
+            //                        "py.jpg", "ny.jpg",
+            //                        "pz.jpg", "nz.jpg"
+            //                    ], function (newTexture) {
+            //                        objMain.scene.background.images[0] = newTexture.images[0]; // px
+            //                        objMain.scene.background.images[1] = newTexture.images[1]; // nx
+            //                        objMain.scene.background.images[2] = newTexture.images[2]; // py
+            //                        objMain.scene.background.images[3] = newTexture.images[3]; // ny
+            //                        objMain.scene.background.images[4] = newTexture.images[4]; // pz
+            //                        objMain.scene.background.images[5] = newTexture.images[5]; // nz
+            //                        objMain.scene.background.needsUpdate = true;
+            //                        cubeTextureLoader = null;
+            //                    });
+            //                    //  objMain.background.backgroundData[this.path] = cubeTexture;
+            //                }
+            //                //objMain.scene.background = objMain.background.backgroundData[this.path];
+            //                //delete objMain.background.backgroundData[this.path];
+
+            //            }; break;
+            //    }
+            //}
         },
         backgroundData: {},
         changeWhenIsCross: function (r) {
@@ -1093,7 +1132,8 @@ var objMain =
                 }
                 // objMain.scene.background = objMain.background.backgroundData[r.Md5Key];
             }
-        }
+        },
+        rotateOthers: function (r) { }
     },
     rightAndDuty:
     {
@@ -1101,6 +1141,7 @@ var objMain =
         update: function () { }
     },
     dealWithReceivedObj: function (received_obj, evt, received_msg) {
+        console.log('reveivedMsg', received_obj);
         switch (received_obj.c) {
             case 'setState':
                 {
@@ -1440,6 +1481,14 @@ var objMain =
                         color: { r: 2, g: 1, b: 2 }
                     });
                     objMain.ws.send('SetSpeedIcon');
+                }; break;
+            case 'SetVehicle':
+                {
+                    loadAerialVehicle(function (objectInput) {
+                        console.log('objectInput', objectInput);
+                        objMain.ws.send('SetVehicle');
+                        objMain.ModelInput.vehicle = objectInput;
+                    })
                 }; break;
             case 'SetAttackIcon':
                 {
@@ -1791,8 +1840,10 @@ var objMain =
                 }; break;
             case 'BradCastPromoteDiamondCount':
                 {
-                    objMain.PromoteDiamondCount[received_obj.pType] = received_obj.count;
-                    objMain.mainF.drawDiamondCollected();
+                    if (false) {
+                        objMain.PromoteDiamondCount[received_obj.pType] = received_obj.count;
+                        objMain.mainF.drawDiamondCollected();
+                    }
                 }; break;
             case 'BradCastAbility':
                 {
@@ -2077,13 +2128,14 @@ var objMain =
                 }; break;
             case 'BradCastCollectInfoDetail_v2':
                 {
-
-                    console.log('显示', received_obj);
-                    objMain.CollectPosition[received_obj.collectIndex] = received_obj;
-                    ////  switch (received_obj.
-                    //objMain.CollectPosition = received_obj;
-                    for (var i = 0; i < 38; i++) {
-                        objMain.mainF.refreshCollectAndPanle(i + 0, undefined);
+                    if (false) {
+                        console.log('显示', received_obj);
+                        objMain.CollectPosition[received_obj.collectIndex] = received_obj;
+                        ////  switch (received_obj.
+                        //objMain.CollectPosition = received_obj;
+                        for (var i = 0; i < 38; i++) {
+                            objMain.mainF.refreshCollectAndPanle(i + 0, undefined);
+                        }
                     }
                 }; break;
             case 'BradCarPurpose':
@@ -2108,8 +2160,9 @@ var objMain =
                 }; break;
             case 'BradCastBackground':
                 {
-                    objMain.background.path = received_obj.path;
-                    objMain.background.change();
+                    ChangeBG(received_obj);
+                    //objMain.background.path = received_obj.path;
+                    //objMain.background.change();
                 }; break;
             case 'WMsg':
                 {
@@ -2769,8 +2822,8 @@ function animate() {
                 {
                     objMain.animateParameter.loopCount++;
                     const lengthOfCC = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target);
-                    var deltaYOfSelectObj = 0;
-                    deltaYOfSelectObj = animateDetailF.moveCamara(lengthOfCC);
+                    //var deltaYOfSelectObj = 0;
+                    // deltaYOfSelectObj = animateDetailF.moveCamara(lengthOfCC);
                     for (var i = 0; i < objMain.collectGroup.children.length; i++) {
                         /*
                          * 初始化人民币的大小
@@ -3273,21 +3326,21 @@ function animate() {
                         /*
                          * 初始化汽车的大小
                          */
-                        if (objMain.carGroup.children[i].isGroup) {
-                            var scale = lengthOfCC * 0.001;
-                            if (scale < 0.002) {
-                                scale = 0.002;
-                            }
-                            objMain.carGroup.children[i].scale.set(scale, scale, scale);
-                            objMain.carGroup.children[1].name.split('_')[1]
-                            stateSet.speed.Animate(objMain.carGroup.children[i].name.split('_')[1]);
-                            stateSet.attck.Animate(objMain.carGroup.children[i].name.split('_')[1]);
-                            stateSet.confuse.Animate(objMain.carGroup.children[i].name.split('_')[1]);
-                            stateSet.lost.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        //if (objMain.carGroup.children[i].isGroup) {
+                        //    var scale = lengthOfCC * 0.001;
+                        //    if (scale < 0.002) {
+                        //        scale = 0.002;
+                        //    }
+                        //    objMain.carGroup.children[i].scale.set(scale, scale, scale);
+                        //    objMain.carGroup.children[1].name.split('_')[1]
+                        //    stateSet.speed.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        //    stateSet.attck.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        //    stateSet.confuse.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        //    stateSet.lost.Animate(objMain.carGroup.children[i].name.split('_')[1]);
 
-                            stateSet.lightning.Animate(objMain.carGroup.children[i].name.split('_')[1]);
-                            stateSet.fire.Animate(objMain.carGroup.children[i].name.split('_')[1]);
-                        }
+                        //    stateSet.lightning.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        //    stateSet.fire.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        //}
                     }
                     {
                         /*放大选中的汽车*/
@@ -3356,15 +3409,15 @@ function animate() {
                         if (objMain.carGroup.getObjectByName('car_' + objMain.indexKey)) {
                             deltaYOfCar = objMain.carGroup.getObjectByName('car_' + objMain.indexKey).position.y;
                         }
-                        sceneYUpdate(deltaYOfCar);
+                        // sceneYUpdate(deltaYOfCar);
                         objMain.heightLevel = deltaYOfCar;
                     }
                     else if (objMain.camaraAnimateData != null) {
-                        sceneYUpdate(deltaYOfSelectObj);
-                        objMain.heightLevel = deltaYOfSelectObj;
+                        // sceneYUpdate(deltaYOfSelectObj);
+                        //  objMain.heightLevel = deltaYOfSelectObj;
                     }
                     else {
-                        sceneYUpdate(objMain.heightLevel);
+                        //sceneYUpdate(objMain.heightLevel);
                     }
                     moneyAbsorb.animate();
                     targetShow.animate();
@@ -3468,35 +3521,38 @@ animate();
 var animateDetailF =
 {
     moveCamara: function (lengthOfCC) {
-        if (objMain.camaraAnimateData != null) {
-            if (objMain.camaraAnimateData.newT.t < Date.now()) {
-                objMain.camaraAnimateData = null;
-                return 0;
-            }
-            else {
-                var percent1 = (Date.now() - objMain.camaraAnimateData.old.t) / 3000 * Math.PI;
-                var percent2 = (Math.sin(percent1 - Math.PI / 2) + 1) / 2;
-                var x = objMain.camaraAnimateData.old.x + (objMain.camaraAnimateData.newT.x - objMain.camaraAnimateData.old.x) * percent2;
-                var y = objMain.camaraAnimateData.old.y + (objMain.camaraAnimateData.newT.y - objMain.camaraAnimateData.old.y) * percent2;
-                var z = objMain.camaraAnimateData.old.z + (objMain.camaraAnimateData.newT.z - objMain.camaraAnimateData.old.z) * percent2;
-                objMain.controls.target.set(x, y, z);
-                var angle = objMain.controls.getPolarAngle();
-                //if(
-                //var dCal = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target);
-                var distance = lengthOfCC;
-                var unitY = Math.abs(distance * Math.cos(angle));
-                var unitZX = distance * Math.sin(angle);
+        return 0;
+        if (false) {
+            if (objMain.camaraAnimateData != null) {
+                if (objMain.camaraAnimateData.newT.t < Date.now()) {
+                    objMain.camaraAnimateData = null;
+                    return 0;
+                }
+                else {
+                    var percent1 = (Date.now() - objMain.camaraAnimateData.old.t) / 3000 * Math.PI;
+                    var percent2 = (Math.sin(percent1 - Math.PI / 2) + 1) / 2;
+                    var x = objMain.camaraAnimateData.old.x + (objMain.camaraAnimateData.newT.x - objMain.camaraAnimateData.old.x) * percent2;
+                    var y = objMain.camaraAnimateData.old.y + (objMain.camaraAnimateData.newT.y - objMain.camaraAnimateData.old.y) * percent2;
+                    var z = objMain.camaraAnimateData.old.z + (objMain.camaraAnimateData.newT.z - objMain.camaraAnimateData.old.z) * percent2;
+                    objMain.controls.target.set(x, y, z);
+                    var angle = objMain.controls.getPolarAngle();
+                    //if(
+                    //var dCal = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target);
+                    var distance = lengthOfCC;
+                    var unitY = Math.abs(distance * Math.cos(angle));
+                    var unitZX = distance * Math.sin(angle);
 
-                var angleOfCamara = objMain.controls.getAzimuthalAngle();
-                var unitX = unitZX * Math.sin(angleOfCamara);
-                var unitZ = unitZX * Math.cos(angleOfCamara);
+                    var angleOfCamara = objMain.controls.getAzimuthalAngle();
+                    var unitX = unitZX * Math.sin(angleOfCamara);
+                    var unitZ = unitZX * Math.cos(angleOfCamara);
 
-                objMain.camera.position.set(x + unitX, y + unitY, z + unitZ);
-                objMain.camera.lookAt(x, y, z);
-                return y;
+                    objMain.camera.position.set(x + unitX, y + unitY, z + unitZ);
+                    objMain.camera.lookAt(x, y, z);
+                    return y;
+                }
             }
+            else return 0;
         }
-        else return 0;
     }
 };
 
@@ -4090,12 +4146,15 @@ var set3DHtml = function () {
     //objMain.labelRenderer.domElement.style.curs
     document.getElementById('mainC').appendChild(objMain.labelRenderer.domElement);
 
-    objMain.camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 30000);
-    objMain.camera.position.set(4000, 2000, 0);
-    objMain.camera.position.set(MercatorGetXbyLongitude(objMain.centerPosition.lon), 20, -MercatorGetYbyLatitude(objMain.centerPosition.lat));
+    objMain.camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 0.1, 300000);
+    // objMain.camera.position.set(4000, 2000, 0);
+    objMain.camera.position.set(4.8, 6, 6.4);
+
+    //objMain.controls.maxDistance = 10;
+    //objMain.controls.minDistance = 10;
 
     objMain.controls = new THREE.OrbitControls(objMain.camera, objMain.labelRenderer.domElement);
-    objMain.controls.center.set(MercatorGetXbyLongitude(objMain.centerPosition.lon), 0, -MercatorGetYbyLatitude(objMain.centerPosition.lat));
+    objMain.controls.center.set(0, 0, 0);
 
     {
         var registGroup = function (g) {
@@ -4147,10 +4206,10 @@ var set3DHtml = function () {
     {
         //objMain.controls.minDistance = 3;
         // objMain.controls.maxPolarAngle = Math.PI;
-        objMain.controls.minPolarAngle = Math.PI / 600;
-        objMain.controls.maxPolarAngle = Math.PI / 2 - Math.PI / 36;
-        objMain.controls.minDistance = 2;
-        objMain.controls.maxDistance = 256;
+        objMain.controls.minPolarAngle = 0;
+        objMain.controls.maxPolarAngle = Math.PI;// / 2;//'- Math.PI / 36;
+        objMain.controls.minDistance = 10;
+        objMain.controls.maxDistance = 10;
     }
 
     objMain.raycaster = new THREE.Raycaster();
@@ -4267,8 +4326,8 @@ var set3DHtml = function () {
     //drawCarBtnsFrame();
     //objNotify.carNotifyShow();
     window.addEventListener('resize', onWindowResize, false);
-    douyinPanleShow.drawFlagThemeDetail('Ukraine');
-    douyinPanleShow.drawFlagThemeDetail('Russia');
+    // douyinPanleShow.drawFlagThemeDetail('Ukraine');
+    // douyinPanleShow.drawFlagThemeDetail('Russia');
 }
 function onWindowResize() {
     switch (objMain.state) {
@@ -7140,33 +7199,35 @@ var DiamondModel =
 };
 
 var sceneYUpdate = function (deltaY) {
-    var v1 = new THREE.Vector3().subVectors(objMain.controls.target, objMain.camera.position);
-    if (v1.length() > 0) {
-        v1.setLength(1);
-        var v2 = new THREE.Vector3(0, 1, 0);
-        var v3 = new THREE.Vector3().crossVectors(v1, v2);
-        if (v3.length() > 0) {
-            v3.setLength(1);
-            v2 = new THREE.Vector3().crossVectors(v3, v1);
 
-            var v4 = v2.applyAxisAngle(v3, (0.5 - 0.618) * 35 / 180 * Math.PI);
-            var A = v4.x;
-            var B = v4.y;
-            var C = v4.z;
-            var D = -A * objMain.camera.position.x - B * objMain.camera.position.y - C * objMain.camera.position.z;
 
-            if (Math.abs(B) > 1e-4) {
-                var calY = (-D - A * objMain.controls.target.x - C * objMain.controls.target.z) / B;
-                if (calY > 25)
-                    calY = 25;
-                else if (calY < -25)
-                    calY = -25;
-                objMain.scene.position.y = calY - deltaY;
-                //  objMain.scene.
-                return calY;
-            }
-        }
-    }
+    //var v1 = new THREE.Vector3().subVectors(objMain.controls.target, objMain.camera.position);
+    //if (v1.length() > 0) {
+    //    v1.setLength(1);
+    //    var v2 = new THREE.Vector3(0, 1, 0);
+    //    var v3 = new THREE.Vector3().crossVectors(v1, v2);
+    //    if (v3.length() > 0) {
+    //        v3.setLength(1);
+    //        v2 = new THREE.Vector3().crossVectors(v3, v1);
+
+    //        var v4 = v2.applyAxisAngle(v3, (0.5 - 0.618) * 35 / 180 * Math.PI);
+    //        var A = v4.x;
+    //        var B = v4.y;
+    //        var C = v4.z;
+    //        var D = -A * objMain.camera.position.x - B * objMain.camera.position.y - C * objMain.camera.position.z;
+
+    //        if (Math.abs(B) > 1e-4) {
+    //            var calY = (-D - A * objMain.controls.target.x - C * objMain.controls.target.z) / B;
+    //            if (calY > 25)
+    //                calY = 25;
+    //            else if (calY < -25)
+    //                calY = -25;
+    //            objMain.scene.position.y = calY - deltaY;
+    //            //  objMain.scene.
+    //            return calY;
+    //        }
+    //    }
+    //}
 }
 
 var OperateHelp =
@@ -7236,21 +7297,21 @@ var lookInfoForCar = function () {
     // objMain.mouse = new THREE.Vector2(1, 1);
     objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
 
-    for (var i = 0; i < objMain.carGroup.children.length; i++) {
-        if (objMain.carGroup.children[i].type == "Group") {
-            for (var j = 0; j < objMain.carGroup.children[i].children.length; j++) {
-                var intersection = objMain.raycaster.intersectObject(objMain.carGroup.children[i].children[j]);
-                if (intersection.length > 0) {
-                    var carName = objMain.carGroup.children[i].name;
-                    var indexKey = carName.split('_')[1];
-                    if (objMain.othersBasePoint[indexKey]) {
-                        $.notify('这是【' + objMain.othersBasePoint[indexKey].playerName + '】的车', 'msg');
-                        return;
-                    }
-                }
-            }
-        }
-    }
+    //for (var i = 0; i < objMain.carGroup.children.length; i++) {
+    //    //if (objMain.carGroup.children[i].type == "Group") {
+    //    //    for (var j = 0; j < objMain.carGroup.children[i].children.length; j++) {
+    //    //        var intersection = objMain.raycaster.intersectObject(objMain.carGroup.children[i].children[j]);
+    //    //        if (intersection.length > 0) {
+    //    //            var carName = objMain.carGroup.children[i].name;
+    //    //            var indexKey = carName.split('_')[1];
+    //    //            if (objMain.othersBasePoint[indexKey]) {
+    //    //                $.notify('这是【' + objMain.othersBasePoint[indexKey].playerName + '】的车', 'msg');
+    //    //                return;
+    //    //            }
+    //    //        }
+    //    //    }
+    //    //}
+    //}
 
 
 }

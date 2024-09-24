@@ -17,6 +17,7 @@ namespace ModelBase.Data
         public string BitcoinAddr { get; set; }
         public bool CanGetScore { get; set; }
         public string fPName { get; set; }
+        public double ObjInSceneRotation { get; set; }
         public string lineStr
         {
             get

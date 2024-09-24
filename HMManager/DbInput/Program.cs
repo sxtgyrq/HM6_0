@@ -15,8 +15,11 @@ namespace DbInput
                     $"选择All，查询\r\n" +
                     $"选择 UPDATELINECOMMAND ，补充绘制\r\n" +
                     $"选择 CONNECT ，连接线路\r\n" +
-                    $"选择 CALPATH ，GPU计算线路\r\n"+
-                    $"选择 READPATHRESULT ，读取路径");
+                    $"选择 CALPATH ，GPU计算线路\r\n" +
+                    $"选择 READPATHRESULT ，读取路径\r\n" +
+                    $"选择 CALCULATEFP ，数据库内容读取成文件\r\n" +
+                    $"选择 DRAW ，Google Earth可视化\r\n"
+                    );
                 var switchChacter = Console.ReadLine();
                 var regex = new Regex("^[A-Z]{10}$");
                 if (switchChacter == null)
@@ -53,10 +56,10 @@ namespace DbInput
                         {
                             ConnectTwoPoint();
                         }; break;
-                    case "CALCULATE":
+                    case "CALCULATEFP":
                         {
                             Shop.CalculateFP();
-                            Tunnel.CalculatePath();
+                            // Tunnel.CalculatePath();
                         }; break;
                     case "CHECKALLCANCONNECT":
                         {

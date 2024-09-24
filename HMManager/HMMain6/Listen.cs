@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Hosting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
@@ -16,8 +17,61 @@ namespace HMMain6
         }
         private static string DealWith(string notifyJson, int port)
         {
+            Console.WriteLine(notifyJson);
+            CommonClass.Command c = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.Command>(notifyJson);
+            return DealWithInterfaceAndObj(Program.rm, c, notifyJson);
 
             return "";
+        }
+        static string DealWithInterfaceAndObj(interfaceOfHM.ListenInterface objI, CommonClass.Command c, string notifyJson)
+        {
+            /*
+        * 这些方法，中间禁止线程暂停，即Thread.sleep()
+        */
+            string outPut = "haveNothingToReturn";
+            switch (c.c)
+            {
+                case "PlayerAdd_V2":
+                    {
+                        CommonClass.PlayerAdd_V2 addItem = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.PlayerAdd_V2>(notifyJson);
+                        var result = objI.AddPlayer(addItem, Program.rm, Program.dt);
+                        outPut = result;
+
+                    }; break;
+                case "GetPosition":
+                    {
+                        CommonClass.GetPosition getPosition = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.GetPosition>(notifyJson);
+                        //string fromUrl; 
+                        var GPResult = objI.GetPosition(getPosition);
+                        if (GPResult.Success)
+                        {
+                            CommonClass.GetPositionNotify_v2 notify = new CommonClass.GetPositionNotify_v2()
+                            {
+                                c = "GetPositionNotify_v2",
+                                fp = GPResult.Fp,
+                                WebSocketID = GPResult.WebSocketID,
+                                key = getPosition.Key,
+                                PlayerName = GPResult.PlayerName,
+                                positionInStation = GPResult.positionInStation,
+                                fPIndex = GPResult.fPIndex,
+                                AsynSend = false, //这里之所以要同步发送，是因为刷新的时候不报错！,
+                                groupNumber = GPResult.groupNumber,
+                            };
+
+                            Startup.sendSingleMsg(GPResult.FromUrl, Newtonsoft.Json.JsonConvert.SerializeObject(notify));
+                            var notifyMsgs = GPResult.NotifyMsgs; 
+                            Startup.sendSeveralMsgs(notifyMsgs);
+                        }
+                        outPut = "ok";
+                    }; break;
+                case "PlayerCheck": 
+                    {
+                        CommonClass.PlayerCheck checkItem = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.PlayerCheck>(notifyJson);
+                        var result = objI.UpdatePlayer(checkItem);
+                        outPut = result;
+                    };break;
+            }
+            return outPut;
         }
     }
 }

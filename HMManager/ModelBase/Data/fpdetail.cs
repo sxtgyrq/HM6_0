@@ -12,6 +12,9 @@ namespace ModelBase.Data
         public string FPCode { get; set; }
         public int Height { get; set; }
         public bool CanGetScore { get; set; }
-
+        /// <summary>
+        /// 单位是弧度，不是角度，这样可以直接在Three.js中不经变换直接使用。
+        /// </summary>
+        public double ObjInSceneRotation { get; set; }
     }
 }
