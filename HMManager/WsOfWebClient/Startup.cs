@@ -85,6 +85,7 @@ namespace WsOfWebClient
              */
             app.Map("/objdata", ObjData);
             app.Map("/pic", PicData);
+            app.Map("/coredata", ObjCore);
             //app.Map("/douyindata", douyindata);
             //app.Map("/roaddata", roaddata);//此接口只对调试时开放
             //roaddata
@@ -201,6 +202,24 @@ namespace WsOfWebClient
                                     {
                                         //Consoe.WriteLine("错误的状态");
                                         return;
+                                    }
+                                }; break;
+                            case "Exit":
+                                {
+                                    if (s.Ls == LoginState.OnLine)
+                                    {
+                                        var success = Room.ExitF(ref s, connectInfoDetail);
+                                        if (success)
+                                        {
+
+                                            var ws = ConnectInfo.connectedWs[s.WebsocketID];
+                                            ConnectInfo.connectedWs.Remove(s.WebsocketID);
+                                            ConnectInfo.webSocketID++;
+
+
+                                            s.WebsocketID = ConnectInfo.webSocketID;
+                                            addWs(ws.ws, s.WebsocketID);
+                                        }
                                     }
                                 }; break;
                         }
@@ -610,6 +629,14 @@ namespace WsOfWebClient
                                                 }
                                             }
                                         }; break;
+                                    case "WebSelect":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                            {
+                                                WebSelect ws = Newtonsoft.Json.JsonConvert.DeserializeObject<WebSelect>(returnResult.result);
+                                                Room.WebSelect(s, ws);
+                                            }
+                                        }; break;
                                     //case "Ability":
                                     //    {
                                     //        if (s.Ls == LoginState.OnLine)
@@ -631,7 +658,7 @@ namespace WsOfWebClient
                                             if (s.Ls == LoginState.OnLine)
                                             {
                                                 Donate donate = Newtonsoft.Json.JsonConvert.DeserializeObject<Donate>(returnResult.result);
-                                                // Room.Donate(s, donate);
+                                                Room.Donate(s, donate);
                                             }
                                         }; break;
                                     case "GetSubsidize":
@@ -639,7 +666,7 @@ namespace WsOfWebClient
                                             if (s.Ls == LoginState.OnLine)
                                             {
                                                 GetSubsidize getSubsidize = Newtonsoft.Json.JsonConvert.DeserializeObject<GetSubsidize>(returnResult.result);
-                                                //   Room.GetSubsidize(s, getSubsidize);
+                                                Room.GetSubsidize(s, getSubsidize);
                                             }
                                         }; break;
                                     case "OrderToSubsidize":
@@ -1301,14 +1328,14 @@ namespace WsOfWebClient
                     if (pathValue == "/Drone.obj")
                     {
                         context.Response.ContentType = "text/plain";
-                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple1.obj");
+                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple2.obj");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
 
                     }
                     else if (pathValue == "/Drone.mtl")
                     {
                         context.Response.ContentType = "text/plain";
-                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple1.mtl");
+                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple2.mtl");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
                     }
 
@@ -1406,6 +1433,45 @@ namespace WsOfWebClient
                     //        }
                     //    }
                     //}
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+        internal static void ObjCore(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/core.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\W202410\\core\\core003.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/core.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\W202410\\core\\core003.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/px.jpg")
+                    {
+                        context.Response.ContentType = "image/jpeg";
+                        var bytes = File.ReadAllBytes("E:\\DB\\bgImg\\RUDCSSPVVX\\h0\\px.jpg");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
                 }
                 catch (Exception e)
                 {

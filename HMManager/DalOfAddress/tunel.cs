@@ -410,7 +410,7 @@ namespace DalOfAddress
             var sQL = @"SELECT
 	B.lon AS StartLon,B.lat AS StartLat,A.HeightFrom+B.baseHeight AS StartHeight,B.baseHeight AS StartBaseHeight,
 	C.lon AS EndLon,C.lat AS EndLat,A.HeightTo+C.baseHeight AS EndHeight,C.baseHeight AS EndBaseHeight,
-	A.Speed,A.FPCodeFrom,A.FPCodeTo
+	A.Speed,A.FPCodeFrom,A.FPCodeTo,A.IsRegionTransfer
 	
 FROM
 	tunel A
@@ -442,6 +442,7 @@ WHERE
                                     FPCodeFrom = Convert.ToString(reader["FPCodeFrom"]).Trim(),
                                     FPCodeTo = Convert.ToString(reader["FPCodeTo"]).Trim(),
                                     Speed = Convert.ToInt32(reader["Speed"]),
+                                    IsRegionTransfer = Convert.ToInt32(reader["IsRegionTransfer"]) > 0,
                                 });
                             }
                         }

@@ -896,6 +896,7 @@ namespace HMMain6
         /// </summary>
         public Dictionary<string, int> PromoteState { get; set; }
         public string FromUrl { get; internal set; }
+
         public int WebSocketID { get; internal set; }
 
         public void GetUrlAndWebsocket(out string fromUrl, out int websocketID)

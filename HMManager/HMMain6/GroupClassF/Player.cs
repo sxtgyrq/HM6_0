@@ -257,7 +257,7 @@ namespace HMMain6.GroupClassF
                     };
                 ((Player)this._PlayerInGroup[addItem.Key]).GetConnectionF = that.GetConnectionF;
                 ((Player)this._PlayerInGroup[addItem.Key]).playerSelectDirectionTh = null;
-                //  ((Player)this._PlayerInGroup[addItem.Key]).nntl = that.NoNeedToLogin;
+                ((Player)this._PlayerInGroup[addItem.Key]).nntl = that.NoNeedToLogin;
                 // ((Player)this._PlayerInGroup[addItem.Key]).hntts = that.HasNewTaskToShow;
                 ((Player)this._PlayerInGroup[addItem.Key]).CollectMoney = 0;
                 ((Player)this._PlayerInGroup[addItem.Key]).SelectCount = 0;

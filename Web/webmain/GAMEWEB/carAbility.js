@@ -77,7 +77,7 @@
         ctx.fillStyle = "#800000";
         ctx.fillRect(0, 0, 140, 20);
         ctx.fillStyle = "#FF0000";
-        var percentMile = this.data[carIndexStr].mile.costValue / this.data[carIndexStr].mile.sumValue;
+        var percentMile = (this.data[carIndexStr].mile.sumValue - this.data[carIndexStr].mile.costValue) / this.data[carIndexStr].mile.sumValue;
         percentMile = Math.min(1, percentMile);
         ctx.fillRect(0, 0, percentMile * 140, 20);
 

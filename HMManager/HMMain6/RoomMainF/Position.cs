@@ -1,12 +1,15 @@
 ﻿using CommonClass;
 using HMMain6.GroupClassF;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using ModelBase.Data;
+using NBitcoin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static CommonClass.ExitObj;
 
 namespace HMMain6.RoomMainF
 {
@@ -331,9 +334,66 @@ namespace HMMain6.RoomMainF
             throw new NotImplementedException();
         }
 
-        string interfaceOfHM.ListenInterface.ExitF(ExitObj obj)
+        public string ExitF(ExitObj obj)
         {
-            throw new NotImplementedException();
+            {
+                if (this._Groups.ContainsKey(obj.GroupKey))
+                {
+                    var group = this._Groups[obj.GroupKey];
+                    if (group._PlayerInGroup.ContainsKey(obj.Key))
+                    {
+                        var role = group._PlayerInGroup[obj.Key];
+                        if (role.playerType == Player.PlayerType.player)
+                        {
+                            var player = (Player)role;
+                            var car = player.getCar();
+                            if (string.IsNullOrEmpty(player.BTCAddress))
+                            {
+                                ExitObjResult r = new ExitObjResult()
+                                {
+                                    Success = false,
+                                };
+                                this.WebNotify(player, "您还没有登录！");
+                                return Newtonsoft.Json.JsonConvert.SerializeObject(r);
+                            }
+                            else if (player.MoneyForSave > 0)
+                            {
+                                ExitObjResult r = new ExitObjResult()
+                                {
+                                    Success = false,
+                                };
+                                this.WebNotify(player, "你的积分还没有存储！");
+                                return Newtonsoft.Json.JsonConvert.SerializeObject(r);
+                            }
+                            //else if (car.ability.HasDiamond())
+                            //{
+                            //    ExitObjResult r = new ExitObjResult()
+                            //    {
+                            //        Success = false,
+                            //    };
+                            //    this.WebNotify(player, "还有宝石没有释放！");
+                            //    return Newtonsoft.Json.JsonConvert.SerializeObject(r);
+                            //}
+                            else
+                            {
+                                ExitObjResult r = new ExitObjResult()
+                                {
+                                    Success = true,
+                                };
+                                return Newtonsoft.Json.JsonConvert.SerializeObject(r);
+                            }
+                        }
+                    }
+                }
+
+            }
+            {
+                ExitObjResult r = new ExitObjResult()
+                {
+                    Success = false,
+                };
+                return Newtonsoft.Json.JsonConvert.SerializeObject(r);
+            }
         }
 
         string interfaceOfHM.ModelTranstractionI.GetAddrFromAndToWhenGenerateAgreementBetweenTwo(GAFATWGABT gaobj)
@@ -520,10 +580,7 @@ namespace HMMain6.RoomMainF
 
         }
 
-        private void UpdateSelection(string key, string groupKey, GetRandomPos getRandomPosObj, ref List<string> notifyMsgs)
-        {
-            // throw new NotImplementedException();
-        }
+
 
         string interfaceOfHM.Resistance.GetResistance(GetResistanceObj r)
         {
@@ -545,20 +602,14 @@ namespace HMMain6.RoomMainF
             throw new NotImplementedException();
         }
 
-        void interfaceOfHM.ListenInterface.OrderToSubsidize(OrderToSubsidize ots)
-        {
-            throw new NotImplementedException();
-        }
+
 
         void interfaceOfHM.ListenInterface.SaveInFileF(SaveInFile sif)
         {
             throw new NotImplementedException();
         }
 
-        string interfaceOfHM.ListenInterface.SaveMoney(SaveMoney saveMoney)
-        {
-            throw new NotImplementedException();
-        }
+
 
         void interfaceOfHM.ListenInterface.SendMsg(DialogMsg dm)
         {
@@ -610,6 +661,30 @@ namespace HMMain6.RoomMainF
         string interfaceOfHM.ListenInterface.updateView(View v)
         {
             throw new NotImplementedException();
+        }
+
+        public string UpdateCurrentPosition(WebSelectPassData wspd, GetRandomPos grp)
+        {
+            if (this._Groups.ContainsKey(wspd.GroupKey))
+            {
+                List<string> notifyMsg = new List<string>();
+                var group = this._Groups[wspd.GroupKey];
+                if (group._PlayerInGroup.ContainsKey(wspd.Key))
+                {
+                    var player = group._PlayerInGroup[wspd.Key];
+                    player.ActiveTime = DateTime.Now;
+                    var success = group.UpdateCurrentPosition(player, grp, wspd, ref notifyMsg);
+                    if (success)
+                    {
+                        UpdateBackground(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdateSelection(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                    }
+                    GetBackground(player, ref notifyMsg);
+                }
+                Startup.sendSeveralMsgs(notifyMsg);
+            }
+            return "";
+            // throw new NotImplementedException();
         }
     }
 

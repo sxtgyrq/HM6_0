@@ -560,6 +560,22 @@ namespace CommonClass
         public FPPosition fp { get; set; }
     }
 
+    public class BradCastSelections : CommandNotify
+    {
+        public string path { get; set; }
+        public FPPosition fp { get; set; }
+        public List<FPItem> selections { get; set; }
+
+        public class FPItem
+        {
+            public int x { get; set; }
+            public int y { get; set; }
+            public int z { get; set; }
+            public string c { get; set; }
+            public int h { get; set; }
+        }
+    }
+
     public class PlayerAdd : Command
     {
         public string Key { get; set; }
@@ -1385,5 +1401,13 @@ namespace CommonClass
             public string addrFrom { get; set; }
             public string addrTo { get; set; }
         }
+    }
+
+    public class WebSelectPassData : CommonClass.Command 
+    {
+        public string Key { get; set; }
+        public string GroupKey { get; set; }
+        public string code { get; set; }
+        public int height { get; set; }
     }
 }

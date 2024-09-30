@@ -30,5 +30,7 @@ namespace ModelBase.Data
             }
         }
         public string Detail { get { return $"{SegCode}_{Speed}"; } }
+
+        public bool IsRegionTransfer { get; set; }
     }
 }

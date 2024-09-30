@@ -33,11 +33,14 @@ namespace HMMain6
 
         // Data.UserSDouyinGroup GetDouyinNameByFpID(string fastenPositionID, ref Random rm);
         string getMusic(string fastenPositionID);
+        List<int> GetSelections(int index);
+        List<int> GetEnegy(int targetFpIndex);
     }
     public partial class Data
     {
         List<ModelBase.Data.FPPosition> _allFp;
         Dictionary<int, List<int>> map;
+        Dictionary<int, List<int>> enegy;
         internal void LoadFPAndMap()
         {
             // throw new NotImplementedException();
@@ -46,6 +49,22 @@ namespace HMMain6
             this._allFp = GetAllFp(fpDictionary);
 
             this.map = GetAllConnection(fpDictionary);
+            this.enegy = GetAllEnegy(fpDictionary);
+
+        }
+
+        private Dictionary<int, List<int>> GetAllEnegy(string fpDictionary)
+        {
+            var path = $"{fpDictionary}enegyData.json";
+            if (File.Exists(path))
+            {
+                var content = File.ReadAllText(path);
+                return Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, List<int>>>(content);
+            }
+            else
+            {
+                throw new Exception($"不存在文件{path}");
+            }
         }
 
         private Dictionary<int, List<int>> GetAllConnection(string fpDictionary)
@@ -93,6 +112,8 @@ namespace HMMain6
             throw new NotImplementedException();
         }
 
+        
+
         public FPPosition GetFpByIndex(int indexValule)
         {
             while (indexValule < 0)
@@ -112,6 +133,17 @@ namespace HMMain6
         {
             return "";
             //throw new NotImplementedException();
+        }
+
+        public List<int> GetSelections(int index)
+        {
+            return this.map[index];
+            //  throw new NotImplementedException();
+        }
+        public List<int> GetEnegy(int index)
+        {
+            return this.enegy[index];
+            //  throw new NotImplementedException();
         }
     }
 }

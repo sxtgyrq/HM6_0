@@ -295,5 +295,32 @@ namespace HMMain6.RoomMainF
                 return "ng";
             }
         }
+
+        internal void ClearPlayers()
+        {
+            //  lock (this.PlayerLock)
+            {
+                List<string> keysNeedToClear = new List<string>();
+                foreach (var item in this._Groups)
+                {
+                    var group = item.Value;
+                    if (group.ActiveTime.AddHours(1) < DateTime.Now)
+                    {
+                        keysNeedToClear.Add(item.Key);
+                    }
+                }
+                for (int i = 0; i < keysNeedToClear.Count; i++)
+                {
+                    var key = keysNeedToClear[i];
+                    var group = this._Groups[key];
+                    //  lock (group.PlayerLock_)
+                    {
+                        group.Clear();
+                    }
+                    group = null;
+                    this._Groups.Remove(key);
+                }
+            }
+        }
     }
 }

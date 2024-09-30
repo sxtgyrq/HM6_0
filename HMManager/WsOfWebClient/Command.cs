@@ -164,6 +164,11 @@ namespace WsOfWebClient
     {
         //public string car { get; set; }
     }
+    public class WebSelect : CommonClass.Command
+    {
+        public string code { get; set; }
+        public int height { get; set; }
+    }
 
     public class Donate : CommonClass.Command
     {

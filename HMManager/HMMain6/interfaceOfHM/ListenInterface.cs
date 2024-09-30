@@ -129,7 +129,7 @@ namespace HMMain6.interfaceOfHM
 
 
         string GetRoadMeshF(GetRoadMesh tbm);
-
+        string UpdateCurrentPosition(WebSelectPassData wspd, GetRandomPos grp);
     }
 
     interface MapEditor

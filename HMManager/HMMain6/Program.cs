@@ -1,4 +1,5 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace HMMain6
 {
@@ -20,6 +21,7 @@ namespace HMMain6
 
             Console.WriteLine(@"
 --------- main --运行主程序  
+--------- updateImageAndModel --运行主程序  
 ");
             var select = Console.ReadLine();
 
@@ -28,14 +30,22 @@ namespace HMMain6
                 case "":
                 case "MAIN":
                     {
+
                         ServerMain();
                     }; break;
+                case "UPDATEIMAGEANDMODEL":
+                    {
+                        UpdateImageAndModel.updateImageAndModel();
+                    }; break;
+
 
             }
 
 
 
         }
+
+
 
         private static void ServerMain()
         {
@@ -93,6 +103,24 @@ namespace HMMain6
             //Thread startMonitorTcpServer = new Thread(() => Listen.IpAndPortMonitor(ip, 30000 - tcpPort));
             //startMonitorTcpServer.Start();
 
+            Thread th = new Thread(() => PlayersSysOperate(Program.dt));
+            th.Start();
+
+        }
+
+
+        private static void PlayersSysOperate(GetRandomPos grp)
+        {
+            while (true)
+            {
+
+                // Program.rm.SetReturn(grp);
+                Program.rm.ClearPlayers();
+                // Program.rm.SetNPC();
+                Thread.Sleep(30 * 1000);
+
+            }
+            //  throw new NotImplementedException();
         }
     }
 }

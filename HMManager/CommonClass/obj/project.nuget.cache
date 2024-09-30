@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "dJC4XjrgEwwmW54NcwHswgrXmPTf1SRvnVzIvTrb+pqBuK0ZoIModAhTYc9oALVAPQpcuc9+0t+S1J9ZCOsNDw==",
+  "dgSpecHash": "nO9L+1SbbOkg1i6fba82puV/OwkPCMbL68LPebQZ2OonOFij9sMhu0onmQeqPLdt3p4T0k0vaoQ1smy99y9vOw==",
   "success": true,
   "projectFilePath": "E:\\Project\\HM_6\\HMManager\\CommonClass\\CommonClass.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\sxtgy\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\8.0.0\\microsoft.netcore.app.runtime.win-x64.8.0.0.nupkg.sha512",
+    "C:\\Users\\sxtgy\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\8.0.0\\microsoft.windowsdesktop.app.runtime.win-x64.8.0.0.nupkg.sha512",
+    "C:\\Users\\sxtgy\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\8.0.0\\microsoft.aspnetcore.app.runtime.win-x64.8.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -26,6 +26,8 @@ namespace HMMain6.RoomMainF
 
         }
 
+       
+
         private BradCastBackground GetBackgroundInfomation(int webSocketID, ModelBase.Data.FPPosition fp)
         {
             var obj = new BradCastBackground
@@ -45,8 +47,7 @@ namespace HMMain6.RoomMainF
                 {
                     var player = group._PlayerInGroup[key];
                     GetBackground(player, ref notifyMsg);
-
-                } 
+                }
             }
         }
     }

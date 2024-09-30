@@ -95,6 +95,40 @@ namespace WsOfWebClient
                 return false;
         }
 
+        internal static string Donate(State s, Donate donate)
+        {
+            var sm = new SaveMoney()
+            {
+                c = "SaveMoney",
+                Key = s.Key,
+                address = donate.address,
+                dType = donate.dType,
+                GroupKey = s.GroupKey,
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(sm);
+            Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+            return "";
+        }
+
+        internal static void GetSubsidize(State s, GetSubsidize getSubsidize)
+        {
+            Regex r = new Regex("^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$");
+            if (r.IsMatch(getSubsidize.signature))
+            {
+                var getPosition = new OrderToSubsidize()
+                {
+                    c = "OrderToSubsidize",
+                    Key = s.Key,
+                    address = getSubsidize.address,
+                    signature = getSubsidize.signature,
+                    value = getSubsidize.value,
+                    GroupKey = s.GroupKey,
+                };
+                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(getPosition);
+                Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+            }
+        }
+
         public static State GetRoomThenStart(State s, ConnectInfo.ConnectInfoDetail connectInfoDetail, string playerName, string refererAddr, int groupMemberCount)
         {
             /*
@@ -362,8 +396,15 @@ namespace WsOfWebClient
             State result;
             {
 
-                coinIcon ci = new coinIcon();
+                SetVehicle ci = new SetVehicle();
                 if (SetModelCopy(ci, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
+                SetCubeCore scc = new SetCubeCore();
+                if (SetModelCopy(scc, connectInfoDetail)) { }
                 else
                 {
                     return s;
@@ -500,6 +541,21 @@ namespace WsOfWebClient
             {
                 throw new Exception("逻辑错误！");
             }
+        }
+
+        internal static void WebSelect(State s, WebSelect ws)
+        {
+            WebSelectPassData webSelectPassData = new WebSelectPassData()
+            {
+                c = "WebSelectPassData",
+                code = ws.code,
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+                height = ws.height
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+            var result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+            //  throw new NotImplementedException();
         }
     }
     public class Team
@@ -744,9 +800,13 @@ namespace WsOfWebClient
 
     internal partial class Room
     {
-        class coinIcon : interfaceTag.modelForCopy
+        class SetVehicle : interfaceTag.modelForCopy
         {
             public string Command { get { return "SetVehicle"; } }
+        }
+        class SetCubeCore : interfaceTag.modelForCopy
+        {
+            public string Command { get { return "SetCubeCore"; } }
         }
 
         private static bool SetModelCopy(interfaceTag.modelForCopy mp, ConnectInfo.ConnectInfoDetail connectInfoDetail)
@@ -755,7 +815,7 @@ namespace WsOfWebClient
             {
                 var msg = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
-                    c = mp.Command, 
+                    c = mp.Command,
                 });
                 CommonF.SendData(msg, connectInfoDetail, 0);
                 {

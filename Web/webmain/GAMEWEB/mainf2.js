@@ -100,7 +100,8 @@ var objMain =
         NitrogenEffect: null,
         CollectCoinIcon: null,
         GoldIngotIcon: null,
-        vehicle: null
+        vehicle: null,
+        cubeCore: null
     },
     shieldGroup: null,
     confusePrepareGroup: null,
@@ -737,7 +738,7 @@ var objMain =
 
 
             //objMain.GetPositionNotify.data = null;
-            //SysOperatePanel.draw();
+            SysOperatePanel.draw();
             //currentSelectionPreparationShow.show();
             //operateStateShow.show();
 
@@ -1133,7 +1134,30 @@ var objMain =
                 // objMain.scene.background = objMain.background.backgroundData[r.Md5Key];
             }
         },
-        rotateOthers: function (r) { }
+        rotateOthers: function (r) { },
+        changeWithJson: function (code, height) {
+            var url = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/bgImg/' + code + '_' + height + '.json';
+            $.getJSON(url, function (params) {
+
+                //console.log('p', params);
+                var cubeTextureLoader = new THREE.CubeTextureLoader();
+                //  cubeTextureLoader.setPath(this.path);
+                cubeTextureLoader.load([
+                    "data:image/jpeg;base64," + params.px, "data:image/jpeg;base64," + params.nx,
+                    "data:image/jpeg;base64," + params.py, "data:image/jpeg;base64," + params.ny,
+                    "data:image/jpeg;base64," + params.pz, "data:image/jpeg;base64," + params.nz,
+                ], function (newTexture) {
+                    objMain.scene.background.images[0] = newTexture.images[0]; // px
+                    objMain.scene.background.images[1] = newTexture.images[1]; // nx
+                    objMain.scene.background.images[2] = newTexture.images[2]; // py
+                    objMain.scene.background.images[3] = newTexture.images[3]; // ny
+                    objMain.scene.background.images[4] = newTexture.images[4]; // pz
+                    objMain.scene.background.images[5] = newTexture.images[5]; // nz
+                    objMain.scene.background.needsUpdate = true;
+                    cubeTextureLoader = null;
+                });
+            })
+        }
     },
     rightAndDuty:
     {
@@ -1488,6 +1512,14 @@ var objMain =
                         console.log('objectInput', objectInput);
                         objMain.ws.send('SetVehicle');
                         objMain.ModelInput.vehicle = objectInput;
+                    })
+                }; break;
+            case 'SetCubeCore':
+                {
+                    loadCore(function (objectInput) {
+                        console.log('objectInput', objectInput);
+                        objMain.ws.send('SetCubeCore');
+                        objMain.ModelInput.cubeCore = objectInput;
                     })
                 }; break;
             case 'SetAttackIcon':
@@ -2638,6 +2670,12 @@ var objMain =
             case 'StockCenerOrderDetail.Result':
                 {
                     stocktradecenter.addStockCenterDetail(received_obj);
+                }; break;
+            case 'BradCastSelections':
+                {
+                    console.log('BradCastSelections', received_obj);
+                    drawLineOfSelections(received_obj);
+                    // objMain.targetGroup
                 }; break;
             default:
                 {
@@ -4223,90 +4261,105 @@ var set3DHtml = function () {
     //objMain.labelRenderer.domElement.addEventListener
 
     var operateEnd = function (event) {
-
+        var roadLineSelected = false;
+        var targetSelected = false;
         if (event.clientX != undefined && event.clientX != null) {
             //此处对应鼠标
             objMain.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             objMain.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-            lookInfoForCar();
+            // lookInfoForCar();
+            roadLineSelected = lookInfoForSelect();
+            if (!roadLineSelected) targetSelected = confirmSelect();
         }
         else if (event.changedTouches && event.changedTouches.length > 0) {
             // 获取第一个触摸点。这个对应手机触摸屏。
             var touch = event.changedTouches[0];
             objMain.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
             objMain.mouse.y = - (touch.clientY / window.innerHeight) * 2 + 1;
-            lookInfoForCar();
+            // lookInfoForCar();
+            roadLineSelected = lookInfoForSelect();
+            if (!roadLineSelected) targetSelected = confirmSelect();
         }
 
-
-        operatePanel.refresh();
-
-        if (objMain.directionGroup.visible) {
-            var minAngle = Math.PI / 20;
-            var selectIndex = -1;
-            for (var i = 1; i < objMain.directionGroup.children.length; i++) {
-                // objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrow.oldM;
-                var delta = (objMain.directionGroup.children[i].rotation.y - (objMain.controls.getAzimuthalAngle() + Math.PI / 2) + Math.PI * 4) % (Math.PI * 2);
-                if (delta < minAngle) {
-                    minAngle = delta;
-                    selectIndex = i;
-                }
-                else {
-                    continue;
-                }
-            }
-            if (objMain.selection.isZooming) {
-                objMain.selection.isZooming = false;
-            }
-            else if (selectIndex > 0) {
-                if (objMain.selection.first == selectIndex) {
-                    var rotationY = objMain.directionGroup.children[selectIndex].rotation.y;
-                    if (objMain.directionGroup.children[selectIndex].userData.objState > 0) {
-                    }
-                    else {
-                        var json = JSON.stringify({ c: 'ViewAngle', 'rotationY': rotationY, 'postionCrossKey': objMain.directionGroup.children[selectIndex].userData.postionCrossKey, 'uid': '' });
-                        objMain.ws.send(json);
-                        //userData.objState
-                        objMain.directionGroup.children[selectIndex].userData.objState = 1;
-                        objMain.selection.initialize();
-                        switch (selectIndex) {
-                            case 1: { objMain.jscwObj.play('A'); }; break;
-                            case 2: { objMain.jscwObj.play('B'); }; break;
-                            case 3: { objMain.jscwObj.play('C'); }; break;
-                        }
-                        objMain.targetMusic.change();
-
-                        setTimeout(() => {
-                            objMain.targetMusic.change('pass');
-                        }, 3000);
-                    }
-                }
-                else {
-                    objMain.selection.first = selectIndex;
-                    switch (selectIndex) {
-                        case 1: {
-                            //$.notify('再次点击选择A', 'msg');
-                            currentSelectionPreparationShow.updateFrequency('确认选A');
-                            operateStateShow.update('请再点击');
-                        }; break;
-                        case 2: {
-                            //$.notify('再次点击选择B', 'msg');
-                            currentSelectionPreparationShow.updateFrequency('确认选B');
-                            operateStateShow.update('请再点击');
-                        }; break;
-                        case 3: {
-                            //$.notify('再次点击选择C', 'msg');
-                            currentSelectionPreparationShow.updateFrequency('确认选C');
-                            operateStateShow.update('请再点击');
-                        }; break;
-                    }
-
-                }
-
-                operatePanel.refresh();
-                onWindowResize();
-            }
+        if (roadLineSelected) { }
+        else {
+            objMain.mainF.removeF.clearGroup(objMain.targetGroup);
         }
+
+        //operatePanel.refresh();
+
+        //if (objMain.directionGroup.visible) {
+
+
+        //    for (var i = 0; i < objMain.roadGroup.children; i++) {
+
+        //    }
+
+        //    //var minAngle = Math.PI / 20;
+        //    //var selectIndex = -1;
+        //    //for (var i = 1; i < objMain.directionGroup.children.length; i++) {
+        //    //    // objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrow.oldM;
+        //    //    var delta = (objMain.directionGroup.children[i].rotation.y - (objMain.controls.getAzimuthalAngle() + Math.PI / 2) + Math.PI * 4) % (Math.PI * 2);
+        //    //    if (delta < minAngle) {
+        //    //        minAngle = delta;
+        //    //        selectIndex = i;
+        //    //    }
+        //    //    else {
+        //    //        continue;
+        //    //    }
+        //    //}
+        //    //if (objMain.selection.isZooming) {
+        //    //    objMain.selection.isZooming = false;
+        //    //}
+        //    //else if (selectIndex > 0) {
+        //    //    if (objMain.selection.first == selectIndex) {
+        //    //        var rotationY = objMain.directionGroup.children[selectIndex].rotation.y;
+        //    //        if (objMain.directionGroup.children[selectIndex].userData.objState > 0) {
+        //    //        }
+        //    //        else {
+        //    //            var json = JSON.stringify({ c: 'ViewAngle', 'rotationY': rotationY, 'postionCrossKey': objMain.directionGroup.children[selectIndex].userData.postionCrossKey, 'uid': '' });
+        //    //            objMain.ws.send(json);
+        //    //            //userData.objState
+        //    //            objMain.directionGroup.children[selectIndex].userData.objState = 1;
+        //    //            objMain.selection.initialize();
+        //    //            switch (selectIndex) {
+        //    //                case 1: { objMain.jscwObj.play('A'); }; break;
+        //    //                case 2: { objMain.jscwObj.play('B'); }; break;
+        //    //                case 3: { objMain.jscwObj.play('C'); }; break;
+        //    //            }
+        //    //            objMain.targetMusic.change();
+
+        //    //            setTimeout(() => {
+        //    //                objMain.targetMusic.change('pass');
+        //    //            }, 3000);
+        //    //        }
+        //    //    }
+        //    //    else {
+        //    //        objMain.selection.first = selectIndex;
+        //    //        switch (selectIndex) {
+        //    //            case 1: {
+        //    //                //$.notify('再次点击选择A', 'msg');
+        //    //                currentSelectionPreparationShow.updateFrequency('确认选A');
+        //    //                operateStateShow.update('请再点击');
+        //    //            }; break;
+        //    //            case 2: {
+        //    //                //$.notify('再次点击选择B', 'msg');
+        //    //                currentSelectionPreparationShow.updateFrequency('确认选B');
+        //    //                operateStateShow.update('请再点击');
+        //    //            }; break;
+        //    //            case 3: {
+        //    //                //$.notify('再次点击选择C', 'msg');
+        //    //                currentSelectionPreparationShow.updateFrequency('确认选C');
+        //    //                operateStateShow.update('请再点击');
+        //    //            }; break;
+        //    //        }
+
+        //    //    }
+
+        //    //    operatePanel.refresh();
+        //    //    onWindowResize();
+        //    //}
+        //}
         //objMain.ws
         return;
     }
@@ -7314,6 +7367,40 @@ var lookInfoForCar = function () {
     //}
 
 
+}
+var lookInfoForSelect = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    for (var i = 0; i < objMain.roadGroup.children.length; i++) {
+        var intersection = objMain.raycaster.intersectObject(objMain.roadGroup.children[i]);
+        if (intersection.length > 0) {
+            //alert('点击了无人机航线');
+            drawCoreObj(objMain.roadGroup.children[i].userData);
+            return true;
+        }
+    }
+    return false;
+}
+
+var confirmSelect = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.targetGroup.children.length; i++) {
+        var itemGroup = objMain.targetGroup.children[i];
+        for (var j = 0; j < itemGroup.children.length; j++) {
+            var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
+            if (intersection.length > 0) {
+                alert('点击了视角求');
+                //drawCoreObj(objMain.roadGroup.children[i].userData);
+                var userData = objMain.targetGroup.children[i].userData;
+                var objPass = { c: 'WebSelect', code: userData.c, height: userData.h };
+                objMain.ws.send(JSON.stringify(objPass));
+                console.log('obj', JSON.stringify(objPass));
+                return true;
+            }
+        }
+
+    }
+    return false;
 }
 //////////
 /*

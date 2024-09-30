@@ -12,6 +12,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+		<ProjectReference Include="..\Aliyun\Aliyun.csproj" />
 		<ProjectReference Include="..\BitCoin\BitCoin.csproj" />
 		<ProjectReference Include="..\DalOfAddress\DalOfAddress.csproj" />
 		<ProjectReference Include="..\TcpFunction\TcpFunction.csproj" /> 

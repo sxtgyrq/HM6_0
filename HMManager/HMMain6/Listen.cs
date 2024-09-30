@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using CommonClass;
+using Microsoft.AspNetCore.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,17 +60,43 @@ namespace HMMain6
                             };
 
                             Startup.sendSingleMsg(GPResult.FromUrl, Newtonsoft.Json.JsonConvert.SerializeObject(notify));
-                            var notifyMsgs = GPResult.NotifyMsgs; 
+                            var notifyMsgs = GPResult.NotifyMsgs;
                             Startup.sendSeveralMsgs(notifyMsgs);
                         }
                         outPut = "ok";
                     }; break;
-                case "PlayerCheck": 
+                case "PlayerCheck":
                     {
                         CommonClass.PlayerCheck checkItem = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.PlayerCheck>(notifyJson);
                         var result = objI.UpdatePlayer(checkItem);
                         outPut = result;
-                    };break;
+                    }; break;
+                case "WebSelectPassData":
+                    {
+                        CommonClass.WebSelectPassData wspd = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.WebSelectPassData>(notifyJson);
+                        var result = objI.UpdateCurrentPosition(wspd, Program.dt);
+                        outPut = result;
+                    }; break;
+                case "ExitObj":
+                    {
+                        ExitObj obj = Newtonsoft.Json.JsonConvert.DeserializeObject<ExitObj>(notifyJson);
+                        outPut = objI.ExitF(obj);
+                    }; break;
+                case "OrderToSubsidize":
+                    {
+                        /*
+                         * 这里意味着登录与获取积分！
+                         */
+                        CommonClass.OrderToSubsidize ots = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.OrderToSubsidize>(notifyJson);
+                        objI.OrderToSubsidize(ots);
+                        outPut = "ok";
+                    }; break;
+                case "SaveMoney":
+                    {
+                        CommonClass.SaveMoney saveMoney = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.SaveMoney>(notifyJson);
+                        objI.SaveMoney(saveMoney);
+                        outPut = "ok";
+                    }; break;
             }
             return outPut;
         }

@@ -10,7 +10,7 @@ namespace CommonClass
     {
         public class getLengthOfTwoPoint
         {
-            private const double EARTH_RADIUS = 6371393;
+            public const double EARTH_RADIUS = 6371393;
             private static double rad(double d)
             {
                 return d * Math.PI / 180.0;

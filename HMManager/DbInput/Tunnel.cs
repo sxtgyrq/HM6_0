@@ -1,5 +1,6 @@
 ﻿
 using SharpKml.Dom;
+using static CommonClass.ResistanceDisplay_V3;
 
 namespace DbInput
 {
@@ -69,8 +70,16 @@ namespace DbInput
                     {
                         var item = items[j];
                         var l = CommonClass.Geography.getLengthOfTwoPoint.GetDistance(item.StartLat, item.StartLon, item.StartHeight, item.EndLat, item.EndLon, item.EndHeight);
-                        var time = Convert.ToInt32(l / 1000 / item.Speed * 3600);
+
+                        int time;
+                        if (item.IsRegionTransfer)
+                        {
+                            time = 1;
+                        }
+                        else
+                            time = Convert.ToInt32(l / 1000 / item.Speed * 3600);
                         if (time < 1) time = 1;
+
                         costTime.Add(time);
                     }
                 }
@@ -103,12 +112,23 @@ namespace DbInput
             File.WriteAllText("resultOrder.json", json);
 
         }
-
+        public static int GetCostTime(ModelBase.Data.Segment item)
+        {
+            var length = CommonClass.Geography.getLengthOfTwoPoint.GetDistance(item.StartLat, item.StartLon, item.StartHeight, item.EndLat, item.EndLon, item.EndHeight);
+            int time;
+            if (item.IsRegionTransfer)
+            {
+                time = 1;
+            }
+            else
+                time = Convert.ToInt32(length / 1000 / item.Speed * 3600);
+            if (time < 1) time = 1;
+            return time;
+        }
         internal static void ReadResult()
         {
             // throw new NotImplementedException();
             var fpItems = DalOfAddress.FP.GetAll();
-
             int? startIndex = null, endIndex = null;
             var json = File.ReadAllText("resultOrder.json");
             if (json != null)

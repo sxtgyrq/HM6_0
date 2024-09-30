@@ -180,9 +180,9 @@ namespace HMMain6
 
         DateTime CreateTime { get; set; }
 
-        long _costMiles = 0;
+        long _costMiles = 3599;
         /// <summary>
-        /// 已经花费的里程！
+        /// 已经花费的能量！这里暂时用历程替代。
         /// </summary>
         public long costMiles
         {
@@ -401,7 +401,7 @@ namespace HMMain6
         {
             get
             {
-                var selfValue = this.role.Group.groupAbility["mile"] * 8 + this.Data["mile"].Count * 40 + 200;
+                var selfValue = this.role.Group.groupAbility["mile"] * 80 + this.Data["mile"].Count * 400 + 3600;
                 return selfValue;
             }
         }

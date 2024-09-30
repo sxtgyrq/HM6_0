@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static CommonClass.ResistanceDisplay_V3;
 
 namespace DbInput
 {
@@ -109,6 +110,7 @@ namespace DbInput
         static void CalculateFPStep_Connect(Dictionary<string, int> dicOfFP)
         {
             Dictionary<int, List<int>> connections = new Dictionary<int, List<int>>();
+            Dictionary<int, List<int>> costEnegy = new Dictionary<int, List<int>>();
             var items = DalOfAddress.Tunel.GetAll();
 
             for (var i = 0; i < items.Count; i++)
@@ -121,14 +123,29 @@ namespace DbInput
                 {
                     var listOfEnd = new List<int>();
                     connections.Add(dicOfFP[startKey], listOfEnd);
+                    var listOfEnegy = new List<int>();
+                    costEnegy.Add(dicOfFP[startKey], listOfEnegy);
                 }
                 connections[dicOfFP[startKey]].Add(dicOfFP[endKey]);
-            }
-            var path = $"E:\\DB\\DBPublish\\connectionsData.json";
-            var text = Newtonsoft.Json.JsonConvert.SerializeObject(connections);
-            File.WriteAllText(path, text);
-        }
 
+                var enegyCost = GetEnegy(item);
+                costEnegy[dicOfFP[startKey]].Add(enegyCost);
+            }
+            {
+                var path = $"E:\\DB\\DBPublish\\connectionsData.json";
+                var text = Newtonsoft.Json.JsonConvert.SerializeObject(connections);
+                File.WriteAllText(path, text);
+            }
+            {
+                var path = $"E:\\DB\\DBPublish\\enegyData.json";
+                var text = Newtonsoft.Json.JsonConvert.SerializeObject(costEnegy);
+                File.WriteAllText(path, text);
+            }
+        }
+        static int GetEnegy(Segment item)
+        {
+            return Tunnel.GetCostTime(item);
+        }
 
         internal static void CheckAllConnected()
         {
