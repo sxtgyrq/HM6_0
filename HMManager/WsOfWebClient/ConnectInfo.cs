@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,7 @@ namespace WsOfWebClient
     public static class ConnectInfo
     {
         public static string HostIP { get; set; }
-        public static int webSocketID = 0;
+        public static int webSocketID = (Math.Abs(DateTime.Now.GetHashCode())) % 10000000;
         public static object connectedWs_LockObj = new object();
         public class ConnectInfoDetail
         {

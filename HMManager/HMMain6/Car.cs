@@ -449,6 +449,28 @@ namespace HMMain6
                 }
             }
         }
+
+        internal void Charge(ref List<string> notifyMsg)
+        {
+            var m = this.ability.mile;
+            
+            role.ActiveTime= DateTime.Now;
+            this.role.Group.costEnegy += this.ability.costMiles;
+            this.ability.setCostMiles(0, this.role, this, ref notifyMsg);
+
+
+
+            if (this.ability.costVolume > 0)
+            {
+                this.ability.setCostBusiness(
+                   Math.Min(this.ability.costBusiness + this.ability.costVolume, this.ability.Business),
+                    this.role, this, ref notifyMsg);
+
+                this.ability.setCostVolume(0, this.role, this, ref notifyMsg);
+            }
+
+            //  throw new NotImplementedException();
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 ﻿using CommonClass;
 using HMMain6.GroupClassF;
+using HMMain6.interfaceOfHM;
 using Microsoft.AspNetCore.DataProtection.KeyManagement;
 using ModelBase.Data;
 using NBitcoin;
@@ -572,6 +573,10 @@ namespace HMMain6.RoomMainF
 
             UpdateBackground(key, groupKey, getRandomPosObj, ref notifyMsgs);
             UpdateSelection(key, groupKey, getRandomPosObj, ref notifyMsgs);
+            UpdateCompass(key, groupKey, getRandomPosObj, ref notifyMsgs);
+            UpdateGoldOjb(key, groupKey, getRandomPosObj, ref notifyMsgs);
+            UpdateBaseTurbine(key, groupKey, getRandomPosObj, ref notifyMsgs);
+            UpdataSatelite(key, groupKey, getRandomPosObj, ref notifyMsgs);
 
             Startup.sendSeveralMsgs(notifyMsgs);
             //   GetBackground()
@@ -631,9 +636,21 @@ namespace HMMain6.RoomMainF
             throw new NotImplementedException();
         }
 
-        string interfaceOfHM.ListenInterface.SmallMapClickF(SmallMapClick smc)
+        public string SmallMapClickF(SmallMapClick smc)
         {
-            throw new NotImplementedException();
+            GroupClass group = null;
+            //  lock (this.PlayerLock)
+            {
+                if (this._Groups.ContainsKey(smc.GroupKey))
+                {
+                    group = this._Groups[smc.GroupKey];
+                }
+            }
+            if (group != null)
+            {
+                group.SmallMapClickF(smc, this.GetRandomPosObj);
+            }
+            return "";
         }
 
         string interfaceOfHM.ListenInterface.TakeApartF(TakeApart t)
@@ -678,14 +695,59 @@ namespace HMMain6.RoomMainF
                     {
                         UpdateBackground(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateSelection(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdateCompass(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdateGoldOjb(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdateBaseTurbine(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+
                     }
                     GetBackground(player, ref notifyMsg);
+
+                    this.frequencyM.addFrequencyRecord();
                 }
                 Startup.sendSeveralMsgs(notifyMsg);
             }
             return "";
             // throw new NotImplementedException();
         }
+
+
+
+        public void NavigateF(Navigate nObj, GetRandomPos grp)
+        {
+            if (this._Groups.ContainsKey(nObj.GroupKey))
+            {
+                var group = this._Groups[nObj.GroupKey];
+                group.NavigateF(nObj.Key, grp);
+            }
+            // player.Group.askWhetherGoToPositon(player.Key, grp);
+            //  throw new NotImplementedException();
+        }
+
+        public string ReturnHomeF(ReturnHomePassData rhpd, GetRandomPos grp)
+        {
+            //   throw new NotImplementedException();
+            if (this._Groups.ContainsKey(rhpd.GroupKey))
+            {
+                List<string> notifyMsgs = new List<string>();
+                var group = this._Groups[rhpd.GroupKey];
+                var success = group.ReturnHomeF(rhpd.Key, grp, ref notifyMsgs);
+                if (success)
+                {
+                    UpdateBackground(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateSelection(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateCompass(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateGoldOjb(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateBaseTurbine(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                }
+
+                Startup.sendSeveralMsgs(notifyMsgs);
+            }
+            return "";
+        }
+
+
     }
 
     public partial class RoomMain

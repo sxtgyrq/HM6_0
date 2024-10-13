@@ -32,7 +32,7 @@
             TextOfCarAbility.id = 'TextOfCarAbility';
 
             var divMile = document.createElement('div');
-            divMile.innerText = '' + this.data[carIndexStr].mile.costValue + '/' + this.data[carIndexStr].mile.sumValue;;
+            divMile.innerText = '' + (this.data[carIndexStr].mile.sumValue - this.data[carIndexStr].mile.costValue) + '/' + this.data[carIndexStr].mile.sumValue;;
             divMile.id = carIndexStr + '_' + 'mile' + '_' + 'display';
             divMile.className = 'TextOfCarAbilityItem';
 
@@ -55,8 +55,11 @@
 
         {
             var divOfSpeed = document.createElement('div');
+
             divOfSpeed.classList.add('speedValueContainer');
             var spanOfSpeedValue = document.createElement('span');
+            //   this.data[carIndexStr].speed.costValue
+
             spanOfSpeedValue.innerText = this.data[carIndexStr].speed.costValue;
             spanOfSpeedValue.id = carIndexStr + '_' + 'spanOfSpeedValue';
 
@@ -77,7 +80,7 @@
         ctx.fillStyle = "#800000";
         ctx.fillRect(0, 0, 140, 20);
         ctx.fillStyle = "#FF0000";
-        var percentMile = (this.data[carIndexStr].mile.sumValue - this.data[carIndexStr].mile.costValue) / this.data[carIndexStr].mile.sumValue;
+        var percentMile = (this.data[carIndexStr].mile.costValue) / this.data[carIndexStr].mile.sumValue;
         percentMile = Math.min(1, percentMile);
         ctx.fillRect(0, 0, percentMile * 140, 20);
 

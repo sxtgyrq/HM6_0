@@ -130,6 +130,11 @@ namespace HMMain6.interfaceOfHM
 
         string GetRoadMeshF(GetRoadMesh tbm);
         string UpdateCurrentPosition(WebSelectPassData wspd, GetRandomPos grp);
+        void NavigateF(CommonClass.Navigate nObj, GetRandomPos grp);
+        string CollectF(CollectPassData cpd, GetRandomPos grp);
+        string ChargeF(ChargePassData cpd, GetRandomPos grp);
+        string ReturnHomeF(ReturnHomePassData rhpd, GetRandomPos grp);
+        string CheckIsAdministratorF(CheckIsAdministrator cisA, GetRandomPos grp);
     }
 
     interface MapEditor

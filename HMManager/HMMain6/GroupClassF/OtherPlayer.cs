@@ -11,6 +11,8 @@ namespace HMMain6.GroupClassF
 {
     public partial class GroupClass
     {
+
+
         internal bool UpdateCurrentPosition(Player player, GetRandomPos grp, WebSelectPassData wspd, ref List<string> notifyMsg)
         {
             grp.GetFpByIndex(player.getCar().targetFpIndex);
@@ -33,23 +35,49 @@ namespace HMMain6.GroupClassF
                         break;
                     }
                 }
-                if (targetFind > 1)
+                if (targetFind >= 0)
                 {
                     var enegy = grp.GetEnegy(player.getCar().targetFpIndex);
                     var costEnegy = enegy[index];
-                    if (player.getCar().ability.leftMile > costEnegy)
+                    var timeCostToWait = DateTime.Now - player.ActiveTime;
+                    var sumNeed = costEnegy + Convert.ToInt32(timeCostToWait.TotalSeconds);
+                    if (player.getCar().ability.leftMile > sumNeed)
                     {
                         player.getCar().ability.setCostMiles(
-                            player.getCar().ability.costMiles + costEnegy,
+                            player.getCar().ability.costMiles + sumNeed,
                             player,
                             player.getCar(),
                             ref notifyMsg);
                         player.getCar().targetFpIndexSet(targetFind, ref notifyMsg);
+                        var fpFound = grp.GetFpByIndex(targetFind);
+                        if (fpFound.CanGetScore)
+                            player.rm.WebNotify(player, $"到达了{fpFound.fPName}");
+                        else
+                            player.rm.WebNotify(player, $"到达了{fpFound.fPName}上方{fpFound.Height}米处。");
+                        player.rm.WebNotify(player, $"等待消耗{Convert.ToInt32(timeCostToWait.TotalSeconds)}能量。飞行消耗{costEnegy}能量。一共");
+                        // player.rm.WebNotify(player, $"");
+                        // var 
+
+                        player.ActiveTime = DateTime.Now;
                         return true;
                     }
                     else
                     {
-                        that.WebNotify(player, "能量不足！你可以选择队友救援或者回城。");
+                        if (player.StartFPIndex == player.getCar().targetFpIndex)
+                        {
+                            that.WebNotify(player, "点击旋转的风车，可以给无人机补充能量！");
+                        }
+                        else
+                        {
+                            if (player.Group.groupNumber == 1)
+                            {
+                                that.WebNotify(player, "能量不足！你可以点击卫星来回城。");
+                            }
+                            else
+                            {
+                                that.WebNotify(player, "能量不足！你可以点击卫星来回城，或者请求队友来救援！");
+                            }
+                        }
                     }
                 }
             }

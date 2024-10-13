@@ -101,6 +101,7 @@ namespace HMMain6
         public string PlayerName { get; internal set; }
         public DateTime CreateTime { get; internal set; }
         public DateTime ActiveTime { get; internal set; }
+        public DateTime LastActionTime { get; set; }
         public int StartFPIndex { get { return this.Group.StartFPIndex; } }
         public Car getCar()
         {
@@ -1192,7 +1193,7 @@ namespace HMMain6
         internal void initializeVehicle(interfaceOfHM.CarAndRoomInterface roomMain, interfaceOfHM.Car cafF)
         {
             this._Car = new Car(this);
-           
+
             var notifyMsg = new List<string>();
             this._Car.SendStateAndPurpose = cafF.SendStateOfCar;
             this._Car.setState(this, ref notifyMsg, Car.CarState.waitAtBaseStation);

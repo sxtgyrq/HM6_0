@@ -108,5 +108,50 @@ namespace HMMain6.GroupClassF
                     }
             }
         }
+
+
+        internal bool HasGold(int targetFpIndex, out int collectIndex)
+        {
+            collectIndex = -1;
+            foreach (var item in this._collectPosition)
+            {
+                if (item.Value == targetFpIndex)
+                {
+                    collectIndex = item.Key; break;
+                }
+            }
+            return collectIndex != -1;
+
+            // return this._collectPosition.ContainsValue(targetFpIndex);
+            //   throw new NotImplementedException();
+        }
+        internal bool HasGold(int targetFpIndex)
+        {
+            int collectIndex;
+            return HasGold(targetFpIndex, out collectIndex);
+            // return this._collectPosition.ContainsValue(targetFpIndex);
+            //   throw new NotImplementedException();
+        }
+
+
+        internal bool CollectF(string key, GetRandomPos grp, ref List<string> notifyMsg)
+        {
+            if (this._PlayerInGroup.ContainsKey(key))
+            {
+                var player = this._PlayerInGroup[key];
+                int collectIndex;
+                if (HasGold(player.getCar().targetFpIndex, out collectIndex))
+                {
+                    if (player.getCar().ability.leftVolume >= 100)
+                    {
+                        this._collectPosition[collectIndex] = this.GetRandomPosition(false, grp);
+                        player.getCar().ability.setCostVolume(player.getCar().ability.costVolume + 100, player, player.getCar(), ref notifyMsg);
+                        return true;
+                    }
+                }
+            }
+            return false;
+            //   throw new NotImplementedException();
+        }
     }
 }

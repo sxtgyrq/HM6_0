@@ -215,7 +215,7 @@ namespace HMMain6.RoomMainF
         //以下为Manager
 
         // public Manager_NPC NPCM;
-        //public Manager_Frequency frequencyM;
+        public Manager_Frequency frequencyM;
         //public Manager_Driver driverM;
         //public Manager_GoodsReward goodsM;
         //public Manager_Model modelM;
@@ -253,7 +253,7 @@ namespace HMMain6.RoomMainF
             //  this.npcc = new NPCControle();
 
             // this.NPCM = new Manager_NPC(this);
-            //this.frequencyM = new Manager_Frequency(this);
+            this.frequencyM = new Manager_Frequency(this);
             //this.driverM = new Manager_Driver(this);
             //this.goodsM = new Manager_GoodsReward(this, this.DrawGoodsSelection);
             //this.modelM = new Manager_Model(this);

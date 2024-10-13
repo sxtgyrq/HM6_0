@@ -410,6 +410,34 @@ namespace WsOfWebClient
                     return s;
                 }
 
+                SetGoldBaby sgb = new SetGoldBaby();
+                if (SetModelCopy(sgb, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
+                SetCompass sc = new SetCompass();
+                if (SetModelCopy(sc, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
+                SetTurbine st = new SetTurbine();
+                if (SetModelCopy(st, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
+                SetSatelite ssl = new SetSatelite();
+                if (SetModelCopy(ssl, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
                 result = setState(s, connectInfoDetail, LoginState.OnLine);
 
                 {
@@ -430,6 +458,34 @@ namespace WsOfWebClient
             result.JoinGameSingle_Success = true;
             return result;
         }
+
+
+        internal static void SmallMapClickF(State s, SmallMapClick wgn)
+        {
+            CommonClass.SmallMapClick gfs = new CommonClass.SmallMapClick()
+            {
+                c = "SmallMapClick",
+                Key = s.Key,
+                GroupKey = s.GroupKey,
+                lat = wgn.lat,
+                lon = wgn.lon,
+                radius = wgn.radius,
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(gfs);
+            SendMsgWithANewThread(msg, s);
+            //  Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+        }
+        private static void SendMsgWithANewThread(string msg, State s)
+        {
+            Thread th = new Thread(() =>
+            {
+                Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+                Thread.Sleep(1000);
+            });
+            th.Start();
+            //throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 发送此命令，必在await setState(s, webSocket, LoginState.OnLine) 之后。两者是在前台是依托关系！
         /// </summary>
@@ -556,6 +612,102 @@ namespace WsOfWebClient
             var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
             var result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
             //  throw new NotImplementedException();
+        }
+
+        internal static void Navigate(State s)
+        {
+            Navigate webSelectPassData = new Navigate()
+            {
+                c = "Navigate",
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+            var result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+        }
+
+        internal static void Collect(State s)
+        {
+            CollectPassData webSelectPassData = new CollectPassData()
+            {
+                c = "CollectPassData",
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+            var result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+        }
+
+        internal static void Charge(State s)
+        {
+            ChargePassData webSelectPassData = new ChargePassData()
+            {
+                c = "ChargePassData",
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+            var result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+        }
+
+        internal static void ReturnHome(State s)
+        {
+            ReturnHomePassData webSelectPassData = new ReturnHomePassData()
+            {
+                c = "ReturnHomePassData",
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+            };
+            var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+            var result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+        }
+
+        internal static void SendSqlCommand(State s, SqlCommand sc)
+        {
+            CheckIsAdministrator webSelectPassData = new CheckIsAdministrator()
+            {
+                c = "CheckIsAdministrator",
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+            };
+            string result;
+            {
+                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+                result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+            }
+            if (result == "ok")
+            {
+                for (int i = 0; i < roomUrls.Count; i++)
+                {
+                    var url = roomUrls[i];
+                    var msg = Newtonsoft.Json.JsonConvert.SerializeObject(sc);
+                    Startup.sendInmationToUrlAndGetRes(url, msg);
+                }
+            }
+        }
+
+        internal static void SendPositionJson(State s, UploadPositionJson upj)
+        {
+            CheckIsAdministrator webSelectPassData = new CheckIsAdministrator()
+            {
+                c = "CheckIsAdministrator",
+                GroupKey = s.GroupKey,
+                Key = s.Key,
+            };
+            string result;
+            {
+                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(webSelectPassData);
+                result = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+            }
+            if (result == "ok")
+            {
+                for (int i = 0; i < roomUrls.Count; i++)
+                {
+                    var url = roomUrls[i];
+                    var msg = Newtonsoft.Json.JsonConvert.SerializeObject(upj);
+                    Startup.sendInmationToUrlAndGetRes(url, msg);
+                }
+            }
         }
     }
     public class Team
@@ -807,6 +959,26 @@ namespace WsOfWebClient
         class SetCubeCore : interfaceTag.modelForCopy
         {
             public string Command { get { return "SetCubeCore"; } }
+        }
+
+        class SetGoldBaby : interfaceTag.modelForCopy
+        {
+            public string Command { get { return "SetGoldBaby"; } }
+        }
+
+        class SetCompass : interfaceTag.modelForCopy
+        {
+            public string Command { get { return "SetCompass"; } }
+        }
+
+        class SetTurbine : interfaceTag.modelForCopy
+        {
+            public string Command { get { return "SetTurbine"; } }
+        }
+
+        class SetSatelite : interfaceTag.modelForCopy
+        {
+            public string Command { get { return "SetSatelite"; } }
         }
 
         private static bool SetModelCopy(interfaceTag.modelForCopy mp, ConnectInfo.ConnectInfoDetail connectInfoDetail)
