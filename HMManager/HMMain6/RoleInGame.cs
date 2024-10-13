@@ -101,6 +101,20 @@ namespace HMMain6
         public string PlayerName { get; internal set; }
         public DateTime CreateTime { get; internal set; }
         public DateTime ActiveTime { get; internal set; }
+
+        DateTime _LastActionTime = DateTime.Now;
+        public DateTime LastActionTime
+        {
+            get
+            {
+                return this._LastActionTime;
+            }
+            set
+            {
+                this._LastActionTime = value;
+                this.ActiveTime = DateTime.Now;
+            }
+        }
         public int StartFPIndex { get { return this.Group.StartFPIndex; } }
         public Car getCar()
         {
@@ -554,7 +568,7 @@ namespace HMMain6
 
             {
                 // throw new Exception();
-                if (this.Group.taskFineshedTime.ContainsKey(true))
+                if (this.Group.taskFineshedTime.ContainsKey(this.Key))
                 {
                     return Program.rm.roadFixFee.MoneyForSave(this.Money);
                 }
@@ -594,7 +608,7 @@ namespace HMMain6
             get
             {
                 //  throw new Exception("");
-                if (this.Group.taskFineshedTime.ContainsKey(true))
+                if (this.Group.taskFineshedTime.ContainsKey(this.Key))
                 {
                     return Program.rm.roadFixFee.MoneyForFixRoad(this.Money);
                 }
@@ -1192,7 +1206,7 @@ namespace HMMain6
         internal void initializeVehicle(interfaceOfHM.CarAndRoomInterface roomMain, interfaceOfHM.Car cafF)
         {
             this._Car = new Car(this);
-           
+
             var notifyMsg = new List<string>();
             this._Car.SendStateAndPurpose = cafF.SendStateOfCar;
             this._Car.setState(this, ref notifyMsg, Car.CarState.waitAtBaseStation);

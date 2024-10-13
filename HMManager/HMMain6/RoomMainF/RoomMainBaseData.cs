@@ -28,7 +28,7 @@ namespace HMMain6.RoomMainF
         /// <summary>
         /// 游戏官方市场
         /// </summary>
-     //   public HouseManager5_0.Market Market { get; internal set; }
+        public HMMain6.Market Market { get; internal set; }
 
         /// <summary>
         /// 背景音乐选择器
@@ -215,7 +215,7 @@ namespace HMMain6.RoomMainF
         //以下为Manager
 
         // public Manager_NPC NPCM;
-        //public Manager_Frequency frequencyM;
+        public Manager_Frequency frequencyM;
         //public Manager_Driver driverM;
         //public Manager_GoodsReward goodsM;
         //public Manager_Model modelM;
@@ -225,7 +225,7 @@ namespace HMMain6.RoomMainF
         // public Manager_TaskCopy taskM;
         //public Manager_FileSave fileSM;
         //public Manager_BeginnerMode modelBM;
-        //public Manager_NewRecordReward breakRecordReward;
+        public Manager_NewRecordReward breakRecordReward;
         public Manager_RoadFixFee roadFixFee;
     }
 
@@ -237,7 +237,7 @@ namespace HMMain6.RoomMainF
         {
             this._Groups = new Dictionary<string, GroupClass>();
             this.rm = new Random(DateTime.Now.GetHashCode());
-            //  this.Market = new Market(this.priceChanged);
+            this.Market = new Market(this.priceChanged);
             // this.Music = new Music();
             //this.bg = new BackGround();
             //this.attackE = new Engine_AttackEngine(this);
@@ -253,7 +253,7 @@ namespace HMMain6.RoomMainF
             //  this.npcc = new NPCControle();
 
             // this.NPCM = new Manager_NPC(this);
-            //this.frequencyM = new Manager_Frequency(this);
+            this.frequencyM = new Manager_Frequency(this);
             //this.driverM = new Manager_Driver(this);
             //this.goodsM = new Manager_GoodsReward(this, this.DrawGoodsSelection);
             //this.modelM = new Manager_Model(this);

@@ -374,7 +374,7 @@ namespace HMMain6.GroupClassF
             //}
         }
 
-
+     
 
         public Dictionary<string, long> promotePrice = new Dictionary<string, long>()
         {

@@ -86,6 +86,12 @@ namespace WsOfWebClient
             app.Map("/objdata", ObjData);
             app.Map("/pic", PicData);
             app.Map("/coredata", ObjCore);
+            app.Map("/goldIcon", goldIcon);
+            app.Map("/goldCompass", goldCompass);
+            app.Map("/turbine", turbine);
+
+            app.Map("/satelite", satelite);
+            //satelite
             //app.Map("/douyindata", douyindata);
             //app.Map("/roaddata", roaddata);//此接口只对调试时开放
             //roaddata
@@ -213,12 +219,23 @@ namespace WsOfWebClient
                                         {
 
                                             var ws = ConnectInfo.connectedWs[s.WebsocketID];
+                                            var webSocketObj = ws.ws;
                                             ConnectInfo.connectedWs.Remove(s.WebsocketID);
-                                            ConnectInfo.webSocketID++;
+                                            Thread t = new Thread(() =>
+                                            {
+                                                Thread.Sleep(20 * 1000);
+                                                try
+                                                {
+                                                    webSocketObj.CloseAsync(WebSocketCloseStatus.NormalClosure, "Exit", CancellationToken.None);
+                                                }
+                                                catch
+                                                {
+                                                    Console.WriteLine("webSocketObj 关闭异常！");
+                                                }
+                                            });
 
 
-                                            s.WebsocketID = ConnectInfo.webSocketID;
-                                            addWs(ws.ws, s.WebsocketID);
+                                            // ConnectInfo.webSocketID++;
                                         }
                                     }
                                 }; break;
@@ -594,14 +611,14 @@ namespace WsOfWebClient
                                                 //   Room.setPromote(s, promote);
                                             }
                                         }; break;
-                                    case "Collect":
-                                        {
-                                            if (s.Ls == LoginState.OnLine)
-                                            {
-                                                Collect collect = Newtonsoft.Json.JsonConvert.DeserializeObject<Collect>(returnResult.result);
-                                                //  Room.setCollect(s, collect);
-                                            }
-                                        }; break;
+                                    //case "Collect":
+                                    //    {
+                                    //        if (s.Ls == LoginState.OnLine)
+                                    //        {
+                                    //            Collect collect = Newtonsoft.Json.JsonConvert.DeserializeObject<Collect>(returnResult.result);
+                                    //            //  Room.setCollect(s, collect);
+                                    //        }
+                                    //    }; break;
                                     case "Attack":
                                         {
                                             if (s.Ls == LoginState.OnLine)
@@ -765,7 +782,7 @@ namespace WsOfWebClient
                                     case "RewardPublicSign":
                                         {
                                             RewardPublicSign rps = Newtonsoft.Json.JsonConvert.DeserializeObject<RewardPublicSign>(returnResult.result);
-                                            //       Room.PublicReward(s, connectInfoDetail, rps);
+                                            Room.PublicReward(s, connectInfoDetail, rps);
                                         }; break;
                                     case "CheckCarState":
                                         {
@@ -797,18 +814,17 @@ namespace WsOfWebClient
                                     case "AllBusinessAddr"://AllBusinessAddr
                                         {
                                             RewardSet rs = Newtonsoft.Json.JsonConvert.DeserializeObject<RewardSet>(returnResult.result);
-                                            //    var r = Room.GetAllBusinessAddr(connectInfoDetail, rs);
-                                            //  Consoe.WriteLine(r);
+                                            var r = Room.GetAllBusinessAddr(connectInfoDetail, rs);
                                         }; break;
                                     case "AllStockAddr":
                                         {
                                             AllStockAddr asa = Newtonsoft.Json.JsonConvert.DeserializeObject<AllStockAddr>(returnResult.result);
-                                            //          Room.GetAllStockAddr(connectInfoDetail, asa);
+                                            Room.GetAllStockAddr(connectInfoDetail, asa);
                                         }; break;
                                     case "GenerateRewardAgreement":
                                         {
                                             GenerateRewardAgreement ga = Newtonsoft.Json.JsonConvert.DeserializeObject<GenerateRewardAgreement>(returnResult.result);
-                                            //       Room.GenerateRewardAgreementF(connectInfoDetail, ga);
+                                            Room.GenerateRewardAgreementF(connectInfoDetail, ga);
                                         }; break;
                                     case "RewardInfomation":
                                         {
@@ -934,11 +950,11 @@ namespace WsOfWebClient
 
                                                     var ws = ConnectInfo.connectedWs[s.WebsocketID];
                                                     ConnectInfo.connectedWs.Remove(s.WebsocketID);
-                                                    ConnectInfo.webSocketID++;
+                                                    //   ConnectInfo.webSocketID++;
 
 
-                                                    s.WebsocketID = ConnectInfo.webSocketID;
-                                                    addWs(ws.ws, s.WebsocketID);
+                                                    //   s.WebsocketID = ConnectInfo.webSocketID;
+                                                    // addWs(ws.ws, s.WebsocketID);
                                                 }
                                             }
                                         }; break;
@@ -954,8 +970,7 @@ namespace WsOfWebClient
                                             if (s.Ls == LoginState.OnLine)
                                             {
                                                 WsOfWebClient.SmallMapClick wgn = Newtonsoft.Json.JsonConvert.DeserializeObject<WsOfWebClient.SmallMapClick>(returnResult.result);
-                                                //     Room.SmallMapClickF(s, wgn);
-                                                // Room.GetOnLineState(s);
+                                                Room.SmallMapClickF(s, wgn);
                                             }
                                         }; break;
                                     case "NotWantToGoNeedToBack":
@@ -1075,6 +1090,43 @@ namespace WsOfWebClient
                                         {
                                             //           Room.GetAllStockPlaceF(s);
                                         }; break;
+                                    case "Navigate":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                                Room.Navigate(s);
+                                        }; break;
+                                    case "Collect":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                                Room.Collect(s);
+                                        }; break;
+                                    case "Charge":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                                Room.Charge(s);
+                                        }; break;
+                                    case "ReturnHome":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                                Room.ReturnHome(s);
+                                        }; break;
+                                    case "SqlCommand":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                            {
+                                                SqlCommand sc = Newtonsoft.Json.JsonConvert.DeserializeObject<SqlCommand>(returnResult.result);
+                                                Room.SendSqlCommand(s, sc);
+                                            }
+
+                                        }; break;
+                                    case "UploadPositionJson":
+                                        {
+                                            if (s.Ls == LoginState.OnLine)
+                                            {
+                                                UploadPositionJson upj = Newtonsoft.Json.JsonConvert.DeserializeObject<UploadPositionJson>(returnResult.result);
+                                                Room.SendPositionJson(s, upj);
+                                            }
+                                        }; break;
                                     default:
                                         {
                                             // Console.WriteLine(returnResult.result);
@@ -1097,6 +1149,8 @@ namespace WsOfWebClient
                                 File.WriteAllText($"Error{DateTime.Now.ToString("yyyyMMddHHmmssffff")}.txt", returnResult.result);
 #warning 这里用log做记录
                                 // throw e;
+                                var json = Newtonsoft.Json.JsonConvert.SerializeObject(e);
+                                File.WriteAllText($"ErrorException{DateTime.Now.ToString("yyyyMMddHHmmssffff")}.txt", json);
                             }
                         }
                 }
@@ -1328,14 +1382,14 @@ namespace WsOfWebClient
                     if (pathValue == "/Drone.obj")
                     {
                         context.Response.ContentType = "text/plain";
-                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple2.obj");
+                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple4.obj");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
 
                     }
                     else if (pathValue == "/Drone.mtl")
                     {
                         context.Response.ContentType = "text/plain";
-                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple2.mtl");
+                        var bytes = File.ReadAllBytes("E:\\W202410\\lowpolydrone\\simple4.mtl");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
                     }
 
@@ -1470,6 +1524,166 @@ namespace WsOfWebClient
                     {
                         context.Response.ContentType = "image/jpeg";
                         var bytes = File.ReadAllBytes("E:\\DB\\bgImg\\RUDCSSPVVX\\h0\\px.jpg");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+        internal static void goldIcon(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/gold.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\goldModel\\gold.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/gold.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\goldModel\\gold.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/material_baseColor.png")
+                    {
+                        context.Response.ContentType = "image/jpeg";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\goldModel\\material_baseColor.png");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+
+        //goldCompass
+        internal static void goldCompass(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/Compass.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\compass\\Compass.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/Compass.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\compass\\Compass.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/compassBG.png")
+                    {
+                        context.Response.ContentType = "image/jpeg";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\compass\\compassBG.png");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+        //turbine
+        internal static void turbine(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/turbine.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\turbine\\turbine.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/turbine.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\turbine\\turbine.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    //else if (pathValue == "/compassBG.png")
+                    //{
+                    //    context.Response.ContentType = "image/jpeg";
+                    //    var bytes = File.ReadAllBytes("E:\\DB\\model\\compass\\compassBG.png");
+                    //    await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    //}
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+        //satelite
+        internal static void satelite(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/satelite.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\satelite\\satelite.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/satelite.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\satelite\\satelite.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/satelite.png")
+                    {
+                        context.Response.ContentType = "image/png";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\satelite\\satelite.png");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
                     }
                 }

@@ -1,5 +1,6 @@
 ﻿using CommonClass;
 using Microsoft.VisualBasic;
+using ModelBase.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +35,15 @@ namespace HMMain6.RoomMainF
                             y = Convert.ToInt32(y),
                             z = z,
                             c = getRandomPosObj.GetFpByIndex(target[i]).fPCode,
-                            h = getRandomPosObj.GetFpByIndex(target[i]).Height
+                            h = getRandomPosObj.GetFpByIndex(target[i]).Height,
+                            r = getRandomPosObj.GetFpByIndex(target[i]).ObjInSceneRotation
                         });
                     }
 
                     var url = player.FromUrl;
                     var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
                     notifyMsgs.Add(url);
-                    notifyMsgs.Add(sendMsg);  
+                    notifyMsgs.Add(sendMsg);
                 }
             }
 
@@ -54,6 +56,39 @@ namespace HMMain6.RoomMainF
                 WebSocketID = webSocketID,
                 fp = fp,
                 selections = new List<BradCastSelections.FPItem>()
+            };
+            return obj;
+        }
+
+
+        private void UpdateCompass(string key, string groupKey, GetRandomPos getRandomPosObj, ref List<string> notifyMsgs)
+        {
+            if (this._Groups.ContainsKey(groupKey))
+            {
+                var group = this._Groups[groupKey];
+                if (group._PlayerInGroup.ContainsKey(key))
+                {
+                    var player = group._PlayerInGroup[key];
+                    var targetFpIndex = player.getCar().targetFpIndex;
+                    //  var target = getRandomPosObj.GetSelections(targetFpIndex);
+                    var position = getRandomPosObj.GetCompassPosition(targetFpIndex);
+                    var obj = GetItemCompass(player.WebSocketID, position);
+                    var url = player.FromUrl;
+                    var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                    notifyMsgs.Add(url);
+                    notifyMsgs.Add(sendMsg);
+                }
+            }
+
+        }
+
+        private BradCastCompass GetItemCompass(int webSocketID, CompassPosition position)
+        {
+            var obj = new BradCastCompass
+            {
+                c = "BradCastCompass",
+                WebSocketID = webSocketID,
+                position = position
             };
             return obj;
         }

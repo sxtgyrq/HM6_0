@@ -1,4 +1,5 @@
 ﻿using CommonClass;
+using ModelBase.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,5 +80,57 @@ namespace HMMain6.RoomMainF
             //    Startup.sendSingleMsg(url, sendMsg);
             //}
         }
+
+
+        //   UpdateBaseTurbine()；
+        private void UpdateBaseTurbine(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
+        {
+            if (this._Groups.ContainsKey(groupKey))
+            {
+                var group = this._Groups[groupKey];
+                if (group._PlayerInGroup.ContainsKey(key))
+                {
+                    var player = group._PlayerInGroup[key];
+                    var targetFpIndex = player.getCar().targetFpIndex;
+                    //  var target = getRandomPosObj.GetSelections(targetFpIndex);
+                    // if (targetFpIndex == player.StartFPIndex)
+                    {
+                        var position = grp.GetTurbine(targetFpIndex);
+                        var obj = GetItemTurbine(player.WebSocketID, position);
+                        obj.hasValue = targetFpIndex == player.StartFPIndex;
+                        if (player.BTCAddress == AdministratorAddr)
+                        {
+                            if (grp.GetFpByIndex(targetFpIndex).CanGetScore)
+                                obj.hasValue = true;
+                        }
+                        var url = player.FromUrl;
+                        var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                        notifyMsgs.Add(url);
+                        notifyMsgs.Add(sendMsg);
+                    }
+
+                    //if (group.HasGold(targetFpIndex))
+                    //{
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                }
+            }
+        }
+
+        private BradCastTurbine GetItemTurbine(int webSocketID, CompassPosition position)
+        {
+            var obj = new BradCastTurbine
+            {
+                c = "BradCastTurbine",
+                WebSocketID = webSocketID,
+                position = position
+            };
+            return obj;
+        }
+      
     }
 }

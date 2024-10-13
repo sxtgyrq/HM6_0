@@ -279,6 +279,7 @@ namespace HMMain6.RoomMainF
                                                 if (string.IsNullOrEmpty(((Player)player).BTCAddress))
                                                 {
                                                     ((Player)player).BTCAddress = ots.address;
+                                                    UpdateAdministrator(player, ref notifyMsg);
                                                     try
                                                     {
                                                         //var addsuccess = DalOfAddress.traderewardtimerecord.Add3(int.Parse(player.Group.RewardDate), player.BTCAddress.Trim(), player.Group.groupNumber, ref Program.rm.rm);
@@ -321,6 +322,8 @@ namespace HMMain6.RoomMainF
                 Startup.sendSeveralMsgs(notifyMsg);
             }
         }
+
+     
 
         private void SetReferAddr(ref Player player)
         {

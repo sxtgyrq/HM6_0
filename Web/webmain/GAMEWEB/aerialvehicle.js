@@ -16,15 +16,84 @@
         new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
             console.log('obj', object);
             console.log('mtl', materials);
+            object.scale.set(2, 2, 2);
+            object.getObjectByName('propeller_01').position.x = -0.201797;
+            object.getObjectByName('propeller_01').position.z = -0.19839;
+
+            object.getObjectByName('propeller_02').position.x = 0.196888;
+            object.getObjectByName('propeller_02').position.z = -0.199555
+                ;
+
+            object.getObjectByName('propeller_03').position.x = 0.19781;
+            object.getObjectByName('propeller_03').position.z = 0.200141;
+
+            object.getObjectByName('propeller_04').position.x = -0.188468;
+            object.getObjectByName('propeller_04').position.z = 0.201515;
             fFinished(object);
         })
     });
+
+    ////
+    //// 假设你的物体是一个Mesh对象
+    //const object = new THREE.Mesh(geometry, material);
+
+    //// 定义旋转轴（例如绕 Y 轴旋转）
+    //const axis = new THREE.Vector3(0, 1, 0).normalize(); // 归一化轴向量
+
+    //// 定义旋转角度（以弧度为单位，1 弧度约等于 57.3 度）
+    //const angle = Math.PI / 4; // 45 度
+
+    //// 创建一个四元数，并设置物体的旋转
+    //const quaternion = new THREE.Quaternion();
+    //quaternion.setFromAxisAngle(axis, angle); // 设置四元数根据轴和角度旋转
+
+    //// 将物体的四元数旋转状态设置为这个四元数
+    //object.quaternion.copy(quaternion);
+};
+var animateAerialVehicle = function () {
+    for (var i = 0; i < objMain.carGroup.children.length; i++) {
+        var vehicle = objMain.carGroup.children[i];
+
+        //  var moveValue1 = { x: -0.201797, y: 0.365639, z: -0.19839 };
+        //var moveValue2 = { x: -0.19839, y: -0.365639, z: -0.201797 };
+        var propeller_01 = vehicle.getObjectByName('propeller_01');
+        var propeller_02 = vehicle.getObjectByName('propeller_02');
+        var propeller_03 = vehicle.getObjectByName('propeller_03');
+        var propeller_04 = vehicle.getObjectByName('propeller_04');
+
+        var angle = Date.now() % 600 / 600 * Math.PI * 2;
+        propeller_01.rotation.y = angle;
+        propeller_02.rotation.y = -angle;
+        propeller_03.rotation.y = angle;
+        propeller_04.rotation.y = -angle;
+
+        ////const axis = new THREE.Vector3(0, 1, 0).normalize(); // 归一化轴向量
+
+        ////var moveToZero = function (obj, moveValue) {
+        ////    obj.position.x -= moveValue.x;
+        ////    obj.position.y -= moveValue.y;
+        ////    obj.position.z -= moveValue.z;
+        ////};
+        //var rotateObj = function (obj, roateValue, angle) {
+        //    const axis = new THREE.Vector3(roateValue.x, roateValue.y, roateValue.z).normalize();
+        //    const quaternion = new THREE.Quaternion();
+        //    quaternion.setFromAxisAngle(axis.normalize(), angle); // 设置新的旋转角度
+        //    obj.quaternion.copy(quaternion); // 应用新的旋转
+        //    // obj.rotation.y
+        //}
+        ////moveToZero(propeller_01, moveValue1);
+        //var angle = Date.now() % 3000 / 3000 * Math.PI * 2;
+        //rotateObj(propeller_01, { x: 0, y: 1, z: 0 }, angle);
+        //// moveToZero(propeller_01, moveValue2);
+    }
+
 };
 
 let ChangeBG = function (inputObj) {
     var fp = inputObj.fp;
     var fPCode = fp.fPCode;
     var Height = fp.Height;
+    objMain.background.mainFP = fp;
     if (objMain.debug == 0) {
         objMain.background.path = "http://127.0.0.1:11001/pic/" + fPCode + "/" + Height + "/"; //received_obj.path;
         objMain.background.change();
@@ -35,6 +104,8 @@ let ChangeBG = function (inputObj) {
         objMain.background.changeWithJson(fPCode, Height);
     }
     objMain.background.rotateOthers(inputObj.fp.ObjInSceneRotation);
+
+    //rotateOthers
 };
 
 let loadCore = function (fFinished) {
@@ -66,6 +137,123 @@ let loadCore = function (fFinished) {
     //var manager = new THREE.LoadingManager();
     // new THREE.MTLLoader(manager).load.load(mtlUrl, );
 };
+
+let loadGoldBaby = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/goldIcon/gold.obj';
+        mtlUrl = 'http://127.0.0.1:11001/goldIcon/gold.mtl';
+        picUrl = 'http://127.0.0.1:11001/goldIcon/material_baseColor.png';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/goldModel/gold.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/goldModel/gold.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/goldModel/material_baseColor.png';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+    //var manager = new THREE.LoadingManager();
+    // new THREE.MTLLoader(manager).load.load(mtlUrl, );
+};
+
+let loadCompass = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/goldCompass/Compass.obj';
+        mtlUrl = 'http://127.0.0.1:11001/goldCompass/Compass.mtl';
+        picUrl = 'http://127.0.0.1:11001/goldCompass/compassBG.png';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/compass/Compass.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/compass/Compass.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/compass/compassBG.png';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+    //var manager = new THREE.LoadingManager();
+    // new THREE.MTLLoader(manager).load.load(mtlUrl, );
+};
+
+let loadTurbine = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/turbine/turbine.obj';
+        mtlUrl = 'http://127.0.0.1:11001/turbine/turbine.mtl';
+        picUrl = '';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/turbine/turbine.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/turbine/turbine.mtl';
+        picUrl = '';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+};
+
+let loadSatelite = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/satelite/satelite.obj';
+        mtlUrl = 'http://127.0.0.1:11001/satelite/satelite.mtl';
+        picUrl = 'http://127.0.0.1:11001/satelite/satelite.png';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/satelite/satelite.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/satelite/satelite.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/satelite/satelite.png';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+};
+
 var testCoreDraw = function () {
     var drawF = function (imgUrl, loadFinished) {
         objUrl = 'http://127.0.0.1:11001/coredata/core.obj';
@@ -178,6 +366,7 @@ var drawCoreObj = function (inputData) {
         }
         objMain.mainF.removeF.clearGroup(objMain.targetGroup);
         var fPCode = inputData.c;
+        var Height = inputData.h;
         var Height = inputData.h;
         {
             var imgUrl = "http://127.0.0.1:11001/pic/" + fPCode + "/" + Height + "/px.jpg";
@@ -321,3 +510,486 @@ var drawLineOfSelections = function (inputObj) {
         objMain.roadGroup.add(line);
     }
 };
+
+var drawCompass = function (inputObj) {
+    console.log('需要绘制', inputObj);
+    var color = 0x00ff00;
+    var selections = inputObj.selections;
+    // var selections = ['', ''];
+    objMain.mainF.removeF.clearGroup(objMain.directionGroup);
+    var copyObj = objMain.ModelInput.compass.clone();
+    copyObj.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
+    copyObj.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
+    copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+    objMain.directionGroup.add(copyObj);
+};
+
+var drawGoldObj = function (inputObj) {
+    console.log('需要绘制', inputObj);
+
+    objMain.mainF.removeF.clearGroup(objMain.collectGroup);
+    if (inputObj.hasValue) {
+        var copyObj = objMain.ModelInput.GoldIngotIcon.clone();
+        copyObj.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
+        copyObj.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
+        copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+        objMain.collectGroup.add(copyObj);
+    }
+};
+
+var drawTurbine = function (inputObj) {
+    console.log('需要绘制', inputObj);
+
+    objMain.mainF.removeF.clearGroup(objMain.buildingGroup);
+    if (inputObj.hasValue) {
+        var copyObj = objMain.ModelInput.turbine.clone();
+        copyObj.children[1].position.set(-2.30335, 9.00124, 0.070831);
+        copyObj.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
+        copyObj.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
+        copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+        objMain.buildingGroup.add(copyObj);
+    }
+    //z=9.00124  y=-2.30335  x-0.070831
+};
+
+//getOutGroup
+var drawStatelite = function (inputObj) {
+    console.log('需要绘制', inputObj);
+
+    objMain.mainF.removeF.clearGroup(objMain.getOutGroup);
+    if (inputObj.hasValue) {
+        var copyObj = objMain.ModelInput.satelite.clone();
+        copyObj.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
+        copyObj.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
+        copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+        objMain.getOutGroup.add(copyObj);
+    }
+};
+var objPlaceSystemObj = function () {
+    var obj =
+    {
+        'precision': 1,
+        precisionAdd: function () {
+            this.precision *= 2;
+        },
+        precisionMinus: function () {
+            this.precision /= 2;
+            if (this.precisionMinus < 0.01) {
+                this.precision = 0.01;
+            }
+        },
+        operateIndex: 0,
+        operateGroups: [objMain.collectGroup, objMain.getOutGroup, objMain.buildingGroup, objMain.directionGroup],
+        indexAdd: function () {
+            this.operateIndex++;
+            this.operateIndex %= this.operateGroups.length;
+            this.addObj();
+            switch (this.operateIndex) {
+                case 0:
+                    {
+                        $.notify('元宝');
+                    }; break;
+                case 1:
+                    {
+                        $.notify('卫星');
+                    }; break;
+                case 2:
+                    {
+                        $.notify('风车');
+                    }; break;
+                case 3:
+                    {
+                        $.notify('指南针');
+                    }; break;
+            }
+
+        },
+        indexMinus: function () {
+            this.operateIndex--;
+            this.operateIndex += this.operateGroups.length;
+            this.operateIndex %= this.operateGroups.length;
+            this.addObj();
+            switch (this.operateIndex) {
+                case 0:
+                    {
+                        $.notify('元宝');
+                    }; break;
+                case 1:
+                    {
+                        $.notify('卫星');
+                    }; break;
+                case 2:
+                    {
+                        $.notify('风车');
+                    }; break;
+                case 3:
+                    {
+                        $.notify('指南针');
+                    } break;
+            }
+        },
+        addObj: function () {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 0) {
+                if (false) {
+                    switch (this.operateIndex) {
+                        case 0:
+                            {
+                                drawGoldObj(
+                                    {
+                                        'hasValue': true,
+                                        position:
+                                            { 'x': 0, 'y': 0, 'z': 0, 'rx': 0, 'ry': 0, 'rz': 0, 's': 1 }
+                                    });
+                            };
+                        case 1:
+                            {
+                                drawStatelite(
+                                    {
+                                        'hasValue': true,
+                                        position:
+                                            { 'x': 0, 'y': 0, 'z': 0, 'rx': 0, 'ry': 0, 'rz': 0, 's': 1 }
+                                    });
+                            };
+                        case 2:
+                            {
+                                drawTurbine(
+                                    {
+                                        'hasValue': true,
+                                        position:
+                                            { 'x': 0, 'y': 0, 'z': 0, 'rx': 0, 'ry': 0, 'rz': 0, 's': 1 }
+                                    });
+                            };
+                        case 3:
+                            {
+                                drawCompass({
+                                    'hasValue': true,
+                                    position:
+                                        { 'x': 0, 'y': 0, 'z': 0, 'rx': 0, 'ry': 0, 'rz': 0, 's': 1 }
+                                });
+                            } break;
+                    }
+                }
+            }
+        },
+        add: function (p) {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                group.children[0].position[p] += this.precision;
+                $.notify(p + '：' + group.children[0].position[p]);
+            }
+        },
+        minus: function (p) {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                group.children[0].position[p] -= this.precision;
+                $.notify(p + '：' + group.children[0].position[p]);
+            }
+        },
+        rotate: function (axis, value) {
+
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                group.children[0].rotation[axis] += value;
+            }
+        },
+        scaleAdd: function () {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                // group.children[0].rotation[axis] += value;
+                group.children[0].scale.x += 0.01;
+                group.children[0].scale.x *= 1.01;
+
+                group.children[0].scale.y += 0.01;
+                group.children[0].scale.y *= 1.01;
+
+                group.children[0].scale.z += 0.01;
+                group.children[0].scale.z *= 1.01;
+            }
+        },
+        scaleMinus: function () {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                // group.children[0].rotation[axis] += value;
+                group.children[0].scale.x -= 0.01;
+                group.children[0].scale.x *= 0.99;
+
+
+                group.children[0].scale.y -= 0.01;
+                group.children[0].scale.y *= 0.99;
+
+                group.children[0].scale.z -= 0.01;
+                group.children[0].scale.z *= 0.99;
+
+                if (group.children[0].scale.x <= 0) {
+                    group.children[0].scale.x = 0.01;
+                    group.children[0].scale.y = 0.01;
+                    group.children[0].scale.z = 0.01;
+                }
+            }
+        },
+        model: 0,
+        changeModelAKey: function () {
+            this.model++;
+            this.model = this.model % 10;
+            switch (this.model) {
+                case 0:
+                    {
+                        $.notify('调整移动精度模式');
+                    }; break;
+                case 1:
+                    {
+                        $.notify('x move模式');
+                    }; break;
+                case 2:
+                    {
+                        $.notify('z move模式');
+                    }; break;
+                case 3:
+                    {
+                        $.notify('y move模式');
+                    }; break;
+                case 4:
+                    {
+                        $.notify('x rotate模式');
+                    }; break;
+                case 5:
+                    {
+                        $.notify('z rotate模式');
+                    }; break;
+                case 6:
+                    {
+                        $.notify('y rotatemove模式');
+                    }; break;
+                case 7:
+                    {
+                        $.notify('sacle rotatemove模式');
+                    }; break;
+                case 8:
+                    {
+                        $.notify('切换调整对象');
+                    }; break;
+                case 9:
+                    {
+                        $.notify('位置、比例放大');
+                    }; break;
+            }
+        },
+        addSkey: function () {
+            switch (this.model % 10) {
+                case 0:
+                    {
+                        this.precisionAdd();
+                        $.notify('精度：' + this.precision);
+                    }; break;
+                case 1:
+                    {
+                        this.add('x');
+                    }; break;
+                case 2:
+                    {
+                        this.add('z');
+                    }; break;
+                case 3:
+                    {
+                        this.add('y');
+                    }; break;
+                case 4:
+                    {
+                        this.rotate('x', 0.05);
+                    }; break;
+                case 5:
+                    {
+                        this.rotate('z', 0.05);
+                    }; break;
+                case 6:
+                    {
+                        this.rotate('y', 0.05);
+                    }; break;
+                case 7:
+                    {
+                        this.scaleAdd();
+                    }; break;
+                case 8:
+                    {
+                        this.indexAdd();
+                    }; break;
+                case 9:
+                    {
+                        this.scaleAndLengthZoom(true);
+                    }; break;
+            }
+        },
+        minusDkey: function () {
+            switch (this.model % 10) {
+                case 0:
+                    {
+                        this.precisionMinus();
+                        $.notify('精度：' + this.precision);
+                    }; break;
+                case 1:
+                    {
+                        this.minus('x');
+                    }; break;
+                case 2:
+                    {
+                        this.minus('z');
+                    }; break;
+                case 3:
+                    {
+                        this.minus('y');
+                    }; break;
+                case 4:
+                    {
+                        this.rotate('x', -0.05);
+                    }; break;
+                case 5:
+                    {
+                        this.rotate('z', -0.05);
+                    }; break;
+                case 6:
+                    {
+                        this.rotate('y', -0.05);
+                    }; break;
+                case 7:
+                    {
+                        this.scaleMinus();
+                    }; break;
+                case 8:
+                    {
+                        this.indexMinus();
+                    }; break;
+                case 9:
+                    {
+                        this.scaleAndLengthZoom(false);
+                    }; break;
+            }
+        },
+        downloadKeyF: function () {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                var fileName = '';
+                switch (this.operateIndex) {
+                    case 0:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'goldobj' + '.json';
+                        }; break;
+                    case 1:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'satelite' + '.json';
+                        }; break;
+                    case 2:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'turbine' + '.json';
+                        }; break;
+                    case 3:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'compass' + '.json';
+                        }; break;
+                    default: return;
+                }
+                var data = {
+                    'x': group.children[0].position.x,
+                    'y': group.children[0].position.y,
+                    'z': group.children[0].position.z,
+                    'rx': group.children[0].rotation.x,
+                    'ry': group.children[0].rotation.y,
+                    'rz': group.children[0].rotation.z,
+                    's': group.children[0].scale.x
+                };
+                const jsonString = JSON.stringify(data, null, 2); // null, 2 参数用于美化 JSON
+
+                // 创建一个 Blob 对象，类型为 JSON
+                const blob = new Blob([jsonString], { type: "application/json" });
+
+                // 创建一个下载链接
+                const link = document.createElement("a");
+
+                // 创建下载的文件名
+                link.download = fileName;// objMain.background.mainFP
+
+                // 创建 URL 供下载使用
+                link.href = URL.createObjectURL(blob);
+
+                // 触发下载
+                link.click();
+
+                // 释放 URL 对象
+                URL.revokeObjectURL(link.href);
+            }
+
+
+            // 将 JSON 对象转换为字符串
+
+        },
+        uploadKeyF: function () {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                var fileName = '';
+                switch (this.operateIndex) {
+                    case 0:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'goldobj' + '.json';
+                        }; break;
+                    case 1:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'satelite' + '.json';
+                        }; break;
+                    case 2:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'turbine' + '.json';
+                        }; break;
+                    case 3:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'compass' + '.json';
+                        }; break;
+                    default: return;
+                }
+                var data = {
+                    'x': group.children[0].position.x,
+                    'y': group.children[0].position.y,
+                    'z': group.children[0].position.z,
+                    'rx': group.children[0].rotation.x,
+                    'ry': group.children[0].rotation.y,
+                    'rz': group.children[0].rotation.z,
+                    's': group.children[0].scale.x
+                };
+                const jsonString = JSON.stringify(data, null, 2); // null, 2 参数用于美化 JSON
+
+                // 创建一个 Blob 对象，类型为 JSON
+                var passObj = { 'c': 'UploadPositionJson', 'fileName': fileName, 'jsonString': jsonString };
+                objMain.ws.send(JSON.stringify(passObj));
+            }
+        },
+        scaleAndLengthZoom: function (add) {
+            var group = this.operateGroups[this.operateIndex];
+            if (group.children.length == 1) {
+                if (add) {
+                    // group.children[0].rotation[axis] += value; 
+                    group.children[0].scale.x *= 2;
+                    group.children[0].scale.y *= 2;
+                    group.children[0].scale.z *= 2;
+
+                    group.children[0].position.x *= 2;
+                    group.children[0].position.y *= 2;
+                    group.children[0].position.z *= 2;
+                }
+                else {
+                    group.children[0].scale.x /= 2;
+                    group.children[0].scale.y /= 2;
+                    group.children[0].scale.z /= 2;
+
+                    group.children[0].position.x /= 2;
+                    group.children[0].position.y /= 2;
+                    group.children[0].position.z /= 2;
+                }
+                $.notify('比例：' + group.children[0].scale.x);
+            }
+        }
+    };
+    return obj;
+};
+let placeObj = null;
+var setUpPlaceObj = function () {
+    placeObj = objPlaceSystemObj();
+}

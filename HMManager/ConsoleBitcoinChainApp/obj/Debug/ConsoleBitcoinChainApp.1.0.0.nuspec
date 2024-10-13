@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>ConsoleBitcoinChainApp</id>
+    <version>1.0.0</version>
+    <authors>ConsoleBitcoinChainApp</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="fafe6a97942725cee82d96a54a382eea5c857680" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="BitCoin" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="DalOfAddress" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="TcpFunction" version="1.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="E:\Project\HouseManager5_0\VRPServer\ConsoleBitcoinChainApp\bin\Debug\net8.0\ConsoleBitcoinChainApp.runtimeconfig.json" target="lib\net8.0\ConsoleBitcoinChainApp.runtimeconfig.json" />
+    <file src="E:\Project\HouseManager5_0\VRPServer\ConsoleBitcoinChainApp\bin\Debug\net8.0\ConsoleBitcoinChainApp.dll" target="lib\net8.0\ConsoleBitcoinChainApp.dll" />
+  </files>
+</package>

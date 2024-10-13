@@ -61,12 +61,12 @@
         }
     },
     animate: function () {
-        var group = objMain.getOutGroup;
-        var startIndex = group.children.length - 1;
-        for (var i = startIndex; i >= 0; i--) {
-            //if
-            var item = group.children[i];
-            item.rotation.set(0, Date.now() % 6000 / 6000 * 2 * Math.PI, 0, 'XYZ');
-        }
+        //var group = objMain.getOutGroup;
+        //var startIndex = group.children.length - 1;
+        //for (var i = startIndex; i >= 0; i--) {
+        //    //if
+        //    var item = group.children[i];
+        //    item.rotation.set(0, Date.now() % 6000 / 6000 * 2 * Math.PI, 0, 'XYZ');
+        //}
     }
 }

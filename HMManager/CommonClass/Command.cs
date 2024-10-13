@@ -315,6 +315,8 @@ namespace CommonClass
         public string address { get; set; }
     }
 
+    public class IsAdministrator : CommandNotify { }
+
     public class StockScoreNotify : CommandNotify
     {
         public string showType { get; set; }
@@ -406,6 +408,11 @@ namespace CommonClass
         public string carIndexStr { get; set; }
         public long costValue { get; set; }
         public long sumValue { get; set; }
+    }
+    public class BradCastGroupAbility : CommandNotify 
+    {
+        public string pType { get; set; }  
+        public long showValue { get; set; }
     }
     public class BradCarState : CommandNotify
     {
@@ -573,8 +580,19 @@ namespace CommonClass
             public int z { get; set; }
             public string c { get; set; }
             public int h { get; set; }
+            public double r { get; set; }
         }
     }
+    public class BradCastCompass : CommandNotify
+    {
+        public CompassPosition position { get; set; }
+    }
+    public class BradCastGoldObj : BradCastCompass
+    {
+        public bool hasValue { get; set; }
+    };
+    public class BradCastTurbine : BradCastGoldObj { }
+    public class BradCastSatelite : BradCastGoldObj { }
 
     public class PlayerAdd : Command
     {
@@ -1403,11 +1421,46 @@ namespace CommonClass
         }
     }
 
-    public class WebSelectPassData : CommonClass.Command 
+    public class WebSelectPassData : CommonClass.Command
     {
         public string Key { get; set; }
         public string GroupKey { get; set; }
         public string code { get; set; }
         public int height { get; set; }
+    }
+    public class Navigate : CommonClass.Command
+    {
+        public string Key { get; set; }
+        public string GroupKey { get; set; }
+    }
+    public class CollectPassData : CommonClass.Command
+    {
+        public string Key { get; set; }
+        public string GroupKey { get; set; }
+    }
+    public class ChargePassData : CommonClass.Command
+    {
+        public string Key { get; set; }
+        public string GroupKey { get; set; }
+    }
+    public class ReturnHomePassData : CommonClass.Command
+    {
+        public string Key { get; set; }
+        public string GroupKey { get; set; }
+    }
+
+    public class SqlCommand : CommonClass.Command
+    {
+        public string Sql { get; set; }
+    }
+    public class CheckIsAdministrator : CommonClass.Command
+    {
+        public string Key { get; set; }
+        public string GroupKey { get; set; }
+    }
+    public class UploadPositionJson : CommonClass.Command 
+    {
+        public string fileName { get; set; }
+        public string jsonString { get; set; }
     }
 }

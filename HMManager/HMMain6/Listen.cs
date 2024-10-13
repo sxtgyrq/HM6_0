@@ -97,6 +97,73 @@ namespace HMMain6
                         objI.SaveMoney(saveMoney);
                         outPut = "ok";
                     }; break;
+                case "Navigate":
+                    {
+                        CommonClass.Navigate n = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.Navigate>(notifyJson);
+                        objI.NavigateF(n, Program.dt);
+                        outPut = "ok";
+                    }; break;
+                case "SmallMapClick":
+                    {
+                        SmallMapClick smc = Newtonsoft.Json.JsonConvert.DeserializeObject<SmallMapClick>(notifyJson);
+                        outPut = objI.SmallMapClickF(smc);
+                    }; break;
+                case "CollectPassData":
+                    {
+                        CollectPassData cpd = Newtonsoft.Json.JsonConvert.DeserializeObject<CollectPassData>(notifyJson);
+                        outPut = objI.CollectF(cpd, Program.dt);
+                        outPut = "ok";
+                    }; break;
+                case "ChargePassData":
+                    {
+                        ChargePassData cpd = Newtonsoft.Json.JsonConvert.DeserializeObject<ChargePassData>(notifyJson);
+                        outPut = objI.ChargeF(cpd, Program.dt);
+                        outPut = "ok";
+                    }; break;
+                case "ReturnHomePassData":
+                    {
+                        ReturnHomePassData rhpd = Newtonsoft.Json.JsonConvert.DeserializeObject<ReturnHomePassData>(notifyJson);
+                        outPut = objI.ReturnHomeF(rhpd, Program.dt);
+                    }; break;
+                case "CheckIsAdministrator":
+                    {
+                        CheckIsAdministrator cisA = Newtonsoft.Json.JsonConvert.DeserializeObject<CheckIsAdministrator>(notifyJson);
+                        outPut = objI.CheckIsAdministratorF(cisA, Program.dt);
+                    }; break;
+                case "SqlCommand":
+                    {
+                        SqlCommand sq = Newtonsoft.Json.JsonConvert.DeserializeObject<SqlCommand>(notifyJson);
+                        Program.dt.DealWithSql(sq);
+                    }; break;
+                case "UploadPositionJson":
+                    {
+                        UploadPositionJson upj = Newtonsoft.Json.JsonConvert.DeserializeObject<UploadPositionJson>(notifyJson);
+                        Program.dt.DealWithUploadJson(upj);
+                    }; break;
+                case "GetFrequency":
+                    {
+                        outPut = Program.rm.GetFrequency().ToString();
+                    }; break;
+                case "AllBuiisnessAddr":
+                    {
+                        outPut = objI.GetAllBuiisnessAddr(Program.dt);
+                    }; break;
+                case "GetTransctionModelDetail":
+                    {
+                        CommonClass.ModelTranstraction.GetTransctionModelDetail gtmd = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.GetTransctionModelDetail>(notifyJson);
+                        outPut = objI.GetTransctionModelDetail(gtmd);
+                    }; break;
+                case "TradeIndex":
+                    {
+                        CommonClass.ModelTranstraction.TradeIndex tc = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.TradeIndex>(notifyJson);
+                        outPut = objI.TradeIndex(tc);
+                    }; break;
+                case "TradeSetAsReward":
+                    {
+
+                        CommonClass.ModelTranstraction.TradeSetAsReward tsar = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.TradeSetAsReward>(notifyJson);
+                        outPut = objI.TradeSetAsRewardF(tsar);
+                    }; break;
             }
             return outPut;
         }

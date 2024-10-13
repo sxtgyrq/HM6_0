@@ -1,4 +1,5 @@
 ﻿using CommonClass;
+using ModelBase.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -144,11 +145,11 @@ namespace HMMain6.RoomMainF
         }
         public string updateCollect(SetCollect sc, GetRandomPos grp)
         {
-            Action p = () =>
-            {
-                // this.collectE.updateCollect(sc, grp);
-            };
-            WaitForAPeriodOfTime(p, 10 * 1000);
+            //Action p = () =>
+            //{
+            //    // this.collectE.updateCollect(sc, grp);
+            //};
+            //WaitForAPeriodOfTime(p, 10 * 1000);
             return "";
         }
 
@@ -160,6 +161,74 @@ namespace HMMain6.RoomMainF
                 Thread.Sleep(waitTime);
             });
             th.Start();
+        }
+
+
+        private void UpdateGoldOjb(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
+        {
+            if (this._Groups.ContainsKey(groupKey))
+            {
+                var group = this._Groups[groupKey];
+                if (group._PlayerInGroup.ContainsKey(key))
+                {
+                    var player = group._PlayerInGroup[key];
+                    var targetFpIndex = player.getCar().targetFpIndex;
+                    //  var target = getRandomPosObj.GetSelections(targetFpIndex);
+
+                    var position = grp.GetGoldOjb(targetFpIndex);
+                    var obj = GetItemGoldObj(player.WebSocketID, position);
+                    obj.hasValue = group.HasGold(targetFpIndex);
+                    if (player.BTCAddress == AdministratorAddr)
+                    {
+                        if (grp.GetFpByIndex(targetFpIndex).CanGetScore)
+                            obj.hasValue = true;
+                    }
+
+                    var url = player.FromUrl;
+                    var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                    notifyMsgs.Add(url);
+                    notifyMsgs.Add(sendMsg);
+                    //if (group.HasGold(targetFpIndex))
+                    //{
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                }
+            }
+        }
+        private BradCastGoldObj GetItemGoldObj(int webSocketID, CompassPosition position)
+        {
+            var obj = new BradCastGoldObj
+            {
+                c = "BradCastGoldObj",
+                WebSocketID = webSocketID,
+                position = position
+            };
+            return obj;
+        }
+
+        public string CollectF(CollectPassData cpd, GetRandomPos grp)
+        {
+            if (this._Groups.ContainsKey(cpd.GroupKey))
+            {
+                List<string> notifyMsgs = new List<string>();
+                var group = this._Groups[cpd.GroupKey];
+                var collectSuccess = group.CollectF(cpd.Key, grp, ref notifyMsgs);
+
+                if (collectSuccess)
+                {
+                    foreach (var item in group._PlayerInGroup)
+                    {
+                        UpdateGoldOjb(item.Key, group.GroupKey, grp, ref notifyMsgs);
+                    }
+                }
+
+                Startup.sendSeveralMsgs(notifyMsgs);
+            }
+            return "";
         }
     }
 }

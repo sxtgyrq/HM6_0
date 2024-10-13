@@ -134,6 +134,7 @@ namespace HMMain6.GroupClassF
 
                     CreateTime = DateTime.Now,
                     ActiveTime = DateTime.Now,
+                    LastActionTime = DateTime.Now,
                     PromoteState = new Dictionary<string, int>()
                         {
                             {"mile",-1},

@@ -130,6 +130,12 @@ namespace HMMain6.interfaceOfHM
 
         string GetRoadMeshF(GetRoadMesh tbm);
         string UpdateCurrentPosition(WebSelectPassData wspd, GetRandomPos grp);
+        void NavigateF(CommonClass.Navigate nObj, GetRandomPos grp);
+        string CollectF(CollectPassData cpd, GetRandomPos grp);
+        string ChargeF(ChargePassData cpd, GetRandomPos grp);
+        string ReturnHomeF(ReturnHomePassData rhpd, GetRandomPos grp);
+        string CheckIsAdministratorF(CheckIsAdministrator cisA, GetRandomPos grp);
+
     }
 
     interface MapEditor
@@ -171,17 +177,17 @@ namespace HMMain6.interfaceOfHM
     interface ModelTranstractionI
     {
         // string GetFirstModelAddr(ModelTranstraction.GetFirstModelAddr gfm);
-        //  string GetTransctionModelDetail(ModelTranstraction.GetTransctionModelDetail gtmd);
+        string GetTransctionModelDetail(ModelTranstraction.GetTransctionModelDetail gtmd);
         // string GetTransctionFromChainF(ModelTranstraction.GetTransctionFromChain gtfc);
         // string GetRoadNearby(ModelTranstraction.GetRoadNearby grn);
         // string TradeCoinF(ModelTranstraction.TradeCoin tc);
         // string TradeCoinForSaveF(ModelTranstraction.TradeCoinForSave tcfs);
-        // string TradeSetAsRewardF(ModelTranstraction.TradeSetAsReward tsar);
+        string TradeSetAsRewardF(ModelTranstraction.TradeSetAsReward tsar);
         //  string GetAllModelPosition();
         //  string GetModelByID(ModelTranstraction.GetModelByID gmbid);
-        // string TradeIndex(ModelTranstraction.TradeIndex tc);
+        string TradeIndex(ModelTranstraction.TradeIndex tc);
         // string GetRewardFromBuildingF(GetRewardFromBuildingM m);
-        // string GetAllBuiisnessAddr();
+        string GetAllBuiisnessAddr(GetRandomPos grp);
         // string GetAllStockAddr(AllStockAddr ss);
         //  string GetRewardInfomationByStartDate(ModelTranstraction.RewardInfomation ri);
         // string GetForwardRewardInfomationByStartDate(ModelTranstraction.RewardInfomation ri);
@@ -203,6 +209,7 @@ namespace HMMain6.interfaceOfHM
         // string CancleTheTransaction(ModelTranstraction.CancleTheTransactionToServer ctt);
         // string GetStockScoreTransctionStateF(ModelTranstraction.GetStockScoreTransctionState ctt);
         // string ScoreTransactionToServerF(ModelTranstraction.ScoreTransactionToServer ssts);
+        //  string GetAllBuiisnessAddr();
     }
 
     interface Resistance

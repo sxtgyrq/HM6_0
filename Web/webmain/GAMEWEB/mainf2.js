@@ -35,7 +35,7 @@ TaskClass.prototype.__defineSetter__("state", function (val) {
     //}
     this._state = val;
     if (this._oldState != this._state) {
-        operatePanel.refresh();
+        //  operatePanel.refresh();
         this._oldState = val;
     }
     //ShowSetInfo("Age");
@@ -50,6 +50,8 @@ TaskClass.prototype.__defineSetter__("carSelect", function (val) {
     this._carSelect = val;
     //ShowSetInfo("Age");
 });
+
+
 var objMain =
 {
     debug: (function () {
@@ -101,7 +103,10 @@ var objMain =
         CollectCoinIcon: null,
         GoldIngotIcon: null,
         vehicle: null,
-        cubeCore: null
+        cubeCore: null,
+        compass: null,
+        turbine: null,
+        satelite: null
     },
     shieldGroup: null,
     confusePrepareGroup: null,
@@ -1134,7 +1139,24 @@ var objMain =
                 // objMain.scene.background = objMain.background.backgroundData[r.Md5Key];
             }
         },
-        rotateOthers: function (r) { },
+        rotateOthers: function (r) {
+            var groups = [objMain.roadGroup, objMain.carGroup, objMain.buildingGroup, objMain.collectGroup, objMain.directionGroup, objMain.targetGroup, objMain.getOutGroup];
+            for (var i = 0; i < groups.length; i++) {
+                var group = groups[i];
+                group.rotation.y = r;
+            }
+            if (this.mainFP != null) {
+                while (r < 0) {
+                    r += Math.PI * 2;
+                }
+                while (r > Math.PI * 2) {
+                    r -= Math.PI * 2;
+                }
+                this.rotateOtherScript = 'UPDATE fpdetail SET ObjInSceneRotation =' + r + ' WHERE FPCode=\'' + this.mainFP.fPCode + '\' AND Height=' + this.mainFP.Height + ';';
+            }
+        },
+        mainFP: null,
+        rotateOtherScript: '',
         changeWithJson: function (code, height) {
             var url = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/bgImg/' + code + '_' + height + '.json';
             $.getJSON(url, function (params) {
@@ -1153,10 +1175,33 @@ var objMain =
                     objMain.scene.background.images[3] = newTexture.images[3]; // ny
                     objMain.scene.background.images[4] = newTexture.images[4]; // pz
                     objMain.scene.background.images[5] = newTexture.images[5]; // nz
-                    objMain.scene.background.needsUpdate = true;
+                    if (objMain.scene.background == undefined || objMain.scene.background == null) { }
+                    else { objMain.scene.background.needsUpdate = true; }
                     cubeTextureLoader = null;
                 });
             })
+        },
+        keyZ: function () {
+            if (this.mainFP != null) {
+                this.mainFP.ObjInSceneRotation += 0.01;
+                this.rotateOthers(this.mainFP.ObjInSceneRotation);
+            }
+        },
+        keyX: function () {
+            if (this.mainFP != null) {
+                this.mainFP.ObjInSceneRotation -= 0.01;
+                this.rotateOthers(this.mainFP.ObjInSceneRotation);
+            }
+        },
+        keyC: function () {
+            if (this.mainFP != null) {
+                alert(this.rotateOtherScript);
+            }
+        },
+        keyPassToOrigin: function () {
+            //    objMain.ws.send('SetOnLine');  objMain.
+            var passObj = { 'c': 'SqlCommand', 'Sql': this.rotateOtherScript };
+            objMain.ws.send(JSON.stringify(passObj));
         }
     },
     rightAndDuty:
@@ -1219,7 +1264,7 @@ var objMain =
                                 if (objMain.state == 'OnLine') {
                                     objMain.state = objMain.receivedState;
                                     setTransactionHtml.change();
-                                    operatePanel.refresh();
+                                    //  operatePanel.refresh();
                                     UpdateOtherBasePoint();
                                 }
                             }; break;
@@ -1236,6 +1281,7 @@ var objMain =
                         case 'empty':
                             {
                                 if (objMain.state == 'OnLine') {
+                                    objMain.ws.close();
                                     location.reload();
                                 }
                             }; break;
@@ -1520,6 +1566,38 @@ var objMain =
                         console.log('objectInput', objectInput);
                         objMain.ws.send('SetCubeCore');
                         objMain.ModelInput.cubeCore = objectInput;
+                    })
+                }; break;
+            case 'SetGoldBaby':
+                {
+                    loadGoldBaby(function (objectInput) {
+                        console.log('SetGoldBaby', objectInput);
+                        objMain.ws.send('SetGoldBaby');
+                        objMain.ModelInput.GoldIngotIcon = objectInput;
+                    })
+                }; break;
+            case 'SetTurbine':
+                {
+                    loadTurbine(function (objectInput) {
+                        console.log('SetTurbine', objectInput);
+                        objMain.ws.send('SetTurbine');
+                        objMain.ModelInput.turbine = objectInput;
+                    })
+                }; break;
+            case 'SetCompass':
+                {
+                    loadCompass(function (objectInput) {
+                        console.log('SetCompass', objectInput);
+                        objMain.ws.send('SetCompass');
+                        objMain.ModelInput.compass = objectInput;
+                    })
+                }; break;
+            case 'SetSatelite':
+                {
+                    loadSatelite(function (objectInput) {
+                        console.log('SetSatelite', objectInput);
+                        objMain.ws.send('SetSatelite');
+                        objMain.ModelInput.satelite = objectInput;
                     })
                 }; break;
             case 'SetAttackIcon':
@@ -2151,7 +2229,7 @@ var objMain =
                         // var oldLength = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target);
                         //objMain.carStateTimestamp[received_obj.carID] = { 't': Date.now(), 'l': oldLength };
                         objNotify.notifyCar(received_obj.carID, received_obj.State);
-                        operatePanel.refresh();
+                        //    operatePanel.refresh();
                         //setInterval(function () {
                         //    objMain.music.MarketRepeat();
                         //}, 1000);//这里要用setTimeOut主要是考虑加速时，carState 与speed 传输不一致，加个时间，做缓冲。
@@ -2220,7 +2298,7 @@ var objMain =
                     objMain.driver.sex = received_obj.sex;
                     objMain.driver.race = received_obj.race;
                     driverSys.drawIcon(objMain.driver);
-                    operatePanel.refresh();
+                    //    operatePanel.refresh();
                 }; break;
             case 'SpeedNotify':
                 {
@@ -2343,7 +2421,7 @@ var objMain =
                     setTransactionHtml.drawTradeTable();
                     setTransactionHtml.originalTable();
                     transactionBussiness().showAuthor(received_obj.author);
-                    operatePanel.refresh();
+                    //   operatePanel.refresh();
                 }; break;
             case 'TradeDetail':
                 {
@@ -2423,7 +2501,7 @@ var objMain =
                 {
                     moneyAbsorb.copyModel(received_obj.reduceValue);
                     DirectionOperator.showWhenIsWrong(received_obj.postionCrossKey);
-                    operatePanel.refresh();
+                    //  operatePanel.refresh();
                     //objMain.se
                 }; break;
             case 'DrawTarget':
@@ -2507,6 +2585,11 @@ var objMain =
                         //location.reload();
                     }
                     window.localStorage.removeItem('session');
+
+                    if (objMain.state == 'OnLine') {
+                        //  location.reload();
+                    }
+
                     //stateNeedToChange:
                     //{
                     //    'isLogin': false,
@@ -2676,6 +2759,31 @@ var objMain =
                     console.log('BradCastSelections', received_obj);
                     drawLineOfSelections(received_obj);
                     // objMain.targetGroup
+                }; break;
+            case 'BradCastCompass':
+                {
+                    console.log('BradCastSelections', received_obj);
+                    drawCompass(received_obj);
+                }; break;
+            case 'BradCastGoldObj':
+                {
+                    console.log('BradCastGoldObj', received_obj);
+                    drawGoldObj(received_obj);
+                }; break;
+            case 'BradCastTurbine':
+                {
+                    console.log('BradCastTurbine', received_obj);
+                    drawTurbine(received_obj);
+                }; break;
+            case 'BradCastSatelite':
+                {
+                    console.log('BradCastSatelite', received_obj);
+                    drawStatelite(received_obj);
+                }; break;
+            case 'IsAdministrator':
+                {
+                    operatePanel.refresh();
+                    setUpPlaceObj();
                 }; break;
             default:
                 {
@@ -2862,25 +2970,25 @@ function animate() {
                     const lengthOfCC = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target);
                     //var deltaYOfSelectObj = 0;
                     // deltaYOfSelectObj = animateDetailF.moveCamara(lengthOfCC);
-                    for (var i = 0; i < objMain.collectGroup.children.length; i++) {
-                        /*
-                         * 初始化人民币的大小
-                         */
+                    //for (var i = 0; i < objMain.collectGroup.children.length; i++) {
+                    //    /*
+                    //     * 初始化人民币的大小
+                    //     */
 
-                        if (objMain.collectGroup.children[i].isGroup) {
-                            //if (objMain.Task.state == 'collect') {
-                            //    var scale = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target) / 1226;
-                            //    objMain.collectGroup.children[i].scale.set(scale, scale, scale);
-                            //}
-                            //else
-                            {
-                                var scale = 0.020;//; objMain.mainF.getLength(objMain.camera.position, objMain.controls.target) / 1840;
-                                objMain.collectGroup.children[i].scale.set(scale, scale, scale);
-                            }
-                            objMain.collectGroup.children[i].rotation.set(-Math.PI / 2, 0, Date.now() % 30000 / 30000 * Math.PI * 2);
-                            //  objMain.collectGroup.children[i].position.y = 0;
-                        }
-                    }
+                    //    if (objMain.collectGroup.children[i].isGroup) {
+                    //        //if (objMain.Task.state == 'collect') {
+                    //        //    var scale = objMain.mainF.getLength(objMain.camera.position, objMain.controls.target) / 1226;
+                    //        //    objMain.collectGroup.children[i].scale.set(scale, scale, scale);
+                    //        //}
+                    //        //else
+                    //        {
+                    //            var scale = 0.020;//; objMain.mainF.getLength(objMain.camera.position, objMain.controls.target) / 1840;
+                    //            objMain.collectGroup.children[i].scale.set(scale, scale, scale);
+                    //        }
+                    //        objMain.collectGroup.children[i].rotation.set(-Math.PI / 2, 0, Date.now() % 30000 / 30000 * Math.PI * 2);
+                    //        //  objMain.collectGroup.children[i].position.y = 0;
+                    //    }
+                    //}
 
                     for (var i = 0; i < objMain.fightSituationGroup.children.length; i++) {
                         /*
@@ -2942,42 +3050,42 @@ function animate() {
                             objMain.columnGroup.children[i].scale.setZ(1);
                         }
                     }
-                    for (var i = 0; i < objMain.buildingGroup.children.length; i++) {
-                        objMain.buildingGroup.children[i].scale.setX(1);
-                        objMain.buildingGroup.children[i].scale.setZ(1);
-                        objMain.buildingGroup.children[i].visible = false;
-                        if (objMain.mainF.getLength(objMain.controls.target, objMain.buildingGroup.children[i].position) < lengthOfCC * 5) {
-                            objMain.buildingGroup.children[i].visible = true;
-                        }
-                        if (objMain.buildingGroup.children[i].visible) {
-                            continue;
-                        }
-                        else {
-                            var selfCar = objMain.carGroup.getObjectByName('car_' + objMain.indexKey);
-                            if (objMain.mainF.getLength(selfCar.position, objMain.buildingGroup.children[i].position) < lengthOfCC * 5) {
-                                objMain.buildingGroup.children[i].visible = true;
-                            }
-                        }
-                        if (objMain.buildingGroup.children[i].visible) {
-                            continue;
-                        }
-                        else {
-                            for (var j = 0; j < drawGoodsSelection.data.length; j++) {
-                                var end = drawGoodsSelection.data[j];
-                                if (objMain.mainF.getLength(end, objMain.buildingGroup.children[i].position) < lengthOfCC) {
-                                    objMain.buildingGroup.children[i].visible = true;
-                                    break;
-                                }
-                            }
-                        }
-                        //显示3km以内的建筑物
-                    }
-                    {
-                        var lengthOfObjs = objMain.groupOfOperatePanle.children.length;
-                        for (var i = lengthOfObjs - 1; i >= 0; i--) {
-                            objMain.groupOfOperatePanle.remove(objMain.groupOfOperatePanle.children[i]);
-                        }
-                    }
+                    //for (var i = 0; i < objMain.buildingGroup.children.length; i++) {
+                    //    objMain.buildingGroup.children[i].scale.setX(1);
+                    //    objMain.buildingGroup.children[i].scale.setZ(1);
+                    //    objMain.buildingGroup.children[i].visible = false;
+                    //    if (objMain.mainF.getLength(objMain.controls.target, objMain.buildingGroup.children[i].position) < lengthOfCC * 5) {
+                    //        objMain.buildingGroup.children[i].visible = true;
+                    //    }
+                    //    if (objMain.buildingGroup.children[i].visible) {
+                    //        continue;
+                    //    }
+                    //    else {
+                    //        var selfCar = objMain.carGroup.getObjectByName('car_' + objMain.indexKey);
+                    //        if (objMain.mainF.getLength(selfCar.position, objMain.buildingGroup.children[i].position) < lengthOfCC * 5) {
+                    //            objMain.buildingGroup.children[i].visible = true;
+                    //        }
+                    //    }
+                    //    if (objMain.buildingGroup.children[i].visible) {
+                    //        continue;
+                    //    }
+                    //    else {
+                    //        for (var j = 0; j < drawGoodsSelection.data.length; j++) {
+                    //            var end = drawGoodsSelection.data[j];
+                    //            if (objMain.mainF.getLength(end, objMain.buildingGroup.children[i].position) < lengthOfCC) {
+                    //                objMain.buildingGroup.children[i].visible = true;
+                    //                break;
+                    //            }
+                    //        }
+                    //    }
+                    //    //显示3km以内的建筑物
+                    //}
+                    //{
+                    //    var lengthOfObjs = objMain.groupOfOperatePanle.children.length;
+                    //    for (var i = lengthOfObjs - 1; i >= 0; i--) {
+                    //        objMain.groupOfOperatePanle.remove(objMain.groupOfOperatePanle.children[i]);
+                    //    }
+                    //}
                     if (objMain.canSelect) {
 
                         var objMainTaskstate = '';
@@ -3139,36 +3247,36 @@ function animate() {
                             switch (objMain.Task.state) {
                                 case 'collect':
                                     {
-                                        selectObj.scale.set(scale, scale, scale);
-                                        objMain.selectObj.obj = selectObj;
-                                        objMain.selectObj.type = objMain.Task.state;
-                                        selectObj.rotation.set(-Math.PI / 2, 0, Date.now() % 6000 / 6000 * Math.PI * 2);
-                                        {
-                                            var collectPosition = selectObj.userData.collectPosition;
-                                            var element = document.createElement('div');
-                                            element.style.width = '10em';
-                                            element.style.marginTop = '3em';
-                                            var color = '#ff0000';
-                                            element.style.border = '2px solid ' + color;
-                                            element.style.borderTopLeftRadius = '0.5em';
-                                            element.style.backgroundColor = 'rgba(245, 255, 179, 0.9)';
-                                            element.style.color = '#1504f6';
+                                        //selectObj.scale.set(scale, scale, scale);
+                                        //objMain.selectObj.obj = selectObj;
+                                        //objMain.selectObj.type = objMain.Task.state;
+                                        //selectObj.rotation.set(-Math.PI / 2, 0, Date.now() % 6000 / 6000 * Math.PI * 2);
+                                        //{
+                                        //    var collectPosition = selectObj.userData.collectPosition;
+                                        //    var element = document.createElement('div');
+                                        //    element.style.width = '10em';
+                                        //    element.style.marginTop = '3em';
+                                        //    var color = '#ff0000';
+                                        //    element.style.border = '2px solid ' + color;
+                                        //    element.style.borderTopLeftRadius = '0.5em';
+                                        //    element.style.backgroundColor = 'rgba(245, 255, 179, 0.9)';
+                                        //    element.style.color = '#1504f6';
 
-                                            var div2 = document.createElement('div');
-                                            div2.style.fontSize = '0.5em';
+                                        //    var div2 = document.createElement('div');
+                                        //    div2.style.fontSize = '0.5em';
 
-                                            var b = document.createElement('b');
-                                            b.innerHTML = '到' + collectPosition.Fp.region + '[<span style="color:#02020f">' + collectPosition.Fp.FastenPositionName + '</span>]回收<span style="color:#02020f">' + (collectPosition.collectMoney).toFixed(2) + '元</span>现金。';
-                                            div2.appendChild(b);
+                                        //    var b = document.createElement('b');
+                                        //    b.innerHTML = '到' + collectPosition.Fp.region + '[<span style="color:#02020f">' + collectPosition.Fp.FastenPositionName + '</span>]回收<span style="color:#02020f">' + (collectPosition.collectMoney).toFixed(2) + '元</span>现金。';
+                                        //    div2.appendChild(b);
 
-                                            element.appendChild(div2);
+                                        //    element.appendChild(div2);
 
-                                            var object = new THREE.CSS2DObject(element);
-                                            var fp = collectPosition.Fp;
-                                            object.position.set(MercatorGetXbyLongitude(fp.Longitude), MercatorGetZbyHeight(fp.Height) * objMain.heightAmplify, -MercatorGetYbyLatitude(fp.Latitde));
+                                        //    var object = new THREE.CSS2DObject(element);
+                                        //    var fp = collectPosition.Fp;
+                                        //    object.position.set(MercatorGetXbyLongitude(fp.Longitude), MercatorGetZbyHeight(fp.Height) * objMain.heightAmplify, -MercatorGetYbyLatitude(fp.Latitde));
 
-                                            objMain.groupOfOperatePanle.add(object);
-                                        }
+                                        //    objMain.groupOfOperatePanle.add(object);
+                                        //}
                                     }; break;
                                 case 'ability':
                                     {
@@ -3394,19 +3502,22 @@ function animate() {
 
                     }
 
-                    if (objMain.carState.car == 'selecting') {
-                        if (objMain.directionGroup.children.length > 0) {
-                            var newDirectionModle = objMain.directionGroup.children[0];
-                            var roleKey = 'car_' + objMain.indexKey;
-                            var car_self = objMain.carGroup.getObjectByName(roleKey);
-                            if (car_self) {
-                                var x = newDirectionModle.position.x;
-                                var y = newDirectionModle.position.y + 0.1;
-                                var z = newDirectionModle.position.z;
-                                car_self.position.set(x, y, z);
-                            }
-                        }
-                    }
+                    if (objMain.buildingGroup.children.length > 0)
+                        objMain.buildingGroup.children[0].children[1].rotation.x = (Date.now() % 2000) / 2000 * Math.PI * 2;
+
+                    //if (objMain.carState.car == 'selecting') {
+                    //    if (objMain.directionGroup.children.length > 0) {
+                    //        var newDirectionModle = objMain.directionGroup.children[0];
+                    //        var roleKey = 'car_' + objMain.indexKey;
+                    //        var car_self = objMain.carGroup.getObjectByName(roleKey);
+                    //        if (car_self) {
+                    //            var x = newDirectionModle.position.x;
+                    //            var y = newDirectionModle.position.y + 0.1;
+                    //            var z = newDirectionModle.position.z;
+                    //            car_self.position.set(x, y, z);
+                    //        }
+                    //    }
+                    //}
                     var selfsCarIsMoving = false;
                     {
                         var keys = Object.keys(objMain.carsAnimateData);//获取素有的Key
@@ -3429,17 +3540,17 @@ function animate() {
                             }
                         }
                     }
-                    if (objMain.carState.car == 'selecting') {
-                        objMain.directionGroup.visible = true;
-                        if (objMain.directionGroup.children.length > 0) {
-                        }
+                    //if (objMain.carState.car == 'selecting') {
+                    //    objMain.directionGroup.visible = true;
+                    //    if (objMain.directionGroup.children.length > 0) {
+                    //    }
 
-                        objMain.controls.maxPolarAngle = Math.PI / 2 + Math.PI / 3;
-                    }
-                    else {
-                        objMain.directionGroup.visible = false;
-                        objMain.controls.maxPolarAngle = Math.PI / 2 + Math.PI / 3;//Math.PI / 2 - Math.PI / 36;
-                    }
+                    //    objMain.controls.maxPolarAngle = Math.PI / 2 + Math.PI / 3;
+                    //}
+                    //else {
+                    //    objMain.directionGroup.visible = false;
+                    //    objMain.controls.maxPolarAngle = Math.PI / 2 + Math.PI / 3;//Math.PI / 2 - Math.PI / 36;
+                    //}
 
                     // var carPosition = 
                     if (selfsCarIsMoving) {
@@ -3461,42 +3572,42 @@ function animate() {
                     targetShow.animate();
                     objMain.animation.animateCameraByCarAndTask();
 
-                    theLagestHoderKey.animate();
+                    //   theLagestHoderKey.animate();
                     objMain.renderer.render(objMain.scene, objMain.camera);
                     objMain.labelRenderer.render(objMain.scene, objMain.camera);
                     objMain.light1.position.set(objMain.camera.position.x + lengthOfCC / 3, objMain.camera.position.y, objMain.camera.position.z + lengthOfCC / 3);
-                    if (objMain.directionGroup.visible) {
-                        var minAngle = Math.PI / 20;
-                        var selectIndex = -1;
-                        for (var i = 1; i < objMain.directionGroup.children.length; i++) {
-                            if (i == 1)
-                                objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowA.oldM;
-                            else if (i == 2)
-                                objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowB.oldM;
-                            else if (i == 3)
-                                objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowC.oldM;
-                            var delta = (objMain.directionGroup.children[i].rotation.y - (objMain.controls.getAzimuthalAngle() + Math.PI / 2) + Math.PI * 2) % (Math.PI * 2);
-                            if (delta < minAngle) {
-                                minAngle = delta;
-                                selectIndex = i;
-                            }
-                            else {
-                                continue;
-                            }
-                        }
-                        if (selectIndex == 1) {
-                            objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowA.newM;
-                        }
-                        else if (selectIndex == 2) {
-                            objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowB.newM;
-                        }
-                        else if (selectIndex == 3) {
-                            objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowC.newM;
-                        }
-                        else {
-                            objMain.selection.initialize();
-                        }
-                    }
+                    //if (objMain.directionGroup.visible) {
+                    //    var minAngle = Math.PI / 20;
+                    //    var selectIndex = -1;
+                    //    for (var i = 1; i < objMain.directionGroup.children.length; i++) {
+                    //        if (i == 1)
+                    //            objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowA.oldM;
+                    //        else if (i == 2)
+                    //            objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowB.oldM;
+                    //        else if (i == 3)
+                    //            objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowC.oldM;
+                    //        var delta = (objMain.directionGroup.children[i].rotation.y - (objMain.controls.getAzimuthalAngle() + Math.PI / 2) + Math.PI * 2) % (Math.PI * 2);
+                    //        if (delta < minAngle) {
+                    //            minAngle = delta;
+                    //            selectIndex = i;
+                    //        }
+                    //        else {
+                    //            continue;
+                    //        }
+                    //    }
+                    //    if (selectIndex == 1) {
+                    //        objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowA.newM;
+                    //    }
+                    //    else if (selectIndex == 2) {
+                    //        objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowB.newM;
+                    //    }
+                    //    else if (selectIndex == 3) {
+                    //        objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowC.newM;
+                    //    }
+                    //    else {
+                    //        objMain.selection.initialize();
+                    //    }
+                    //}
 
                     //for (var i = 0; i < objMain.marketGroup.children.length; i++) {
                     //    var itemLength = objMain.mainF.getLength(objMain.marketGroup.children[i].position, objMain.controls.target);
@@ -3512,6 +3623,7 @@ function animate() {
                     if (objMain.animateParameter.loopCount % 5000 == 0) {
                         onWindowResize();
                     }
+                    animateAerialVehicle();
                 }; break;
             case 'LookForBuildings':
                 {
@@ -3629,11 +3741,15 @@ var buttonClick = function (v) {
                     }; break;
                 case 'team':
                     {
+                        alert('暂不开放');
+                        return;
                         objMain.ws.send(JSON.stringify({ c: 'CreateTeam', RefererAddr: nyrqUrl.get() }));
                         objMain.receivedState = '';
                     }; break;
                 case 'join':
                     {
+                        alert('暂不开放');
+                        return;
                         objMain.ws.send(JSON.stringify({ c: 'JoinTeam' }));
                         objMain.receivedState = '';
                     }; break;
@@ -3653,11 +3769,15 @@ var buttonClick = function (v) {
                     }; break;
                 case 'QueryReward':
                     {
+                        alert('暂不开放');
+                        return;
                         //selectSingleTeamJoinHtmlF.setNameHtmlShow();
                         objMain.ws.send(JSON.stringify({ c: 'QueryReward' }));
                     }; break;
                 case 'HelpAndGuide':
                     {
+                        alert('暂不开放');
+                        return;
                         objMain.ws.send(JSON.stringify({ c: 'Guid' }));
                     }; break;
 
@@ -3797,7 +3917,7 @@ var QueryReward =
         //objMain.labelRenderer.domElement.addEventListener
 
         var operateEnd = function (event) {
-            operatePanel.refresh();
+            //   operatePanel.refresh();
             return;
         }
         var operateStart = function (event) {
@@ -4028,7 +4148,7 @@ var setTransactionHtml =
         //objMain.labelRenderer.domElement.addEventListener
 
         var operateEnd = function (event) {
-            operatePanel.refresh();
+            //   operatePanel.refresh();
             return;
         }
         var operateStart = function (event) {
@@ -4263,13 +4383,39 @@ var set3DHtml = function () {
     var operateEnd = function (event) {
         var roadLineSelected = false;
         var targetSelected = false;
+        var compassIconIsClicked = false;
+        var goldObjIsClicked = false;
+        var isSelected = false;
+        var turbineIsClicked = false;
+        var sateliteIsClicked = false;
+
         if (event.clientX != undefined && event.clientX != null) {
             //此处对应鼠标
             objMain.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             objMain.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
             // lookInfoForCar();
             roadLineSelected = lookInfoForSelect();
-            if (!roadLineSelected) targetSelected = confirmSelect();
+            isSelected = isSelected || roadLineSelected;
+            if (!isSelected) {
+                targetSelected = confirmSelect();
+                isSelected = isSelected || targetSelected;
+            }
+            if (!isSelected) {
+                compassIconIsClicked = compassClicked();
+                isSelected = isSelected || compassIconIsClicked;
+            }
+            if (!isSelected) {
+                goldObjIsClicked = goldObjClicked();
+                isSelected = isSelected || goldObjIsClicked;
+            }
+            if (!isSelected) {
+                turbineIsClicked = turbineClicked();
+                isSelected = isSelected || turbineIsClicked;
+            }
+            if (!isSelected) {
+                sateliteIsClicked = sataliteClicked();
+                isSelected = isSelected || sateliteIsClicked;
+            }
         }
         else if (event.changedTouches && event.changedTouches.length > 0) {
             // 获取第一个触摸点。这个对应手机触摸屏。
@@ -4278,10 +4424,30 @@ var set3DHtml = function () {
             objMain.mouse.y = - (touch.clientY / window.innerHeight) * 2 + 1;
             // lookInfoForCar();
             roadLineSelected = lookInfoForSelect();
-            if (!roadLineSelected) targetSelected = confirmSelect();
+            isSelected = isSelected || roadLineSelected;
+            if (!isSelected) {
+                targetSelected = confirmSelect();
+                isSelected = isSelected || targetSelected;
+            }
+            if (!isSelected) {
+                compassIconIsClicked = compassClicked();
+                isSelected = isSelected || compassIconIsClicked;
+            }
+            if (!isSelected) {
+                goldObjIsClicked = goldObjClicked();
+                isSelected = isSelected || goldObjIsClicked;
+            }
+            if (!isSelected) {
+                turbineIsClicked = turbineClicked();
+                isSelected = isSelected || turbineIsClicked;
+            }
+            if (!isSelected) {
+                sateliteIsClicked = sataliteClicked();
+                isSelected = isSelected || sateliteIsClicked;
+            }
         }
 
-        if (roadLineSelected) { }
+        if (isSelected) { }
         else {
             objMain.mainF.removeF.clearGroup(objMain.targetGroup);
         }
@@ -5228,7 +5394,23 @@ var operatePanel =
         }
     },
     refresh: function () {
+        var addParent = function () {
+            var divTaskOperatingPanel = document.createElement('div');
+            divTaskOperatingPanel.id = 'taskOperatingPanel';
+
+            divTaskOperatingPanel.style.position = 'absolute';
+            divTaskOperatingPanel.style.zIndex = '7';
+            divTaskOperatingPanel.style.right = '20px';
+            divTaskOperatingPanel.style.border = 'none';
+            divTaskOperatingPanel.style.width = '5em';
+            divTaskOperatingPanel.style.color = 'green';
+            //根据底部计算所得
+            divTaskOperatingPanel.style.bottom = 'calc(2.5em + 14px)';
+            document.body.appendChild(divTaskOperatingPanel);
+            return divTaskOperatingPanel;
+        };
         operatePanel.clearPanel();
+        operatePanel.divTaskOperatingPanel = addParent();
         var clearBtnOfObj = function (id) {
             if (document.getElementById(id) == null) { }
             else {
@@ -5238,17 +5420,9 @@ var operatePanel =
                 }
             }
         }
-        var divTaskOperatingPanel = document.createElement('div');
-        divTaskOperatingPanel.id = 'taskOperatingPanel';
 
-        divTaskOperatingPanel.style.position = 'absolute';
-        divTaskOperatingPanel.style.zIndex = '7';
-        divTaskOperatingPanel.style.right = '20px';
-        divTaskOperatingPanel.style.border = 'none';
-        divTaskOperatingPanel.style.width = '5em';
-        divTaskOperatingPanel.style.color = 'green';
-        //根据底部计算所得
-        divTaskOperatingPanel.style.bottom = 'calc(2.5em + 14px)';
+
+
         var addItemToTaskOperatingPanle = function (btnName, id, clickF) {
             var div = document.createElement('div');
             div.style.width = 'calc(5em - 4px)';
@@ -5259,6 +5433,8 @@ var operatePanel =
             div.style.marginBottom = '4px';
             div.style.background = 'rgba(0, 191, 255, 0.6)';
             div.style.height = '1.3em';
+            div.style.padding = '0.5em 0.1em 0.5em 0.1em';
+            div.style.color = 'white';
             div.id = id;
 
             var span = document.createElement('span');
@@ -5268,7 +5444,7 @@ var operatePanel =
 
             div.onclick = function () { clickF(); }
             div.classList.add('costomButton');
-            divTaskOperatingPanel.appendChild(div);
+            operatePanel.divTaskOperatingPanel.appendChild(div);
         }
 
         var addItemToTaskOperatingPanle2 = function (bgRc, id, clickF, objState) {
@@ -5316,447 +5492,121 @@ var operatePanel =
             //}
 
             div.classList.add('costomButton');
-            divTaskOperatingPanel.appendChild(div);
+            operatePanel.divTaskOperatingPanel.appendChild(div);
         }
-        document.body.appendChild(divTaskOperatingPanel);
 
-        var carState = objMain.carState["car"];
 
-        var attackF = function () {
-            addItemToTaskOperatingPanle('攻击', 'attackBtn', function () {
-                objMain.canSelect = false;
-                if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                    var selectObj = objMain.selectObj.obj;
-                    var customTagIndexKey = selectObj.name.substring(5);
-                    if (objMain.othersBasePoint[customTagIndexKey] != undefined) {
-                        var fPIndex = objMain.othersBasePoint[customTagIndexKey].fPIndex;
-                        objMain.ws.send(JSON.stringify({ 'c': 'Attack', 'TargetOwner': customTagIndexKey, 'Target': fPIndex }));
+        var seleModel = function (choseObjFInput) {
+            operatePanel.clearPanel();
+            operatePanel.divTaskOperatingPanel = addParent();
 
-                    }
-                    objMain.selectObj.obj = null;
-                    objMain.selectObj.type = '';
-                    operatePanel.refresh();
-                }
+            addItemToTaskOperatingPanle('0精', 'cancelBuildingDetailF', function () {
+                placeObj.model = 0;
+                operatePanel.refresh();
             });
-
-        };
-        var lookUp = function () {
-            addItemToTaskOperatingPanle('查看', 'viewBtn', function () {
-                objMain.canSelect = false;
-                if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                    var selectObj = objMain.selectObj.obj;
-                    var animationData =
-                    {
-                        old: {
-                            x: objMain.controls.target.x,
-                            y: objMain.controls.target.y,
-                            z: objMain.controls.target.z,
-                            t: Date.now()
-                        },
-                        newT:
-                        {
-                            x: objMain.selectObj.obj.position.x,
-                            y: objMain.selectObj.obj.position.y,
-                            z: objMain.selectObj.obj.position.z,
-                            t: Date.now() + 3000
-                        }
-                    };
-                    objMain.heightLevel = objMain.selectObj.obj.position.y;
-                    objMain.camaraAnimateData = animationData;
-                    objMain.selectObj.obj = null;
-                    objMain.selectObj.type = '';
-                    operatePanel.refresh();
-                }
+            addItemToTaskOperatingPanle('1xM', 'cancelBuildingDetailF', function () {
+                placeObj.model = 1;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('2zM', 'cancelBuildingDetailF', function () {
+                placeObj.model = 2;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('3yM', 'cancelBuildingDetailF', function () {
+                placeObj.model = 3;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('4xR', 'cancelBuildingDetailF', function () {
+                placeObj.model = 4;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('5zR', 'cancelBuildingDetailF', function () {
+                placeObj.model = 5;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('6yR', 'cancelBuildingDetailF', function () {
+                placeObj.model = 6;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('7s', 'cancelBuildingDetailF', function () {
+                placeObj.model = 7;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('8O', 'cancelBuildingDetailF', function () {
+                choseObjFInput();
+            });
+            addItemToTaskOperatingPanle('9SAndL', 'cancelBuildingDetailF', function () {
+                placeObj.model = 9;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('BACK', 'cancelBuildingDetailF', function () {
+                operatePanel.refresh();
             });
         };
-        var cancelBuildingDetailF = function () {
-            addItemToTaskOperatingPanle('取消', 'cancelBuildingDetailF', function () {
-                objMain.canSelect = false;
-                if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                    objMain.ws.send(JSON.stringify({ c: 'CancleLookForBuildings' }));
-                    objMain.selectObj.obj = null;
-                    objMain.selectObj.type = '';
+        var administratorOperator = function (seleModelFInput, choseObjFInput) {
+            addItemToTaskOperatingPanle('Key_Z', 'cancelBuildingDetailF', function () {
+                try {
+                    objMain.background.keyZ();
                 }
+                catch (e) { }
+            });
+            addItemToTaskOperatingPanle('Key_X', 'cancelBuildingDetailF', function () {
+                try {
+                    objMain.background.keyX();
+                }
+                catch (e) { }
+            });
+            addItemToTaskOperatingPanle('Key_C', 'cancelBuildingDetailF', function () {
+                try {
+                    if (confirm('确定保存转角？')) {
+                        objMain.background.keyPassToOrigin();
+                    }
+                }
+                catch (e) { }
+            });
+            addItemToTaskOperatingPanle('Key_A', 'cancelBuildingDetailF', function () {
+                //  placeObj.changeModelAKey();
+                seleModelFInput(choseObjFInput);
+            });
+            addItemToTaskOperatingPanle('Key_S', 'cancelBuildingDetailF', function () {
+                placeObj.addSkey();
+            });
+            addItemToTaskOperatingPanle('Key_D', 'cancelBuildingDetailF', function () {
+                placeObj.minusDkey();
+            });
+            addItemToTaskOperatingPanle('Key_F', 'cancelBuildingDetailF', function () {
+                if (confirm('确定保存方位？'))
+                    placeObj.uploadKeyF();
             });
         };
-        var buildingDetailF = function () {
-            addItemToTaskOperatingPanle('求福', 'buildingGetRewardBtn', function () {
-                objMain.canSelect = false;
-                if (objMain.carState["car"] == 'waitOnRoad') {
-                    var selectObj = objMain.selectObj.obj;
-                    var animationData =
-                    {
-                        old: {
-                            x: objMain.controls.target.x,
-                            y: objMain.controls.target.y,
-                            z: objMain.controls.target.z,
-                            t: Date.now()
-                        },
-                        newT:
-                        {
-                            x: objMain.selectObj.obj.position.x,
-                            y: objMain.selectObj.obj.position.y,
-                            z: objMain.selectObj.obj.position.z,
-                            t: Date.now() + 3000
-                        }
-                    };
-                    objMain.camaraAnimateData = animationData;
-                    if (objMain.selectObj.obj != null) {
-                        var selectObjName = objMain.selectObj.obj.name;
-                        objMain.ws.send(JSON.stringify({ c: 'GetRewardFromBuildings', 'selectObjName': selectObjName }));
-                    }
-                    objMain.selectObj.obj = null;
-                    objMain.selectObj.type = '';
-                    operatePanel.refresh();
-                }
-                else if (objMain.carState["car"] == 'waitAtBaseStation') {
-                    var selectObj = objMain.selectObj.obj;
-                    var animationData =
-                    {
-                        old: {
-                            x: objMain.controls.target.x,
-                            y: objMain.controls.target.y,
-                            z: objMain.controls.target.z,
-                            t: Date.now()
-                        },
-                        newT:
-                        {
-                            x: objMain.selectObj.obj.position.x,
-                            y: objMain.selectObj.obj.position.y,
-                            z: objMain.selectObj.obj.position.z,
-                            t: Date.now() + 3000
-                        }
-                    };
-                    objMain.camaraAnimateData = animationData;
-                    objMain.selectObj.obj = null;
-                    objMain.selectObj.type = '';
-                    operatePanel.refresh();
-                    $.notify('在基地求福不能提升能力', 'info');
-                }
+        var choseObj = function () {
+            operatePanel.clearPanel();
+            operatePanel.divTaskOperatingPanel = addParent();//  addParent();
+
+            addItemToTaskOperatingPanle('元宝', 'cancelBuildingDetailF', function () {
+                placeObj.operateIndex = 0;
+                operatePanel.refresh();
             });
-            addItemToTaskOperatingPanle('详情', 'buildingDetailBtn', function () {
-                objMain.canSelect = false;
-                if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                    var selectObj = objMain.selectObj.obj;
-                    var animationData =
-                    {
-                        old: {
-                            x: objMain.controls.target.x,
-                            y: objMain.controls.target.y,
-                            z: objMain.controls.target.z,
-                            t: Date.now()
-                        },
-                        newT:
-                        {
-                            x: objMain.selectObj.obj.position.x,
-                            y: objMain.selectObj.obj.position.y,
-                            z: objMain.selectObj.obj.position.z,
-                            t: Date.now() + 3000
-                        }
-                    };
-                    objMain.camaraAnimateData = animationData;
-                    if (objMain.selectObj.obj != null) {
-                        var selectObjName = objMain.selectObj.obj.name;
-                        objMain.ws.send(JSON.stringify({ c: 'LookForBuildings', 'selectObjName': selectObjName }));
-                    }
-                    objMain.selectObj.obj = null;
-                    objMain.selectObj.type = '';
-                    operatePanel.refresh();
-                }
+            addItemToTaskOperatingPanle('卫星', 'cancelBuildingDetailF', function () {
+                placeObj.operateIndex = 1;
+                operatePanel.refresh();
             });
-        };
-        var selectPanle = function () {
-            divTaskOperatingPanel.style.top = 'calc(50% - 6em - 4px)';
-            divTaskOperatingPanel.style.right = 'calc(50% - 6em - 10px)';
-
-            if (objMain.directionGroup.children.length > 2) {
-                divTaskOperatingPanel.style.height = 'calc(9.27em + 4.59px)';
-                divTaskOperatingPanel.style.top = 'calc(50% - 6em - 4px)';
-            }
-            if (objMain.directionGroup.children.length > 3) {
-                divTaskOperatingPanel.style.height = 'calc(12.36em + 6.12px)';
-                divTaskOperatingPanel.style.top = 'calc(50% - 9em - 10px)';
-            }
-            if (objMain.directionGroup.children.length > 4) {
-                divTaskOperatingPanel.style.height = 'calc(15.45em + 7.65px)';
-                divTaskOperatingPanel.style.top = 'calc(50% - 12em - 16px)';
-            }
-            addItemToTaskOperatingPanle2('Pic/crossimg/cross.png', 'selectDirectionBtn', function () {
-                if (objMain.carState["car"] == 'selecting') {
-
-                    if (objMain.directionGroup.children.length > 0) {
-                        //  var p = objMain.directionGroup.children[0].position;
-                        var selectObj = objMain.directionGroup.children[0];
-                        var animationData =
-                        {
-                            old: {
-                                x: objMain.controls.target.x,
-                                y: objMain.controls.target.y,
-                                z: objMain.controls.target.z,
-                                t: Date.now()
-                            },
-                            newT:
-                            {
-                                x: selectObj.position.x,
-                                y: selectObj.position.y,
-                                z: selectObj.position.z,
-                                t: Date.now() + 3000
-                            }
-                        };
-                        objMain.camaraAnimateData = animationData;
-                        if (objMain.directionGroup.children.length > 1)
-                            objMain.directionGroup.children[1].userData.objState = 0;
-                        if (objMain.directionGroup.children.length > 2)
-                            objMain.directionGroup.children[2].userData.objState = 0;
-                        if (objMain.directionGroup.children.length > 3)
-                            objMain.directionGroup.children[3].userData.objState = 0;
-                        operatePanel.refresh();
-                    }
-                }
-            }, 0);
-            if (objMain.directionGroup.children.length > 1)
-                addItemToTaskOperatingPanle2('Pic/crossimg/A.png', 'selectDirectionBtn_01', function () {
-                    if (objMain.carState["car"] == 'selecting') {
-                        if (objMain.directionGroup.children.length > 1) {
-                            var rotationY = objMain.directionGroup.children[1].rotation.y;
-                            var postionCrossKey = objMain.directionGroup.children[1].userData.postionCrossKey;
-                            var json = JSON.stringify({ c: 'ViewAngle', 'rotationY': rotationY, 'postionCrossKey': postionCrossKey, 'uid': '' });
-                            objMain.ws.send(json);
-                            objMain.jscwObj.play('A');
-                            objMain.directionGroup.children[1].userData.objState = 1;
-                            operatePanel.refresh();
-                            setTimeout(() => {
-                                objMain.targetMusic.change('pass');
-                            }, 3000);
-                        }
-                    }
-                }, objMain.directionGroup.children[1].userData.objState);
-            if (objMain.directionGroup.children.length > 2)
-                addItemToTaskOperatingPanle2('Pic/crossimg/B.png', 'selectDirectionBtn_02', function () {
-                    if (objMain.carState["car"] == 'selecting') {
-                        if (objMain.directionGroup.children.length > 2) {
-                            var rotationY = objMain.directionGroup.children[2].rotation.y;
-                            var postionCrossKey = objMain.directionGroup.children[2].userData.postionCrossKey;
-                            var json = JSON.stringify({ c: 'ViewAngle', 'rotationY': rotationY, 'postionCrossKey': postionCrossKey, 'uid': '' });
-                            objMain.ws.send(json);
-                            objMain.jscwObj.play('B');
-                            objMain.directionGroup.children[2].userData.objState = 1;
-                            operatePanel.refresh();
-                            setTimeout(() => {
-                                objMain.targetMusic.change('pass');
-                            }, 3000);
-                        }
-                    }
-                }, objMain.directionGroup.children[2].userData.objState);
-            if (objMain.directionGroup.children.length > 3)
-                addItemToTaskOperatingPanle2('Pic/crossimg/C.png', 'selectDirectionBtn_03', function () {
-                    if (objMain.carState["car"] == 'selecting') {
-                        if (objMain.directionGroup.children.length > 3) {
-                            var rotationY = objMain.directionGroup.children[3].rotation.y;
-                            var postionCrossKey = objMain.directionGroup.children[3].userData.postionCrossKey;
-                            var json = JSON.stringify({ c: 'ViewAngle', 'rotationY': rotationY, 'postionCrossKey': postionCrossKey, 'uid': '' });
-                            objMain.ws.send(json);
-                            objMain.jscwObj.play('C');
-                            objMain.directionGroup.children[3].userData.objState = 1;
-                            operatePanel.refresh();
-                            setTimeout(() => {
-                                objMain.targetMusic.change('pass');
-                            }, 3000);
-                        }
-                    }
-                }, objMain.directionGroup.children[3].userData.objState);
-
-            if (true)
-                addItemToTaskOperatingPanle2('Pic/crossimg/getrightAnswer.png', 'selectDirectionBtn_GetAnswer', function () {
-                    if (objMain.carState["car"] == 'selecting') {
-
-                        if (objMain.directionGroup.children.length > 0) {
-                            var json = JSON.stringify({ c: 'AskWhichToSelect' });
-                            objMain.jscwObj.play('ASK');
-                            objMain.ws.send(json);
-                        }
-                    }
-                }, 0);
-        };
-        switch (carState) {
-            case 'waitAtBaseStation':
-                {
-                    switch (objMain.Task.state) {
-                        case 'collect':
-                            {
-                                addItemToTaskOperatingPanle('收集', 'collectBtn', function () {
-                                    objMain.canSelect = false;
-                                    if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                                        var selectObj = objMain.selectObj.obj;
-                                        var radius = 0.00001;
-                                        objMain.ws.send(JSON.stringify(
-                                            {
-                                                'c': 'SmallMapClick',
-                                                'lon': selectObj.userData.collectPosition.Fp.positionLongitudeOnRoad,
-                                                'lat': selectObj.userData.collectPosition.Fp.positionLatitudeOnRoad,
-                                                'radius': radius
-                                            }));
-
-                                        objMain.selectObj.obj = null;
-                                        objMain.selectObj.type = '';
-                                        operatePanel.refresh();
-                                        whetherGo.cancle();
-                                    }
-                                });
-                                lookUp();
-                            }; break;
-                        case 'attack':
-                            {
-                            }; break;
-                        case 'mile':
-                        case 'volume':
-                        case 'speed':
-                            {
-                                addItemToTaskOperatingPanle('寻宝', 'promoteBtn', function () {
-                                    objMain.canSelect = false;
-                                    if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                                        var selectObj = objMain.selectObj.obj;
-                                        var radius = 0.00001;
-                                        objMain.ws.send(JSON.stringify(
-                                            {
-                                                'c': 'SmallMapClick',
-                                                'lon': selectObj.userData.Fp.positionLongitudeOnRoad,
-                                                'lat': selectObj.userData.Fp.positionLatitudeOnRoad,
-                                                'radius': radius
-                                            }));
-
-                                        objMain.selectObj.obj = null;
-                                        objMain.selectObj.type = '';
-                                        operatePanel.refresh();
-                                        whetherGo.cancle();
-                                    }
-                                });
-                                lookUp();
-                            }; break;
-                        case 'ability':
-                            {
-                            }; break;
-                        case 'setReturn':
-                            {
-                                lookUp();
-                            }; break;
-                        case 'building':
-                            {
-                                if (objMain.state == 'OnLine') {
-
-                                    if (objMain.selectObj.obj != null && objMain.selectObj.obj.userData != undefined && objMain.selectObj.obj.userData.modelType == 'building') {
-                                        buildingDetailF();
-                                    }
-                                    else {
-                                        lookUp();
-                                    }
-                                }
-                            }; break;
-                    }
-                }; break;
-            case 'waitOnRoad':
-                {
-                    switch (objMain.Task.state) {
-                        case 'collect':
-                            {
-                                addItemToTaskOperatingPanle('收集', 'collectBtn', function () {
-                                    objMain.canSelect = false;
-                                    if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                                        var selectObj = objMain.selectObj.obj;
-                                        // console.log('selectObj', selectObj.userData.collectPosition.Fp.FastenPositionID);
-                                        //  objMain.ws.send(JSON.stringify({ 'c': 'Collect', 'cType': 'findWork', 'fastenpositionID': selectObj.userData.collectPosition.Fp.FastenPositionID, 'collectIndex': selectObj.userData.collectPosition.collectIndex }));
-                                        var radius = 0.00001;
-                                        objMain.ws.send(JSON.stringify(
-                                            {
-                                                'c': 'SmallMapClick',
-                                                'lon': selectObj.userData.collectPosition.Fp.positionLongitudeOnRoad,
-                                                'lat': selectObj.userData.collectPosition.Fp.positionLatitudeOnRoad,
-                                                'radius': radius
-                                            }));
-
-                                        objMain.selectObj.obj = null;
-                                        objMain.selectObj.type = '';
-                                        operatePanel.refresh();
-                                        whetherGo.cancle();
-                                    }
-                                });
-                                lookUp();
-                            }; break;
-                        case 'attack':
-                            {
-                                //attackF();
-                                //magicF();
-                                //lookUp();
-                            }; break;
-                        case 'mile':
-                        case 'volume':
-                        case 'speed':
-                            {
-                                addItemToTaskOperatingPanle('寻宝', 'promoteBtn', function () {
-                                    objMain.canSelect = false;
-                                    if (objMain.carState["car"] == 'waitAtBaseStation' || objMain.carState["car"] == 'waitOnRoad') {
-                                        var selectObj = objMain.selectObj.obj;
-                                        var radius = 0.00001;
-                                        objMain.ws.send(JSON.stringify(
-                                            {
-                                                'c': 'SmallMapClick',
-                                                'lon': selectObj.userData.Fp.positionLongitudeOnRoad,
-                                                'lat': selectObj.userData.Fp.positionLatitudeOnRoad,
-                                                'radius': radius
-                                            }));
-                                        objMain.selectObj.obj = null;
-                                        objMain.selectObj.type = '';
-                                        operatePanel.refresh();
-                                        whetherGo.cancle();
-                                    }
-                                });
-                                lookUp();
-                            }; break;
-                        case 'setReturn':
-                            {
-                                lookUp();
-                            }; break;
-                        case 'building':
-                            {
-                                if (objMain.state == 'LookForBuildings') {
-                                    cancelBuildingDetailF();
-                                }
-                                else if (objMain.state == 'OnLine')
-
-                                    if (objMain.selectObj.obj == null) {
-                                        lookUp();
-                                    }
-                                    else if (objMain.selectObj.obj.userData) {
-                                        if (objMain.selectObj.obj.userData.modelType == 'building') {
-                                            buildingDetailF();
-                                        }
-                                        else
-                                            lookUp();
-                                    }
-                                    else {
-                                        lookUp();
-                                    }
-                            }; break;
-                    }
-                    if (objMain.state == 'OnLine')
-                        addItemToTaskOperatingPanle('回基地', 'goBackBtn', function () {
-                            objMain.canSelect = false;
-                            if (objMain.carState["car"] == 'waitOnRoad') {
-                                var selectObj = objMain.selectObj.obj;
-                                objMain.ws.send(JSON.stringify({ 'c': 'SetCarReturn' }));
-                                objMain.selectObj.obj = null;
-                                objMain.selectObj.type = '';
-                                operatePanel.refresh();
-                                whetherGo.cancle();
-                            }
-                        });
-                }; break;
-            case 'selecting':
-                {
-                    selectPanle();
-                }; break;
+            addItemToTaskOperatingPanle('风车', 'cancelBuildingDetailF', function () {
+                placeObj.operateIndex = 2;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('指南针', 'cancelBuildingDetailF', function () {
+                placeObj.operateIndex = 3;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('BACK', 'cancelBuildingDetailF', function () {
+                operatePanel.refresh();
+            });
         }
-    }
+
+        administratorOperator(seleModel, choseObj);
+    },
+    divTaskOperatingPanel: null
 };
 var ModelOperateF =
 {
@@ -6757,7 +6607,7 @@ var DirectionOperator =
                 objMain.directionGroup.add(newArrow);
             }
         }
-        operatePanel.refresh();
+        //  operatePanel.refresh();
         objMain.selection.initialize();
     },
     showWhenIsWrong: function (postionCrossKey) {
@@ -6796,7 +6646,7 @@ var DirectionOperator =
                     objMain.directionGroup.children[selectIndex].userData.objState = 1;
 
                 }
-                operatePanel.refresh();
+                //    operatePanel.refresh();
             }
         }
     }
@@ -7386,15 +7236,88 @@ var confirmSelect = function () {
     //objMain.targetGroup.children[0].children[0]
     for (var i = 0; i < objMain.targetGroup.children.length; i++) {
         var itemGroup = objMain.targetGroup.children[i];
+        if (itemGroup != undefined) {
+            for (var j = 0; j < itemGroup.children.length; j++) {
+                var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
+                if (intersection.length > 0) {
+                    // alert('点击了视角求');
+                    //drawCoreObj(objMain.roadGroup.children[i].userData);
+                    var userData = objMain.targetGroup.children[i].userData;
+                    var objPass = { c: 'WebSelect', code: userData.c, height: userData.h };
+                    objMain.ws.send(JSON.stringify(objPass));
+                    console.log('obj', JSON.stringify(objPass));
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+var compassClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.directionGroup.children.length; i++) {
+        var itemGroup = objMain.directionGroup.children[i];
         for (var j = 0; j < itemGroup.children.length; j++) {
             var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
             if (intersection.length > 0) {
-                alert('点击了视角求');
-                //drawCoreObj(objMain.roadGroup.children[i].userData);
-                var userData = objMain.targetGroup.children[i].userData;
-                var objPass = { c: 'WebSelect', code: userData.c, height: userData.h };
-                objMain.ws.send(JSON.stringify(objPass));
-                console.log('obj', JSON.stringify(objPass));
+                //  alert('点击了指针')
+                objMain.ws.send(JSON.stringify({ 'c': 'Navigate' }));
+                return true;
+            }
+        }
+
+    }
+    return false;
+}
+
+var goldObjClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.collectGroup.children.length; i++) {
+        var itemGroup = objMain.collectGroup.children[i];
+        for (var j = 0; j < itemGroup.children.length; j++) {
+            var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
+            if (intersection.length > 0) {
+                //alert('点击了金元宝');
+                objMain.ws.send(JSON.stringify({ 'c': 'Collect' }));
+                return true;
+            }
+        }
+
+    }
+    return false;
+}
+
+var turbineClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.buildingGroup.children.length; i++) {
+        var itemGroup = objMain.buildingGroup.children[i];
+        for (var j = 0; j < itemGroup.children.length; j++) {
+            var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
+            if (intersection.length > 0) {
+                //alert('点击了金元宝');
+                objMain.ws.send(JSON.stringify({ 'c': 'Charge' }));
+                return true;
+            }
+        }
+
+    }
+    return false;
+}
+
+var sataliteClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.getOutGroup.children.length; i++) {
+        var itemGroup = objMain.getOutGroup.children[i];
+        for (var j = 0; j < itemGroup.children.length; j++) {
+            var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
+            if (intersection.length > 0) {
+                //alert('点击了金元宝');
+                objMain.ws.send(JSON.stringify({ 'c': 'ReturnHome' }));
                 return true;
             }
         }

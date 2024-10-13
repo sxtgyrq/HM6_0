@@ -180,7 +180,7 @@ namespace HMMain6
 
         DateTime CreateTime { get; set; }
 
-        long _costMiles = 3599;
+        long _costMiles = 7199;
         /// <summary>
         /// 已经花费的能量！这里暂时用历程替代。
         /// </summary>
@@ -198,9 +198,7 @@ namespace HMMain6
         {
             get
             {
-                return role.Group.Money;
-                //switch(role.Group.Money)
-                //return _costBusiness;
+                return _costBusiness;
             }
             //private set
 
@@ -251,7 +249,7 @@ namespace HMMain6
                     "speed",new List<DateTime>()
                 }
             };
-            this._costMiles = 0;//this.costMiles = 0;
+            this._costMiles = 7199;//this.costMiles = 0;
             this._costVolume = 0;//this.costVolume = 0;
             this._costBusiness = 0;
             this._diamondInCar = "";
@@ -260,6 +258,7 @@ namespace HMMain6
             //this.diamondInCar = "";
             //this.subsidize = 0;
         }
+
 
 
 
@@ -283,7 +282,7 @@ namespace HMMain6
                 VolumeChanged((Player)player, car, ref notifyMsg, "volume");
                 SpeedChanged((Player)player, car, ref notifyMsg, "speed");
             }
-            this.setCostMiles(0, player, car, ref notifyMsg);
+            this.setCostMiles(this.mile, player, car, ref notifyMsg);
             // this.costMiles = 0;
             //this.setCostBusiness(0, player, car, ref notifyMsg);
             //this.set
@@ -401,7 +400,7 @@ namespace HMMain6
         {
             get
             {
-                var selfValue = this.role.Group.groupAbility["mile"] * 80 + this.Data["mile"].Count * 400 + 3600;
+                var selfValue = this.role.Group.groupAbility["mile"] * 280 + this.Data["mile"].Count * 1400 + 7200;
                 return selfValue;
             }
         }
@@ -538,20 +537,21 @@ namespace HMMain6
         /// <summary>
         /// 
         /// </summary>
-        /// <returns>返回DiamondCount("mile")+DiamondCount("volume")+DiamondCount("speed") </returns>
+        /// <returns>返回DiamondCount("mile")+DiamondCount("volume")</returns>
         internal int DiamondCount()
         {
-            return DiamondCount("mile") + DiamondCount("volume") + DiamondCount("speed");
+            return DiamondCount("mile") + DiamondCount("volume");// + DiamondCount("speed");
         }
         /// <summary>
         /// 小车能跑的最快速度！
         /// </summary>
-        public int Speed
+        public long Speed
         {
             get
             {
-                var selfValue = this.role.Group.groupAbility["speed"] * 3 + this.Data["speed"].Count * 15 + 75;
-                return selfValue;
+                return this.role.Group.costEnegy;
+                //var selfValue = this.role.Group.groupAbility["speed"] * 3 + this.Data["speed"].Count * 15 + 75;
+                //return selfValue;
 
             }
         }

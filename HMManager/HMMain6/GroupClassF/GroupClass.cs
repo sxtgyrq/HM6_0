@@ -15,6 +15,7 @@ namespace HMMain6.GroupClassF
         /// </summary>
         public long Money { get; private set; }
         public DateTime startTime { get; private set; }
+
         public int countOfAskRoad
         {
             get
@@ -27,7 +28,8 @@ namespace HMMain6.GroupClassF
                 return result;
             }
         }
-        public Dictionary<bool, DateTime> taskFineshedTime { get; private set; }
+        public Dictionary<string, long> taskFineshedTime { get; private set; }
+        Dictionary<string, string> recordErrorMsgs = new Dictionary<string, string>();
         public GroupClass(string gkey, RoomMainF.RoomMain roomMain)
         {
             _collectPosition = new Dictionary<int, int>();
@@ -39,12 +41,14 @@ namespace HMMain6.GroupClassF
             //};
             that = roomMain;
             this._PlayerInGroup = new Dictionary<string, Player>();
+            this.EnegyChanged = that.GroupValueChanged2_0;
             this.Money = 0;
             this.startTime = DateTime.Now;
             //this.countOfAskRoad = 0;
-            this.taskFineshedTime = new Dictionary<bool, DateTime>();
-            //  this.recordErrorMsgs = new Dictionary<string, string>();
-            //this.records = new Dictionary<string, bool>();
+            this.taskFineshedTime = new Dictionary<string, long>();
+            this.costEnegy = 0;
+            this.recordErrorMsgs = new Dictionary<string, string>();
+            this.records = new Dictionary<string, bool>();
 
             //this.groupAbility = new Dictionary<string, int>()
             //{
