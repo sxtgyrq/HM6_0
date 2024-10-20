@@ -3,12 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+<<<<<<< HEAD
 using System.Text.RegularExpressions;
+=======
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
 using System.Threading.Tasks;
 
 namespace HMMain6.RoomMainF
 {
+<<<<<<< HEAD
     public partial class RoomMain : interfaceOfHM.MapEditor
+=======
+    public partial class RoomMain
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
     {
         const string AdministratorAddr = "1Hu87mNieKQBZnY89LpeMb5AMJUE8rfExk";
         private void UpdateAdministrator(Player player, ref List<string> notifyMsg)
@@ -45,6 +52,7 @@ namespace HMMain6.RoomMainF
             // throw new NotImplementedException();
         }
 
+<<<<<<< HEAD
 
 
 
@@ -305,5 +313,8 @@ namespace HMMain6.RoomMainF
             var Index = DalOfAddress.HMSever.TradeRecord.GetCount(addrBussiness, addrFrom);
             return Index;
         }
+=======
+       
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
     }
 }

@@ -39,7 +39,11 @@ namespace HMMain6.GroupClassF
                 {
                     var enegy = grp.GetEnegy(player.getCar().targetFpIndex);
                     var costEnegy = enegy[index];
+<<<<<<< HEAD
                     var timeCostToWait = DateTime.Now - player.LastActionTime;
+=======
+                    var timeCostToWait = DateTime.Now - player.ActiveTime;
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
                     var sumNeed = costEnegy + Convert.ToInt32(timeCostToWait.TotalSeconds);
                     if (player.getCar().ability.leftMile > sumNeed)
                     {
@@ -58,7 +62,11 @@ namespace HMMain6.GroupClassF
                         // player.rm.WebNotify(player, $"");
                         // var 
 
+<<<<<<< HEAD
                         player.LastActionTime = DateTime.Now;
+=======
+                        player.ActiveTime = DateTime.Now;
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
                         return true;
                     }
                     else
