@@ -79,7 +79,7 @@ namespace HMMain6.interfaceOfHM
         /// 更新价格
         /// </summary>
         /// <param name="sa"></param>
-       // void MarketUpdate(MarketPrice sa);
+        void MarketUpdate(MarketPrice sa);
 
         /// <summary>
         /// 从市场上购买宝石
@@ -115,7 +115,7 @@ namespace HMMain6.interfaceOfHM
         string ask(Ask v);
         string CheckCarStateF(CheckCarState ccs);
         //  void SystemBradcast(SystemBradcast sb);
-        //string Statictis(ServerStatictis ss);
+        string Statictis(ServerStatictis ss);
         //string GetFightSituationF(GetFightSituation fs);
         // string GetTaskCopyDetailF(GetTaskCopyDetail gtd);
         // string RemoveTaskCopyF(RemoveTaskCopyM gtd);
@@ -134,7 +134,8 @@ namespace HMMain6.interfaceOfHM
         string CollectF(CollectPassData cpd, GetRandomPos grp);
         string ChargeF(ChargePassData cpd, GetRandomPos grp);
         string ReturnHomeF(ReturnHomePassData rhpd, GetRandomPos grp);
-        string CheckIsAdministratorF(CheckIsAdministrator cisA, GetRandomPos grp); 
+        string CheckIsAdministratorF(CheckIsAdministrator cisA, GetRandomPos grp);
+
     }
 
     interface MapEditor
@@ -161,7 +162,7 @@ namespace HMMain6.interfaceOfHM
         // string LockModelObj(CommonClass.MapEditor.UseModelObj cn);
         // string ClearModelObj();
         // string GetUnLockedModel(CommonClass.MapEditor.GetUnLockedModel gulm);
-        // void UpdateModelStock(ModelStock sa);
+        void UpdateModelStock(ModelStock sa);
         string GetBG(SetCrossBG ss);
         string GetFPBGF(GetFPBG ss);
         // string GetHeightAtPositionF(CommonClass.MapEditor.GetHeightAtPosition gh, Data dt);
@@ -175,9 +176,10 @@ namespace HMMain6.interfaceOfHM
 
     interface ModelTranstractionI
     {
+        string GetCurrentPlaceBitcoinAddrF(ModelTranstraction.GetCurrentPlaceBitcoinAddr gcpb, GetRandomPos grp);
         // string GetFirstModelAddr(ModelTranstraction.GetFirstModelAddr gfm);
         string GetTransctionModelDetail(ModelTranstraction.GetTransctionModelDetail gtmd);
-        // string GetTransctionFromChainF(ModelTranstraction.GetTransctionFromChain gtfc);
+        string GetTransctionFromChainF(ModelTranstraction.GetTransctionFromChain gtfc);
         // string GetRoadNearby(ModelTranstraction.GetRoadNearby grn);
         // string TradeCoinF(ModelTranstraction.TradeCoin tc);
         // string TradeCoinForSaveF(ModelTranstraction.TradeCoinForSave tcfs);

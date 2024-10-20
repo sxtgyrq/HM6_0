@@ -30,6 +30,11 @@ namespace CommonClass
                 public string author { get; set; }
             }
         }
+        public class GetCurrentPlaceBitcoinAddr : Command 
+        { 
+            public string Key { get; set; }
+            public string GroupKey { get; set; }
+        }
 
         public class GetRoadNearby : Command
         {
@@ -103,7 +108,7 @@ namespace CommonClass
                 public bool canCancle { get; set; }
             }
         }
-        public class StockCancle : CommonClass.Command 
+        public class StockCancle : CommonClass.Command
         {
             public string Key { get; set; }
             public string GroupKey { get; set; }

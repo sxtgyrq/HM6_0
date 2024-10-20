@@ -164,6 +164,34 @@ namespace HMMain6
                         CommonClass.ModelTranstraction.TradeSetAsReward tsar = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.TradeSetAsReward>(notifyJson);
                         outPut = objI.TradeSetAsRewardF(tsar);
                     }; break;
+                case "GetCurrentPlaceBitcoinAddr":
+                    {
+                        CommonClass.ModelTranstraction.GetCurrentPlaceBitcoinAddr gcpb = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.GetCurrentPlaceBitcoinAddr>(notifyJson);
+                        outPut = objI.GetCurrentPlaceBitcoinAddrF(gcpb, Program.dt);
+                    }; break;
+                case "GetTransctionFromChain":
+                    {
+                        /*
+                         * 从区块链获取数据
+                         */
+                        CommonClass.ModelTranstraction.GetTransctionFromChain gtfc = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.GetTransctionFromChain>(notifyJson);
+                        outPut = objI.GetTransctionFromChainF(gtfc);
+                    }; break;
+                case "MarketPrice":
+                    {
+                        CommonClass.MarketPrice sa = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.MarketPrice>(notifyJson);
+                        objI.MarketUpdate(sa);
+                    }; break;
+                case "ServerStatictis":
+                    {
+                        CommonClass.ServerStatictis ss = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ServerStatictis>(notifyJson);
+                        outPut = objI.Statictis(ss);
+                    }; break;
+                case "ModelStock":
+                    {
+                        CommonClass.ModelStock sa = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelStock>(notifyJson);
+                        objI.UpdateModelStock(sa);
+                    }; break;
             }
             return outPut;
         }

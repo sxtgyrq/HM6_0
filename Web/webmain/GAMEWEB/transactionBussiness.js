@@ -409,7 +409,7 @@ var transactionBussiness = function () {
     };
     this.showAuthor = function (text) {
         var html = `<label>建筑物创建者</label>
-            <div id="authorOfModel" style="width:calc(100% - 2px);word-wrap:anywhere;word-break:break-all;">${text}</div>`;
+            <div id="authorOfModel" style="width:calc(100% - 2px);word-wrap:anywhere;word-break:break-all;margin-bottom: calc(2.5em + 8px);">${text}</div>`;
         var container_Editor = document.getElementById('transtractionEditor');
         container_Editor.innerHTML += html;
 

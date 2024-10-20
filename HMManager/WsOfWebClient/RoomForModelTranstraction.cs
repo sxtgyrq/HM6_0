@@ -244,11 +244,223 @@ namespace WsOfWebClient
                             else
                             {
                                 NotifyMsg(connectInfoDetail, $"错误的tradeIndex:{tradeIndex}");
-                            } 
+                            }
                         }
                     }
-                } 
+                }
             }
+        }
+
+
+        internal static State receiveState2(State s, LookForBuildings joinType, ConnectInfo.ConnectInfoDetail connectInfoDetail)
+        {
+            // try
+            {
+                var index = s.roomIndex;
+                {
+                }
+                {
+                    var gfma = new GetCurrentPlaceBitcoinAddr()
+                    {
+                        c = "GetCurrentPlaceBitcoinAddr",
+                        GroupKey = s.GroupKey,
+                        Key = s.Key,
+                    };
+                    var msg = Newtonsoft.Json.JsonConvert.SerializeObject(gfma);
+                    var info = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[index], msg);
+                    if (string.IsNullOrEmpty(info))
+                    {
+                        return s;
+                    }
+                    else if (BitCoin.CheckAddress.CheckAddressIsUseful(info))
+                    {
+                        var tdr = getTradeDetail(s, connectInfoDetail, info);
+                        return tdr;
+                    }
+                    else
+                    {
+                        return s;
+                    }
+                }
+            }
+            //catch
+            //{
+            //    return s;
+            //} 
+        }
+
+        internal static State getTradeDetail(State s, ConnectInfo.ConnectInfoDetail connectInfoDetail, string addr)
+        {
+            Dictionary<string, long> tradeDetail;
+            {
+                var grn = new GetTransctionFromChain()
+                {
+                    c = "GetTransctionFromChain",
+                    bussinessAddr = addr,
+                };
+                var index = rm.Next(0, roomUrls.Count);
+                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(grn);
+                var data = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[index], msg);
+                tradeDetail = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, long>>(data);
+            }
+
+            long sumValue = 0;
+            {
+                var tradeDetailList = new List<string>();
+                sumValue = 0;
+                foreach (var item in tradeDetail)
+                {
+                    tradeDetailList.Add(item.Key);
+                    tradeDetailList.Add($"{item.Value / 100000000}.{(item.Value % 100000000).ToString("D8")}");
+                    sumValue += item.Value;
+                }
+                // return result;
+                for (int i = 0; i < tradeDetailList.Count; i += 2)
+                {
+                    var addrStr = tradeDetailList[i];
+                    var valueStr = tradeDetailList[i + 1];
+                    var passObj = new
+                    {
+                        c = "TradeDetail",
+                        addr = addrStr,
+                        value = valueStr,
+                        index = i.ToString(),
+                    };
+                    var msg = Newtonsoft.Json.JsonConvert.SerializeObject(passObj);
+                    CommonF.SendData(msg, connectInfoDetail, 0);
+                }
+            }
+            if (sumValue == 0)
+            {
+                return s;
+            }
+            List<string> list;
+            {
+                var grn = new GetTransctionModelDetail()
+                {
+                    c = "GetTransctionModelDetail",
+                    bussinessAddr = addr,
+                };
+                var index = rm.Next(0, roomUrls.Count);
+                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(grn);
+                var json = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[index], msg);
+                list = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(json);
+
+                char[] SplitChars = new char[4] { ':', '-', '@', '>' };
+                for (int i = 0; i < list.Count; i += 2)
+                {
+                    var itemValue = list[i];
+                    var splitDetail = itemValue.Split(SplitChars, StringSplitOptions.RemoveEmptyEntries);
+                    var mainAddr = "";
+                    if (splitDetail.Length == 5)
+                    {
+                        mainAddr = splitDetail[3] + ',' + splitDetail[4];
+                        var agreeMent = list[i];
+                        var sign = list[i + 1];
+                        var passObj = new
+                        {
+                            c = "TradeDetail2",
+                            mainAddr = mainAddr,
+                            agreeMent = agreeMent,
+                            sign = sign,
+                            index = i.ToString(),
+                        };
+                        var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(passObj);
+                        CommonF.SendData(sendMsg, connectInfoDetail, 0);
+                    }
+                }
+            }
+            {
+                for (int i = 0; i < list.Count; i += 2)
+                {
+                    //Consol.WriteLine(list[i]);
+                    var mtsMsg = list[i];
+                    var parameter = mtsMsg.Split(new char[] { '@', '-', '>', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parameter.Length == 5)
+                    {
+                        var sign = list[i + 1];
+                        //    if (BitCoin.Sign.checkSign(sign, mtsMsg, parameter[1]))
+                        {
+                            var tradeIndex = int.Parse(parameter[0]);
+                            var addrFrom = parameter[1];
+                            var addrBussiness = parameter[2];
+                            var addrTo = parameter[3];
+
+                            var passCoinStr = parameter[4];
+                            if (passCoinStr.Substring(passCoinStr.Length - 7, 7) == "Satoshi" || passCoinStr.Substring(passCoinStr.Length - 7, 7) == "satoshi")
+                            {
+                                var passCoin = Convert.ToInt64(passCoinStr.Substring(0, passCoinStr.Length - 7));
+
+                                if (tradeDetail.ContainsKey(addrFrom))
+                                {
+                                    if (tradeDetail[addrFrom] >= passCoin)
+                                    {
+                                        tradeDetail[addrFrom] -= passCoin;
+                                        if (tradeDetail.ContainsKey(addrTo))
+                                        {
+                                            tradeDetail[addrTo] += passCoin;
+                                        }
+                                        else
+                                        {
+                                            tradeDetail.Add(addrTo, passCoin);
+                                        }
+                                    }
+                                }
+
+                            }
+
+
+                        }
+                    }
+                }
+
+                var tradeDetailList2 = new List<string>();
+                foreach (var item in tradeDetail)
+                {
+                    if (item.Value > 0)
+                    {
+                        tradeDetailList2.Add(item.Key);
+                        tradeDetailList2.Add($"{item.Value / 100000000}.{(item.Value % 100000000).ToString("D8")}");
+                        tradeDetailList2.Add($"{(item.Value * 10000 / sumValue) / 100}.{((item.Value * 10000 / sumValue) % 100).ToString("D2")}%");
+                    }
+
+                }
+                for (int i = 0; i < tradeDetailList2.Count; i += 3)
+                {
+                    var addrStr = tradeDetailList2[i];
+                    var valueStr = tradeDetailList2[i + 1];
+                    var percentValue = tradeDetailList2[i + 2];
+                    var passObj3 = new
+                    {
+                        //detail = tradeDetailList2,
+                        c = "TradeDetail3",
+                        addrStr = addrStr,
+                        valueStr = valueStr,
+                        indexStr = i.ToString(),
+                        percentValue = percentValue
+                    };
+                    var passMsg = Newtonsoft.Json.JsonConvert.SerializeObject(passObj3);
+                    CommonF.SendData(passMsg, connectInfoDetail, 0);
+                }
+
+                {
+                    /*
+                     * update OperatePanel
+                     */
+                    var grn = new GetStockScoreTransctionState()
+                    {
+                        c = "GetStockScoreTransctionState",
+                        bussinessAddr = addr,
+                        Key = s.Key,
+                        GroupKey = s.GroupKey,
+
+                    };
+                    var index = s.roomIndex;
+                    var passMsg = Newtonsoft.Json.JsonConvert.SerializeObject(grn);
+                    var json = Startup.sendInmationToUrlAndGetRes(Room.roomUrls[index], passMsg);
+                }
+            }
+            return s;
         }
     }
 }

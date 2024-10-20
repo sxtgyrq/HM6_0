@@ -1,4 +1,5 @@
-﻿using HMMain6.GroupClassF;
+﻿//using CommonClass;
+using HMMain6.GroupClassF;
 using NBitcoin.Protocol;
 using System;
 using System.Collections.Generic;
@@ -440,6 +441,47 @@ namespace HMMain6.RoomMainF
             {
 
             }
+        }
+
+
+        public string Statictis(CommonClass.ServerStatictis ss)
+        {
+            var r = new List<int>(4) { 0, 0, 0, 0 };
+            // lock (this.PlayerLock)
+            {
+
+                foreach (var groupItem in this._Groups)
+                {
+                    var group = groupItem.Value;
+                    foreach (var playerItem in group._PlayerInGroup)
+                    {
+                        r[0]++;
+                        r[1]++;
+                        if (playerItem.Value.IsOnline())
+                        {
+                            r[3]++;
+                        }
+                    }
+                }
+                //foreach (var item in this._Players)
+                //{
+                //    r[0]++;
+                //    if (item.Value.playerType == Player.PlayerType.player)
+                //    {
+                //        r[1]++;
+                //        if (((Player)item.Value).IsOnline())
+                //        {
+                //            r[3]++;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        r[2]++;
+                //    }
+                //}
+            }
+            return Newtonsoft.Json.JsonConvert.SerializeObject(r);
+            //  throw new NotImplementedException();
         }
     }
 }

@@ -1103,7 +1103,7 @@ function createText(font, inputObj) {
 
     }
 
-    var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+    // var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
 
     textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
     var materials = [
@@ -1122,6 +1122,8 @@ function createText(font, inputObj) {
     textMesh1.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
     textMesh1.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
     textMesh1.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+
+    textMesh1.userData = { 'btc': inputObj.bitcoinAddr };
 
     objMain.bitcoinCharacterGroup.add(textMesh1);
 

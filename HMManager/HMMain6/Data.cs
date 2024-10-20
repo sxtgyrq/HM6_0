@@ -44,6 +44,7 @@ namespace HMMain6
         CompassPosition GetTurbine(int targetFpIndex);
         CompassPosition Satelite(int ttargetFpIndexi);
         CompassPosition GetBtcPosition(int targetFpIndex);
+        //  void LoadStock(ModelStock sa);
     }
     public partial class Data
     {
@@ -505,6 +506,9 @@ namespace HMMain6
                 s = 0.3
             };
         }
+
+        //  object modelStockLock = new object();
+
     }
 
     public partial class Data
@@ -644,5 +648,22 @@ namespace HMMain6
         }
         Dictionary<string, string> modelsBussinessAddr = new Dictionary<string, string>();
         public Dictionary<string, CommonClass.ModelStock> modelsStocks = new Dictionary<string, CommonClass.ModelStock>();
+
+        internal void LoadStock(CommonClass.ModelStock sa)
+        {
+            lock (modelStockLock)
+            {
+                if (modelsStocks.ContainsKey(sa.modelID))
+                {
+                    modelsStocks[sa.modelID] = sa;
+                }
+                else
+                {
+                    modelsStocks.Add(sa.modelID, sa);
+                    modelsBussinessAddr.Add(sa.bussinessAddress, sa.modelID);
+                }
+            }
+            //Consol.WriteLine($"接受到stock信息");
+        }
     }
 }

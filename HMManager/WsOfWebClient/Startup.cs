@@ -542,8 +542,8 @@ namespace WsOfWebClient
                                             if (s.Ls == LoginState.OnLine)
                                             {
 
-                                                //s = Room.setState(s, connectInfoDetail, LoginState.LookForBuildings);
-                                                //s = Room.receiveState2(s, joinType, connectInfoDetail);
+                                                s = Room.setState(s, connectInfoDetail, LoginState.LookForBuildings);
+                                                s = Room.receiveState2(s, joinType, connectInfoDetail);
                                                 // s = await Room.GetAllModelPosition(s, webSocket);
                                                 // s = await Room.receiveState(s, webSocket);
                                             }

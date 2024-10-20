@@ -4394,6 +4394,7 @@ var set3DHtml = function () {
         var isSelected = false;
         var turbineIsClicked = false;
         var sateliteIsClicked = false;
+        var btcAddrIsCLicked = false;
 
         if (event.clientX != undefined && event.clientX != null) {
             //此处对应鼠标
@@ -4421,6 +4422,10 @@ var set3DHtml = function () {
             if (!isSelected) {
                 sateliteIsClicked = sataliteClicked();
                 isSelected = isSelected || sateliteIsClicked;
+            }
+            if (!isSelected) {
+                btcAddrIsCLicked = btcAddrClicked();
+                isSelected = isSelected || btcAddrIsCLicked;
             }
         }
         else if (event.changedTouches && event.changedTouches.length > 0) {
@@ -4450,6 +4455,10 @@ var set3DHtml = function () {
             if (!isSelected) {
                 sateliteIsClicked = sataliteClicked();
                 isSelected = isSelected || sateliteIsClicked;
+            }
+            if (!isSelected) {
+                btcAddrIsCLicked = btcAddrClicked();
+                isSelected = isSelected || btcAddrIsCLicked;
             }
         }
 
@@ -5062,6 +5071,14 @@ var SysOperatePanel =
             img.onclick = function () {
                 if (objMain.state == 'LookForBuildings') {
                     objMain.ws.send(JSON.stringify({ c: 'CancleLookForBuildings' }));
+
+                    setTransactionHtml.editRootContainer();
+                    setTransactionHtml.drawAddr('');
+                    setTransactionHtml.drawAgreementEditor();
+                    setTransactionHtml.drawStockTable();
+                    setTransactionHtml.drawTradeTable();
+                    setTransactionHtml.originalTable();
+                    transactionBussiness().showAuthor('');
                 }
                 else {
                     settingSys.add();
@@ -7316,6 +7333,29 @@ var turbineClicked = function () {
 
     }
     return false;
+}
+var btcAddrClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.bitcoinCharacterGroup.children.length; i++) {
+        var itemGroup = objMain.bitcoinCharacterGroup.children[i];
+        var intersection = objMain.raycaster.intersectObject(itemGroup);
+
+        if (intersection.length > 0) {
+            var userData = itemGroup.userData;
+            //alert('点击了比特币地址');
+            objMain.ws.send(JSON.stringify({ c: 'LookForBuildings' }));
+            setTransactionHtml.editRootContainer();
+            setTransactionHtml.drawAddr(userData.btc);
+            setTransactionHtml.drawAgreementEditor();
+            setTransactionHtml.drawStockTable();
+            setTransactionHtml.drawTradeTable();
+            setTransactionHtml.originalTable();
+            transactionBussiness().showAuthor('https://www.nyrq123.com');
+            return true;
+        }
+        return false;
+    }
 }
 
 var sataliteClicked = function () {

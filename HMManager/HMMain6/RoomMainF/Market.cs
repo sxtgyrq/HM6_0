@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonClass;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,6 +36,11 @@ namespace HMMain6.RoomMainF
             //    }
             //}
             //Startup.sendSeveralMsgs(msgs); 
+        }
+        public void MarketUpdate(MarketPrice sa)
+        {
+            this.Market.Update(sa);
+            // throw new NotImplementedException();
         }
     }
 }

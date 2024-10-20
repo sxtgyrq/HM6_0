@@ -2,13 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text; 
-using System.Text.RegularExpressions; 
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace HMMain6.RoomMainF
-{ 
-    public partial class RoomMain 
+{
+    public partial class RoomMain
     {
         const string AdministratorAddr = "1Hu87mNieKQBZnY89LpeMb5AMJUE8rfExk";
         private void UpdateAdministrator(Player player, ref List<string> notifyMsg)
@@ -44,7 +44,7 @@ namespace HMMain6.RoomMainF
             return "ng";
             // throw new NotImplementedException();
         }
- 
+
 
 
 
@@ -184,11 +184,25 @@ namespace HMMain6.RoomMainF
             }
         }
 
-
+        public void UpdateModelStock(ModelStock sa)
+        {
+            Program.dt.LoadStock(sa);
+            //grp.LoadStock(sa);
+            // throw new NotImplementedException();
+        }
     }
 
     public partial class RoomMain : interfaceOfHM.ModelTranstractionI
     {
+        public string GetTransctionFromChainF(ModelTranstraction.GetTransctionFromChain gtfc)
+        {
+            if (this.Market.mile_Price == null)
+                return Newtonsoft.Json.JsonConvert.SerializeObject(new Dictionary<string, long>());
+            else
+                return Market.Send(gtfc);
+            //    throw new NotImplementedException();
+        }
+
         public string GetAllBuiisnessAddr(GetRandomPos grp)
         {
             List<string> list = new List<string>();
@@ -305,8 +319,21 @@ namespace HMMain6.RoomMainF
             var Index = DalOfAddress.HMSever.TradeRecord.GetCount(addrBussiness, addrFrom);
             return Index;
         }
-        //=======
 
-        //>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+        public string GetCurrentPlaceBitcoinAddrF(ModelTranstraction.GetCurrentPlaceBitcoinAddr gcpb, GetRandomPos grp)
+        {
+            if (this._Groups.ContainsKey(gcpb.GroupKey))
+            {
+                var group = this._Groups[gcpb.GroupKey];
+                if (group._PlayerInGroup.ContainsKey(gcpb.Key))
+                {
+                    var player = group._PlayerInGroup[gcpb.Key];
+                    return grp.GetFpByIndex(player.getCar().targetFpIndex).BitcoinAddr;
+
+                }
+            }
+            return "";
+        }
+
     }
 }
