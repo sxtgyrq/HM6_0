@@ -593,6 +593,10 @@ namespace CommonClass
     };
     public class BradCastTurbine : BradCastGoldObj { }
     public class BradCastSatelite : BradCastGoldObj { }
+    public class BradCastBitcoinAddr : BradCastGoldObj 
+    {
+        public string bitcoinAddr { get; set; }
+    }
 
     public class PlayerAdd : Command
     {

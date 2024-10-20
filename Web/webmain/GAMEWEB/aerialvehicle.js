@@ -579,7 +579,7 @@ var objPlaceSystemObj = function () {
             }
         },
         operateIndex: 0,
-        operateGroups: [objMain.collectGroup, objMain.getOutGroup, objMain.buildingGroup, objMain.directionGroup],
+        operateGroups: [objMain.collectGroup, objMain.getOutGroup, objMain.buildingGroup, objMain.directionGroup, objMain.bitcoinCharacterGroup],
         indexAdd: function () {
             this.operateIndex++;
             this.operateIndex %= this.operateGroups.length;
@@ -600,6 +600,10 @@ var objPlaceSystemObj = function () {
                 case 3:
                     {
                         $.notify('指南针');
+                    }; break;
+                case 4:
+                    {
+                        $.notify('BTC地址');
                     }; break;
             }
 
@@ -943,6 +947,10 @@ var objPlaceSystemObj = function () {
                         {
                             fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'compass' + '.json';
                         }; break;
+                    case 4:
+                        {
+                            fileName = objMain.background.mainFP.fPCode + objMain.background.mainFP.Height + 'btc' + '.json';
+                        }; break;
                     default: return;
                 }
                 var data = {
@@ -993,3 +1001,144 @@ let placeObj = null;
 var setUpPlaceObj = function () {
     placeObj = objPlaceSystemObj();
 }
+var loadFont = function (inputObj) {
+    objMain.mainF.removeF.clearGroup(objMain.bitcoinCharacterGroup);
+    if (inputObj.hasValue) {
+        var loader = new THREE.FontLoader();
+        loader.load('fonts/optimer_regular.typeface.json', function (response) {
+            font = response;
+            refreshText(font, inputObj);
+
+        });
+    }
+
+
+}
+function refreshText(font, inputObj) {
+
+    //   updatePermalink();
+
+    // group.remove(textMesh1);
+    //if (mirror) group.remove(textMesh2);
+
+    //if (!text) return;
+
+    createText(font, inputObj);
+
+}
+function createText(font, inputObj) {
+    var text = inputObj.bitcoinAddr;
+
+    var height = 10;
+    var size = 40;
+    var hover = 30;
+
+    var curveSegments = 4;
+    var bevelThickness = 2;
+    var bevelSize = 1.5;
+    var bevelEnabled = true;
+
+    //  var    font = undefined,
+
+    // fontName = "optimer", // helvetiker, optimer, gentilis, droid sans, droid serif
+    //   fontWeight = "bold"; // normal bold
+
+    var textGeo = new THREE.TextGeometry(text, {
+
+        font: font,
+
+        size: size,
+        height: height,
+        curveSegments: curveSegments,
+
+        bevelThickness: bevelThickness,
+        bevelSize: bevelSize,
+        bevelEnabled: bevelEnabled
+
+    });
+
+    textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
+
+    // "fix" side normals by removing z-component of normals for side faces
+    // (this doesn't work well for beveled geometry as then we lose nice curvature around z-axis)
+
+    //if (!bevelEnabled)
+    {
+
+        var triangleAreaHeuristics = 0.1 * (height * size);
+
+        for (var i = 0; i < textGeo.faces.length; i++) {
+
+            var face = textGeo.faces[i];
+
+            if (face.materialIndex == 1) {
+
+                for (var j = 0; j < face.vertexNormals.length; j++) {
+
+                    face.vertexNormals[j].z = 0;
+                    face.vertexNormals[j].normalize();
+
+                }
+
+                var va = textGeo.vertices[face.a];
+                var vb = textGeo.vertices[face.b];
+                var vc = textGeo.vertices[face.c];
+
+                var s = THREE.GeometryUtils.triangleArea(va, vb, vc);
+
+                if (s > triangleAreaHeuristics) {
+
+                    for (var j = 0; j < face.vertexNormals.length; j++) {
+
+                        face.vertexNormals[j].copy(face.normal);
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    var centerOffset = - 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+
+    textGeo = new THREE.BufferGeometry().fromGeometry(textGeo);
+    var materials = [
+        new THREE.MeshPhongMaterial({ color: 0xFFD700, flatShading: true }), // front
+        new THREE.MeshPhongMaterial({ color: 0xFFD700 }) // side
+    ];
+    var textMesh1 = new THREE.Mesh(textGeo, materials);
+
+    //textMesh1.position.x = centerOffset;
+    //textMesh1.position.y = hover;
+    //textMesh1.position.z = 0;
+
+    //textMesh1.rotation.x = 0;
+    //textMesh1.rotation.y = Math.PI * 2;
+
+    textMesh1.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
+    textMesh1.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
+    textMesh1.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+
+    objMain.bitcoinCharacterGroup.add(textMesh1);
+
+    //if (mirror) {
+
+    //    textMesh2 = new THREE.Mesh(textGeo, materials);
+
+    //    textMesh2.position.x = centerOffset;
+    //    textMesh2.position.y = - hover;
+    //    textMesh2.position.z = height;
+
+    //    textMesh2.rotation.x = Math.PI;
+    //    textMesh2.rotation.y = Math.PI * 2;
+
+    //    group.add(textMesh2);
+
+    //}
+
+}
+

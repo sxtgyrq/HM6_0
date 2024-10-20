@@ -123,6 +123,7 @@ var objMain =
     crossSelectionsOperator: null,
     targetGroup: null,
     marketGroup: null,
+    bitcoinCharacterGroup: null,
     clock: null,
     leaveGameModel: null,
     profileModel: null,
@@ -1140,7 +1141,7 @@ var objMain =
             }
         },
         rotateOthers: function (r) {
-            var groups = [objMain.roadGroup, objMain.carGroup, objMain.buildingGroup, objMain.collectGroup, objMain.directionGroup, objMain.targetGroup, objMain.getOutGroup];
+            var groups = [objMain.roadGroup, objMain.carGroup, objMain.buildingGroup, objMain.collectGroup, objMain.directionGroup, objMain.targetGroup, objMain.getOutGroup, objMain.bitcoinCharacterGroup];
             for (var i = 0; i < groups.length; i++) {
                 var group = groups[i];
                 group.rotation.y = r;
@@ -2785,6 +2786,10 @@ var objMain =
                     operatePanel.refresh();
                     setUpPlaceObj();
                 }; break;
+            case 'BradCastBitcoinAddr':
+                {
+                    loadFont(received_obj);
+                }; break;
             default:
                 {
                     console.log('命令未注册', received_obj.c + "__没有注册。");
@@ -4348,6 +4353,7 @@ var set3DHtml = function () {
         objMain.groupOfTaskCopy = registGroup(objMain.groupOfTaskCopy);
         objMain.marketGroup = registGroup(objMain.marketGroup);
         objMain.crossSelectionsOperator = registGroup(objMain.crossSelectionsOperator);
+        objMain.bitcoinCharacterGroup = registGroup(objMain.bitcoinCharacterGroup);
     }
     if (false) {
 
@@ -5597,6 +5603,10 @@ var operatePanel =
             });
             addItemToTaskOperatingPanle('指南针', 'cancelBuildingDetailF', function () {
                 placeObj.operateIndex = 3;
+                operatePanel.refresh();
+            });
+            addItemToTaskOperatingPanle('BTC', 'cancelBuildingDetailF', function () {
+                placeObj.operateIndex = 4;
                 operatePanel.refresh();
             });
             addItemToTaskOperatingPanle('BACK', 'cancelBuildingDetailF', function () {
@@ -7325,6 +7335,8 @@ var sataliteClicked = function () {
     }
     return false;
 }
+
+
 //////////
 /*
  * 手柄类，此游戏只支持单手柄操作。

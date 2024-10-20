@@ -42,8 +42,8 @@ namespace HMMain6
         CompassPosition GetCompassPosition(int targetFpIndex);
         CompassPosition GetGoldOjb(int targetFpIndex);
         CompassPosition GetTurbine(int targetFpIndex);
-        CompassPosition Satelite(int ttargetFpIndexi); 
-        CompassPosition GetBtcPosition(int targetFpIndex); 
+        CompassPosition Satelite(int ttargetFpIndexi);
+        CompassPosition GetBtcPosition(int targetFpIndex);
     }
     public partial class Data
     {
@@ -450,15 +450,59 @@ namespace HMMain6
 
         public CompassPosition GetBtcPosition(int targetFpIndex)
         {
+            if (this.config.isDebug == 1)
+            {
+                var fp = this.GetFpByIndex(targetFpIndex);
+                var rootPath = System.IO.Directory.GetCurrentDirectory();
+                var fpDictionary = $"{rootPath}\\DBPublish\\objplace\\{fp.fPCode}{fp.Height}btc.json";
+                if (File.Exists(fpDictionary))
+                {
+                    var json = File.ReadAllText(fpDictionary);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<CompassPosition>(json);
+                }
+            }
+            else
+            {
+
+                var fp = this.GetFpByIndex(targetFpIndex);
+
+                var rootPath = System.IO.Directory.GetCurrentDirectory();
+                var fpDictionary = $"{rootPath}\\DBPublish\\objplace\\{fp.fPCode}{fp.Height}btc.json";
+                if (this.objPlaceWhereWhetherHasValue.ContainsKey(fpDictionary))
+                {
+                    if (this.objPlaceWhereWhetherHasValue[fpDictionary])
+                    {
+                        return this.objPlaceWhereValue[fpDictionary];
+                    }
+                }
+                else
+                {
+                    if (File.Exists(fpDictionary))
+                    {
+                        var json = File.ReadAllText(fpDictionary);
+
+                        var p = Newtonsoft.Json.JsonConvert.DeserializeObject<CompassPosition>(json);
+                        this.objPlaceWhereValue.Add(fpDictionary, p);
+                        this.objPlaceWhereWhetherHasValue.Add(fpDictionary, true);
+                        return p;
+                    }
+                    else
+                    {
+                        this.objPlaceWhereWhetherHasValue.Add(fpDictionary, false);
+                    }
+
+                }
+
+            }
             return new CompassPosition()
             {
-                x = 50,
+                x = 500,
                 y = 0,
-                z = 44,
+                z = 500,
                 rx = 0,
-                ry = 1.072330292425316,
+                ry = 5.21233029242531,
                 rz = 0,
-                s = 1
+                s = 0.3
             };
         }
     }
@@ -529,7 +573,7 @@ namespace HMMain6
             string heightPattern = @"(\d+)";
 
             // 匹配第三项 goldobj, satelite, turbine, compass
-            string thirdItemPattern = @"(goldobj|satelite|turbine|compass)";
+            string thirdItemPattern = @"(goldobj|satelite|turbine|compass|btc)";
 
             // 综合正则表达式，匹配fileName
             string pattern = fpCodePattern + heightPattern + thirdItemPattern + @"\.json";
@@ -577,10 +621,10 @@ namespace HMMain6
             {
                 Console.WriteLine("No match found.");
             }
-        } 
+        }
     }
 
-    public partial class Data 
+    public partial class Data
     {
         object modelStockLock = new object();
         internal Dictionary<string, long> GetDataOfOriginalStock(string bussinessAddr)
@@ -599,6 +643,6 @@ namespace HMMain6
             // throw new NotImplementedException();
         }
         Dictionary<string, string> modelsBussinessAddr = new Dictionary<string, string>();
-        public Dictionary<string, CommonClass.ModelStock> modelsStocks = new Dictionary<string, CommonClass.ModelStock>(); 
+        public Dictionary<string, CommonClass.ModelStock> modelsStocks = new Dictionary<string, CommonClass.ModelStock>();
     }
 }
