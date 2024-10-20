@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ConsoleBitcoinChainApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+95fea96d2c24d851fca15f6e45349c3ef81c931d")]
 [assembly: System.Reflection.AssemblyProductAttribute("ConsoleBitcoinChainApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ConsoleBitcoinChainApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

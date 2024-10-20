@@ -42,11 +42,8 @@ namespace HMMain6
         CompassPosition GetCompassPosition(int targetFpIndex);
         CompassPosition GetGoldOjb(int targetFpIndex);
         CompassPosition GetTurbine(int targetFpIndex);
-        CompassPosition Satelite(int ttargetFpIndexi);
-<<<<<<< HEAD
-        CompassPosition GetBtcPosition(int targetFpIndex);
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+        CompassPosition Satelite(int ttargetFpIndexi); 
+        CompassPosition GetBtcPosition(int targetFpIndex); 
     }
     public partial class Data
     {
@@ -450,6 +447,20 @@ namespace HMMain6
                 s = 1
             };
         }
+
+        public CompassPosition GetBtcPosition(int targetFpIndex)
+        {
+            return new CompassPosition()
+            {
+                x = 50,
+                y = 0,
+                z = 44,
+                rx = 0,
+                ry = 1.072330292425316,
+                rz = 0,
+                s = 1
+            };
+        }
     }
 
     public partial class Data
@@ -566,8 +577,7 @@ namespace HMMain6
             {
                 Console.WriteLine("No match found.");
             }
-        }
-<<<<<<< HEAD
+        } 
     }
 
     public partial class Data 
@@ -589,8 +599,6 @@ namespace HMMain6
             // throw new NotImplementedException();
         }
         Dictionary<string, string> modelsBussinessAddr = new Dictionary<string, string>();
-        public Dictionary<string, CommonClass.ModelStock> modelsStocks = new Dictionary<string, CommonClass.ModelStock>();
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+        public Dictionary<string, CommonClass.ModelStock> modelsStocks = new Dictionary<string, CommonClass.ModelStock>(); 
     }
 }

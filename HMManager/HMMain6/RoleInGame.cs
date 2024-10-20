@@ -101,7 +101,7 @@ namespace HMMain6
         public string PlayerName { get; internal set; }
         public DateTime CreateTime { get; internal set; }
         public DateTime ActiveTime { get; internal set; }
-<<<<<<< HEAD
+
 
         DateTime _LastActionTime = DateTime.Now;
         public DateTime LastActionTime
@@ -116,9 +116,8 @@ namespace HMMain6
                 this.ActiveTime = DateTime.Now;
             }
         }
-=======
-        public DateTime LastActionTime { get; set; }
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+
+
         public int StartFPIndex { get { return this.Group.StartFPIndex; } }
         public Car getCar()
         {

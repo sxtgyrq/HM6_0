@@ -134,11 +134,7 @@ namespace HMMain6.interfaceOfHM
         string CollectF(CollectPassData cpd, GetRandomPos grp);
         string ChargeF(ChargePassData cpd, GetRandomPos grp);
         string ReturnHomeF(ReturnHomePassData rhpd, GetRandomPos grp);
-        string CheckIsAdministratorF(CheckIsAdministrator cisA, GetRandomPos grp);
-<<<<<<< HEAD
-
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+        string CheckIsAdministratorF(CheckIsAdministrator cisA, GetRandomPos grp); 
     }
 
     interface MapEditor

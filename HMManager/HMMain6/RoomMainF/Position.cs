@@ -577,11 +577,8 @@ namespace HMMain6.RoomMainF
             UpdateGoldOjb(key, groupKey, getRandomPosObj, ref notifyMsgs);
             UpdateBaseTurbine(key, groupKey, getRandomPosObj, ref notifyMsgs);
             UpdataSatelite(key, groupKey, getRandomPosObj, ref notifyMsgs);
-<<<<<<< HEAD
-            UpdateBitcoinAddr(key, groupKey, getRandomPosObj, ref notifyMsgs);
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
 
+            UpdateBitcoinAddr(key, groupKey, getRandomPosObj, ref notifyMsgs);
             Startup.sendSeveralMsgs(notifyMsgs);
             //   GetBackground()
             //  throw new NotImplementedException();
@@ -589,50 +586,6 @@ namespace HMMain6.RoomMainF
 
         }
 
-        private void UpdateBitcoinAddr(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
-        {
-            if (this._Groups.ContainsKey(groupKey))
-            {
-                var group = this._Groups[groupKey];
-                if (group._PlayerInGroup.ContainsKey(key))
-                {
-                    var player = group._PlayerInGroup[key];
-                    var targetFpIndex = player.getCar().targetFpIndex;
-                    //  var target = getRandomPosObj.GetSelections(targetFpIndex);
-
-
-                    // var obj = GetItemGoldObj(player.WebSocketID, position);
-                    // obj.hasValue = group.HasGold(targetFpIndex);
-                    //if (player.BTCAddress == AdministratorAddr)
-                    {
-                        if (string.IsNullOrEmpty(grp.GetFpByIndex(targetFpIndex).BitcoinAddr))
-                        {
-                            var position = grp.GetBtcPosition(targetFpIndex);
-                            //  var fs = Program.dt.GetFpByIndex(ti);
-                            var infomation = Program.rm.GetBackgroundInfomation(player.WebSocketID, fs);
-                            var url = player.FromUrl;
-                            var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(infomation);
-                            notifyMsg.Add(url);
-                            notifyMsg.Add(sendMsg);
-                        }
-                        // obj.hasValue = true;
-                    }
-
-                    //var url = player.FromUrl;
-                    //var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
-                    //notifyMsgs.Add(url);
-                    //notifyMsgs.Add(sendMsg);
-                    //if (group.HasGold(targetFpIndex))
-                    //{
-
-                    //}
-                    //else
-                    //{
-
-                    //}
-                }
-            }
-        }
 
         string interfaceOfHM.Resistance.GetResistance(GetResistanceObj r)
         {
@@ -745,11 +698,8 @@ namespace HMMain6.RoomMainF
                         UpdateCompass(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateGoldOjb(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateBaseTurbine(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
-                        UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
-<<<<<<< HEAD
-                        UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+                        UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg); 
+                        UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg); 
 
                     }
                     GetBackground(player, ref notifyMsg);
@@ -790,11 +740,8 @@ namespace HMMain6.RoomMainF
                     UpdateCompass(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateGoldOjb(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateBaseTurbine(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
-                    UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
-<<<<<<< HEAD
-                    UpdateBitcoinAddr(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+                    UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs); 
+                    UpdateBitcoinAddr(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs); 
                 }
 
                 Startup.sendSeveralMsgs(notifyMsgs);

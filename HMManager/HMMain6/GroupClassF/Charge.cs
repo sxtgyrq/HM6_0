@@ -22,32 +22,17 @@ namespace HMMain6.GroupClassF
             }
             return false;
         }
-<<<<<<< HEAD
+
         Dictionary<string, bool> records = new Dictionary<string, bool>();
         public void publishAchievement(Player playerOperate, ref List<string> notifyMsg)
         {
             //item.Value.CollectMoney
-            #region step1 OrderByDescending by item.Value.CollectMoney
-            //  var playersOrderByCollectCount = this._PlayerInGroup.ToArray().OrderByDescending(item => item.Value.CollectMoney).ToList();
-=======
-
-        private void publishAchievement(Player playerOperate, ref List<string> notifyMsg)
-        {
-            //item.Value.CollectMoney
-            #region step1 OrderByDescending by item.Value.CollectMoney
-            var playersOrderByCollectCount = this._PlayerInGroup.ToArray().OrderByDescending(item => item.Value.CollectMoney).ToList();
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+            #region step1 OrderByDescending by item.Value.CollectMoney 
             #endregion
 
 
 
-            #region step3 record in DB
-            // List<string> playerKeys = new List<string>();
-            // for (int i = 0; i < playersOrderByCollectCount.Count; i++)
-            {
-                // var player = playersOrderByCollectCount[i].Value;
-                //   playerKeys.Add(player.Key);
-            }
+            #region step3 record in DB 
             this.recordRaceTime(playerOperate);
             #endregion
 
@@ -114,13 +99,7 @@ namespace HMMain6.GroupClassF
                     if (this.recordErrorMsgs.ContainsKey(key)) { }
                     else
                     {
-<<<<<<< HEAD
-
                         this.recordErrorMsgs.Add(key, "您还未登录！");
-
-=======
-                        this.recordErrorMsgs.Add(key, "您还未登录！");
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
                     }
                     var player = this._PlayerInGroup[key];
 
@@ -204,39 +183,22 @@ namespace HMMain6.GroupClassF
                         var player = playerList[i];
                         if (findResultCount == 0)
                         {
-<<<<<<< HEAD
 #warning 这里暂停打破记录奖励！
                             if (false)
                             {
                                 that.WebNotify(player, this.groupNumber > 1 ? "你刷新了记录。" : "你刷新了记录");
                                 rewardAnother(player);
                             }
-=======
-                            that.WebNotify(player, this.groupNumber > 1 ? "你刷新了记录。" : "你刷新了记录");
-                            rewardAnother(player);
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
                         }
                     }
-                    ////  this.recordErrorMsgs[key] = $"记录于{this.RewardDate}期荣誉"; ;
-
-                    //for (int i = 0; i < playerList.Count; i++)
-                    //{
-
-                    //}
 
                 }
             }
 
-        }
-<<<<<<< HEAD
-
+        } 
         private void rewardAnother(Player player)
         {
-            that.breakRecordReward.reward(player);
-
-            //  throw new NotImplementedException();
-        }
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
+            that.breakRecordReward.reward(player); 
+        }  
     }
 }

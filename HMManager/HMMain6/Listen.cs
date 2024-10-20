@@ -144,7 +144,6 @@ namespace HMMain6
                     {
                         outPut = Program.rm.GetFrequency().ToString();
                     }; break;
-<<<<<<< HEAD
                 case "AllBuiisnessAddr":
                     {
                         outPut = objI.GetAllBuiisnessAddr(Program.dt);
@@ -165,8 +164,6 @@ namespace HMMain6
                         CommonClass.ModelTranstraction.TradeSetAsReward tsar = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelTranstraction.TradeSetAsReward>(notifyJson);
                         outPut = objI.TradeSetAsRewardF(tsar);
                     }; break;
-=======
->>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
             }
             return outPut;
         }

@@ -953,6 +953,11 @@ namespace DalOfAddress.HMSever
             {
                 btcAdd = Convert.ToString(command.ExecuteScalar()).Trim();
             }
+            if(string.IsNullOrEmpty(btcAdd)) 
+            {
+                tran.Rollback();
+                throw new Exception($"{businessAddr} is not businessAddr!");
+            }
             return btcAdd;
             //  throw new NotImplementedException();
         }
