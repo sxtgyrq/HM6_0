@@ -48,7 +48,11 @@ namespace HMMain6.GroupClassF
             this.taskFineshedTime = new Dictionary<string, long>();
             this.costEnegy = 0;
             this.recordErrorMsgs = new Dictionary<string, string>();
+<<<<<<< HEAD
             this.records = new Dictionary<string, bool>();
+=======
+            //this.records = new Dictionary<string, bool>();
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
 
             //this.groupAbility = new Dictionary<string, int>()
             //{

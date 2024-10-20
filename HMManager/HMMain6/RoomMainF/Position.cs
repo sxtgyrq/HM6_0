@@ -577,7 +577,10 @@ namespace HMMain6.RoomMainF
             UpdateGoldOjb(key, groupKey, getRandomPosObj, ref notifyMsgs);
             UpdateBaseTurbine(key, groupKey, getRandomPosObj, ref notifyMsgs);
             UpdataSatelite(key, groupKey, getRandomPosObj, ref notifyMsgs);
+<<<<<<< HEAD
             UpdateBitcoinAddr(key, groupKey, getRandomPosObj, ref notifyMsgs);
+=======
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
 
             Startup.sendSeveralMsgs(notifyMsgs);
             //   GetBackground()
@@ -743,7 +746,10 @@ namespace HMMain6.RoomMainF
                         UpdateGoldOjb(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateBaseTurbine(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+<<<<<<< HEAD
                         UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+=======
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
 
                     }
                     GetBackground(player, ref notifyMsg);
@@ -785,7 +791,10 @@ namespace HMMain6.RoomMainF
                     UpdateGoldOjb(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateBaseTurbine(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+<<<<<<< HEAD
                     UpdateBitcoinAddr(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+=======
+>>>>>>> 5bbb0cdf3f891fa27c4db97f97ae3529c7f58980
                 }
 
                 Startup.sendSeveralMsgs(notifyMsgs);
