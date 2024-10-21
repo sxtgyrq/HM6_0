@@ -49,63 +49,97 @@ namespace HMMain6
 
         private static void ServerMain()
         {
-            Console.Write("输入密码:");
-            var pass = string.Empty;
-            ConsoleKey key;
-            do
             {
-                var keyInfo = Console.ReadKey(intercept: true);
-                key = keyInfo.Key;
-
-                if (key == ConsoleKey.Backspace && pass.Length > 0)
+                Console.Write("输入密码:");
+                var pass = string.Empty;
+                ConsoleKey key;
+                do
                 {
-                    Console.Write("\b \b");
-                    pass = pass[0..^1];
-                }
-                else if (!char.IsControl(keyInfo.KeyChar))
+                    var keyInfo = Console.ReadKey(intercept: true);
+                    key = keyInfo.Key;
+
+                    if (key == ConsoleKey.Backspace && pass.Length > 0)
+                    {
+                        Console.Write("\b \b");
+                        pass = pass[0..^1];
+                    }
+                    else if (!char.IsControl(keyInfo.KeyChar))
+                    {
+                        Console.Write("*");
+                        pass += keyInfo.KeyChar;
+                    }
+                } while (key != ConsoleKey.Enter);
+                DalOfAddress.Connection.SetPassWord(pass);
+
+                Program.dt = new Data();
+                dt.LoadFPAndMap();
+
+                var ip = "127.0.0.1";
+                int tcpPort = 11100;
+
+                Console.WriteLine($"输入ip,如“{ip}”");
+                var inputIp = Console.ReadLine();
+                if (string.IsNullOrEmpty(inputIp)) { }
+                else
                 {
-                    Console.Write("*");
-                    pass += keyInfo.KeyChar;
+                    ip = inputIp;
                 }
-            } while (key != ConsoleKey.Enter);
-            DalOfAddress.Connection.SetPassWord(pass);
 
-            Program.dt = new Data();
-            dt.LoadFPAndMap();
+                Console.WriteLine($"输入端口≠15000,如“{tcpPort}”");
+                var inputWebsocketPort = Console.ReadLine();
+                if (string.IsNullOrEmpty(inputWebsocketPort)) { }
+                else
+                {
+                    int num;
+                    if (int.TryParse(inputWebsocketPort, out num))
+                    {
+                        tcpPort = num;
+                    }
+                }
+                Program.rm = new RoomMainF.RoomMain(Program.dt);
+                Thread startTcpServer = new Thread(() => Listen.IpAndPort(ip, tcpPort));
+                startTcpServer.Start();
 
-            var ip = "127.0.0.1";
-            int tcpPort = 11100;
 
-            Console.WriteLine($"输入ip,如“{ip}”");
-            var inputIp = Console.ReadLine();
-            if (string.IsNullOrEmpty(inputIp)) { }
-            else
-            {
-                ip = inputIp;
+                //Thread startMonitorTcpServer = new Thread(() => Listen.IpAndPortMonitor(ip, 30000 - tcpPort));
+                //startMonitorTcpServer.Start();
+
+                Thread th = new Thread(() => PlayersSysOperate(Program.dt));
+                th.Start();
+
             }
-
-            Console.WriteLine($"输入端口≠15000,如“{tcpPort}”");
-            var inputWebsocketPort = Console.ReadLine();
-            if (string.IsNullOrEmpty(inputWebsocketPort)) { }
-            else
             {
-                int num;
-                if (int.TryParse(inputWebsocketPort, out num))
+                while (true)
                 {
-                    tcpPort = num;
+                    if (Console.ReadLine().ToLower() == "exit")
+                    {
+                        int countOfPlayersOnline = 0;
+                        if (Program.rm._Groups != null)
+                        {
+                            foreach (var groupItem in Program.rm._Groups)
+                            {
+                                foreach (var playerItem in groupItem.Value._PlayerInGroup)
+                                {
+                                    if (playerItem.Value.IsOnline())
+                                    {
+                                        countOfPlayersOnline++;
+                                    }
+                                }
+                            }
+                        }
+                        if (countOfPlayersOnline > 0)
+                        {
+                            Console.WriteLine($"当前有{countOfPlayersOnline}人在线，未能退出！");
+                            continue;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
                 }
+                Environment.Exit(0);
             }
-            Program.rm = new RoomMainF.RoomMain(Program.dt);
-            Thread startTcpServer = new Thread(() => Listen.IpAndPort(ip, tcpPort));
-            startTcpServer.Start();
-
-
-            //Thread startMonitorTcpServer = new Thread(() => Listen.IpAndPortMonitor(ip, 30000 - tcpPort));
-            //startMonitorTcpServer.Start();
-
-            Thread th = new Thread(() => PlayersSysOperate(Program.dt));
-            th.Start();
-
         }
 
 
