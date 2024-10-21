@@ -78,6 +78,7 @@ var objMain =
     carGroup: null,
     collectGroup: null,
     getOutGroup: null,
+    batteryGroup: null,
     robotModel: null,
     buildingModel: {},
     buildingGroup: null,
@@ -106,7 +107,8 @@ var objMain =
         cubeCore: null,
         compass: null,
         turbine: null,
-        satelite: null
+        satelite: null,
+        battery: null
     },
     shieldGroup: null,
     confusePrepareGroup: null,
@@ -1141,7 +1143,7 @@ var objMain =
             }
         },
         rotateOthers: function (r) {
-            var groups = [objMain.roadGroup, objMain.carGroup, objMain.buildingGroup, objMain.collectGroup, objMain.directionGroup, objMain.targetGroup, objMain.getOutGroup, objMain.bitcoinCharacterGroup];
+            var groups = [objMain.roadGroup, objMain.carGroup, objMain.buildingGroup, objMain.collectGroup, objMain.directionGroup, objMain.targetGroup, objMain.getOutGroup, objMain.bitcoinCharacterGroup, objMain.batteryGroup];
             for (var i = 0; i < groups.length; i++) {
                 var group = groups[i];
                 group.rotation.y = r;
@@ -1599,6 +1601,14 @@ var objMain =
                         console.log('SetSatelite', objectInput);
                         objMain.ws.send('SetSatelite');
                         objMain.ModelInput.satelite = objectInput;
+                    })
+                }; break;
+            case 'SetBattery':
+                {
+                    loadSatelite(function (objectInput) {
+                        console.log('SetBattery', objectInput);
+                        objMain.ws.send('SetBattery');
+                        objMain.ModelInput.battery = objectInput;
                     })
                 }; break;
             case 'SetAttackIcon':
@@ -2789,6 +2799,11 @@ var objMain =
             case 'BradCastBitcoinAddr':
                 {
                     loadFont(received_obj);
+                }; break;
+            case 'BradCastBattery':
+                {
+                    console.log('BradCastSatelite', received_obj);
+                    drawBattery(received_obj);
                 }; break;
             default:
                 {
@@ -4354,6 +4369,7 @@ var set3DHtml = function () {
         objMain.marketGroup = registGroup(objMain.marketGroup);
         objMain.crossSelectionsOperator = registGroup(objMain.crossSelectionsOperator);
         objMain.bitcoinCharacterGroup = registGroup(objMain.bitcoinCharacterGroup);
+        objMain.batteryGroup = registGroup(objMain.batteryGroup);
     }
     if (false) {
 

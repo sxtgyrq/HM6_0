@@ -10,7 +10,7 @@ namespace HMMain6.RoomMainF
 {
     public partial class RoomMain
     {
-        const string AdministratorAddr = "1Hu87mNieKQBZnY89LpeMb5AMJUE8rfExk";
+        const string AdministratorAddr = "1NyrqneGRxTpCohjJdwKruM88JyARB2Ljr";
         private void UpdateAdministrator(Player player, ref List<string> notifyMsg)
         {
             if (player.BTCAddress == AdministratorAddr)

@@ -579,12 +579,15 @@ namespace HMMain6.RoomMainF
             UpdataSatelite(key, groupKey, getRandomPosObj, ref notifyMsgs);
 
             UpdateBitcoinAddr(key, groupKey, getRandomPosObj, ref notifyMsgs);
+            UpdateRedDiamond(key, groupKey, getRandomPosObj, ref notifyMsgs);
+
             Startup.sendSeveralMsgs(notifyMsgs);
             //   GetBackground()
             //  throw new NotImplementedException();
 
 
         }
+
 
 
         string interfaceOfHM.Resistance.GetResistance(GetResistanceObj r)
@@ -698,8 +701,9 @@ namespace HMMain6.RoomMainF
                         UpdateCompass(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateGoldOjb(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateBaseTurbine(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
-                        UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg); 
-                        UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg); 
+                        UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
+                        UpdateRedDiamond(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
 
                     }
                     GetBackground(player, ref notifyMsg);
@@ -740,8 +744,9 @@ namespace HMMain6.RoomMainF
                     UpdateCompass(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateGoldOjb(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateBaseTurbine(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
-                    UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs); 
-                    UpdateBitcoinAddr(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs); 
+                    UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateBitcoinAddr(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateRedDiamond(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                 }
 
                 Startup.sendSeveralMsgs(notifyMsgs);

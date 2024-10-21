@@ -14,9 +14,16 @@ namespace HMMain6.GroupClassF
         public void SetLookForPromote(GetRandomPos gp)
         {
             {
+                int k = 0;
                 do
                 {
                     this.promoteMilePosition = GetRandomPosition(true, gp);
+                    k++;
+                    if (k < 10) { }
+                    else
+                    {
+                        break;
+                    }
                 }
                 while (IsOutTheAbility(gp));
                 // var from = this.GetFromWhenUpdateCollect(player, sc.cType, car);
@@ -27,25 +34,51 @@ namespace HMMain6.GroupClassF
             }
             //   this.promoteBusinessPosition = GetRandomPosition(true, gp);
             this.promoteVolumePosition = GetRandomPosition(true, gp);
-            this.promoteSpeedPosition = GetRandomPosition(true, gp);
+            // this.promoteSpeedPosition = GetRandomPosition(true, gp);
         }
 
         private bool IsOutTheAbility(GetRandomPos grp)
         {
-            throw new Exception();
-            //List<string> notifyMsg = new List<string>();
-            //var goPath = that.GetAFromB_v2(this.StartFPIndex, this.promoteMilePosition, grp, ref notifyMsg);
-            //var returnPath = that.GetAFromB_v2(this.promoteMilePosition, this.StartFPIndex, grp, ref notifyMsg);
+            //  throw new Exception();
+            List<string> notifyMsg = new List<string>();
+            List<int> goFpIndex, returnFpIndex;
+            var goPath = grp.GetAFromB(this.StartFPIndex, this.promoteMilePosition, out goFpIndex);
+            var returnPath = grp.GetAFromB(this.promoteMilePosition, this.StartFPIndex, out returnFpIndex);
+
+            int goEnergy = 0, returnEnergy = 0;
+
+            for (int i = 0; i < goFpIndex.Count - 1; i++)
+            {
+                var selections = grp.GetSelections(goFpIndex[i]);
+                var selectionIndex = selections.FindIndex(item => item == goFpIndex[i + 1]);
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(selections));
+                goEnergy += grp.GetEnegy(goFpIndex[i])[selectionIndex];
+            }
+
+            for (int i = 0; i < returnFpIndex.Count - 1; i++)
+            {
+                var selections = grp.GetSelections(returnFpIndex[i]);
+                var selectionIndex = selections.FindIndex(item => item == returnFpIndex[i + 1]);
+                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(selections));
+                returnEnergy += grp.GetEnegy(returnFpIndex[i])[selectionIndex];
+            }
+
+
+            //  Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(goPath));
+            //  Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(returnPath));
+            // throw (new Exception("暂时展厅"));
+            //var goPathEnegy = grp.GetEnegy(this.StartFPIndex)[this.promoteMilePosition];// that.GetAFromB_v2(this.StartFPIndex, this.promoteMilePosition, grp, ref notifyMsg);
+            //var returnPathEnegy = grp.GetEnegy(this.promoteMilePosition)[this.StartFPIndex];//, grp, ref notifyMsg);
 
             //var goMile = that.GetMile(goPath);
             //var returnMile = that.GetMile(returnPath);
 
-            //if (goMile + returnMile > this.MaxMile * 95 / 100)
-            //{
-            //    return true;
-            //}
-            //else
-            //    return false;
+            if (goEnergy + returnEnergy > this.MaxMile * 90 / 100)
+            {
+                return true;
+            }
+            else
+                return false;
         }
 
         int _promoteMilePosition = -1;
@@ -85,19 +118,19 @@ namespace HMMain6.GroupClassF
         {
             get
             {
-                throw new Exception("");
-                //long maxValue = 200;
-                //foreach (var item in this._PlayerInGroup)
-                //{
-                //    if (item.Value.playerType == Player.PlayerType.player)
-                //    {
-                //        if (item.Value.getCar().ability.mile > maxValue)
-                //        {
-                //            maxValue = item.Value.getCar().ability.mile;
-                //        }
-                //    }
-                //}
-                //return maxValue;
+                // throw new Exception("");
+                long maxValue = 20;
+                foreach (var item in this._PlayerInGroup)
+                {
+                    if (item.Value.playerType == Player.PlayerType.player)
+                    {
+                        if (item.Value.getCar().ability.mile > maxValue)
+                        {
+                            maxValue = item.Value.getCar().ability.mile;
+                        }
+                    }
+                }
+                return maxValue;
             }
         }
 
@@ -113,9 +146,9 @@ namespace HMMain6.GroupClassF
                     }
                     else
                     {
-                        var infomation = this.GetPromoteInfomation(((Player)this._PlayerInGroup[key]).WebSocketID, promoteType);
+                        //  var infomation = this.GetPromoteInfomation(((Player)this._PlayerInGroup[key]).WebSocketID, promoteType);
                         url = ((Player)this._PlayerInGroup[key]).FromUrl;
-                        sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(infomation);
+                        //sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(infomation);
                         ((Player)this._PlayerInGroup[key]).PromoteState[promoteType] = this.getPromoteState(promoteType);
                     }
             if (!string.IsNullOrEmpty(url))
@@ -150,70 +183,70 @@ namespace HMMain6.GroupClassF
 
         internal BradCastPromoteInfoDetail GetPromoteInfomation(int webSocketID, string resultType)
         {
-            throw new Exception();
-            //switch (resultType)
-            //{
-            //    case "mile":
-            //        {
-            //            var obj = new BradCastPromoteInfoDetail
-            //            {
-            //                c = "BradCastPromoteInfoDetail",
-            //                WebSocketID = webSocketID,
-            //                resultType = resultType,
-            //                Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
-            //                Price = this.promotePrice[resultType]
-            //            };
-            //            return obj;
-            //        };
-            //    //case "business":
-            //    //    {
-            //    //        var obj = new BradCastPromoteInfoDetail
-            //    //        {
-            //    //            c = "BradCastPromoteInfoDetail",
-            //    //            WebSocketID = webSocketID,
-            //    //            resultType = resultType,
-            //    //            Fp = Program.dt.GetFpByIndex(this.promoteBusinessPosition),
-            //    //            Price = this.promotePrice[resultType]
-            //    //        };
-            //    //        return obj;
-            //    //    };
-            //    case "volume":
-            //        {
-            //            var obj = new BradCastPromoteInfoDetail
-            //            {
-            //                c = "BradCastPromoteInfoDetail",
-            //                WebSocketID = webSocketID,
-            //                resultType = resultType,
-            //                Fp = Program.dt.GetFpByIndex(this.promoteVolumePosition),
-            //                Price = this.promotePrice[resultType]
-            //            };
-            //            return obj;
-            //        };
-            //    case "speed":
-            //        {
-            //            var obj = new BradCastPromoteInfoDetail
-            //            {
-            //                c = "BradCastPromoteInfoDetail",
-            //                WebSocketID = webSocketID,
-            //                resultType = resultType,
-            //                Fp = Program.dt.GetFpByIndex(this.promoteSpeedPosition),
-            //                Price = this.promotePrice[resultType]
-            //            };
-            //            return obj;
-            //        };
-            //    default:
-            //        {
-            //            var obj = new BradCastPromoteInfoDetail
-            //            {
-            //                c = "BradCastPromoteInfoDetail",
-            //                WebSocketID = webSocketID,
-            //                resultType = "mile",
-            //                Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
-            //                Price = this.promotePrice["mile"]
-            //            };
-            //            return obj;
-            //        };
-            //}
+            //  throw new Exception();
+            switch (resultType)
+            {
+                case "mile":
+                    {
+                        var obj = new BradCastPromoteInfoDetail
+                        {
+                            c = "BradCastPromoteInfoDetail",
+                            WebSocketID = webSocketID,
+                            resultType = resultType,
+                            Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
+                            Price = this.promotePrice[resultType]
+                        };
+                        return obj;
+                    };
+                //case "business":
+                //    {
+                //        var obj = new BradCastPromoteInfoDetail
+                //        {
+                //            c = "BradCastPromoteInfoDetail",
+                //            WebSocketID = webSocketID,
+                //            resultType = resultType,
+                //            Fp = Program.dt.GetFpByIndex(this.promoteBusinessPosition),
+                //            Price = this.promotePrice[resultType]
+                //        };
+                //        return obj;
+                //    };
+                case "volume":
+                    {
+                        var obj = new BradCastPromoteInfoDetail
+                        {
+                            c = "BradCastPromoteInfoDetail",
+                            WebSocketID = webSocketID,
+                            resultType = resultType,
+                            Fp = Program.dt.GetFpByIndex(this.promoteVolumePosition),
+                            Price = this.promotePrice[resultType]
+                        };
+                        return obj;
+                    };
+                case "speed":
+                    {
+                        var obj = new BradCastPromoteInfoDetail
+                        {
+                            c = "BradCastPromoteInfoDetail",
+                            WebSocketID = webSocketID,
+                            resultType = resultType,
+                            Fp = Program.dt.GetFpByIndex(this.promoteSpeedPosition),
+                            Price = this.promotePrice[resultType]
+                        };
+                        return obj;
+                    };
+                default:
+                    {
+                        var obj = new BradCastPromoteInfoDetail
+                        {
+                            c = "BradCastPromoteInfoDetail",
+                            WebSocketID = webSocketID,
+                            resultType = "mile",
+                            Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
+                            Price = this.promotePrice["mile"]
+                        };
+                        return obj;
+                    };
+            }
         }
 
         void PromoteClickFunctionWhenAuto(Player player, string pType, GetRandomPos gp, string Uid)
@@ -374,7 +407,7 @@ namespace HMMain6.GroupClassF
             //}
         }
 
-     
+
 
         public Dictionary<string, long> promotePrice = new Dictionary<string, long>()
         {

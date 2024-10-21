@@ -16,7 +16,13 @@ namespace HMMain6
         //GetFpCount
         public int GetFpCount();
         public ModelBase.Data.FPPosition GetFpByIndex(int indexValule);
-        public List<ModelBase.Data.FPPosition> GetAFromB(int start, int end);
+        public List<ModelBase.Data.FPPosition> GetAFromB(int start, int end, out List<int> fpIndex);
+
+        public List<ModelBase.Data.FPPosition> GetAFromB(int start, int end)
+        {
+            List<int> fpIndex;
+            return this.GetAFromB(start, end, out fpIndex);
+        }
         //   public OssModel.SaveRoad.RoadInfo GetItemRoadInfo(OssModel.MapGo.nyrqPosition nyrqPosition);
         //public OssModel.SaveRoad.RoadInfo GetItemRoadInfo(string roadCode, int roadOrder);
         //public OssModel.SaveRoad.RoadInfo GetItemRoadInfo(string roadCode, int roadOrder, out bool existed);
@@ -44,6 +50,8 @@ namespace HMMain6
         CompassPosition GetTurbine(int targetFpIndex);
         CompassPosition Satelite(int ttargetFpIndexi);
         CompassPosition GetBtcPosition(int targetFpIndex);
+        CompassPosition GetRedDiamond(int targetFpIndex);
+        CompassPosition GetBlueDiamond(int targetFpIndex);
         //  void LoadStock(ModelStock sa);
     }
     public partial class Data
@@ -153,8 +161,9 @@ namespace HMMain6
 
     public partial class Data : GetRandomPos
     {
-        public List<FPPosition> GetAFromB(int start, int end)
+        public List<FPPosition> GetAFromB(int start, int end, out List<int> fpIndex)
         {
+            fpIndex = new List<int>();
             var ItemLength = this.GetFpCount();
             List<int> resultRead = new List<int>();
 
@@ -177,6 +186,7 @@ namespace HMMain6
             for (int i = 0; i < resultRead.Count; i++)
             {
                 result.Add(this.GetFpByIndex(resultRead[i]));
+                fpIndex.Add(resultRead[i]);
             }
             return result;
         }
@@ -328,6 +338,124 @@ namespace HMMain6
                 ry = 0,
                 rz = 0,
                 s = 0.2
+            };
+        }
+
+        public CompassPosition GetRedDiamond(int targetFpIndex)
+        {
+            const string objName = "reddiamond";
+            if (this.config.isDebug == 1)
+            {
+                var fp = this.GetFpByIndex(targetFpIndex);
+                var rootPath = System.IO.Directory.GetCurrentDirectory();
+                var fpDictionary = $"{rootPath}\\DBPublish\\objplace\\{fp.fPCode}{fp.Height}{objName}.json";
+                if (File.Exists(fpDictionary))
+                {
+                    var json = File.ReadAllText(fpDictionary);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<CompassPosition>(json);
+                }
+            }
+            else
+            {
+
+                var fp = this.GetFpByIndex(targetFpIndex);
+
+                var rootPath = System.IO.Directory.GetCurrentDirectory();
+                var fpDictionary = $"{rootPath}\\DBPublish\\objplace\\{fp.fPCode}{fp.Height}{objName}.json";
+                if (this.objPlaceWhereWhetherHasValue.ContainsKey(fpDictionary))
+                {
+                    if (this.objPlaceWhereWhetherHasValue[fpDictionary])
+                    {
+                        return this.objPlaceWhereValue[fpDictionary];
+                    }
+                }
+                else
+                {
+                    if (File.Exists(fpDictionary))
+                    {
+                        var json = File.ReadAllText(fpDictionary);
+
+                        var p = Newtonsoft.Json.JsonConvert.DeserializeObject<CompassPosition>(json);
+                        this.objPlaceWhereValue.Add(fpDictionary, p);
+                        this.objPlaceWhereWhetherHasValue.Add(fpDictionary, true);
+                        return p;
+                    }
+                    else
+                    {
+                        this.objPlaceWhereWhetherHasValue.Add(fpDictionary, false);
+                    }
+
+                }
+
+            }
+            return new CompassPosition()
+            {
+                x = 12,
+                y = 0,
+                z = 16,
+                rx = 0,
+                ry = 0,
+                rz = 0,
+                s = 0.4
+            };
+        }
+
+        public CompassPosition GetBlueDiamond(int targetFpIndex)
+        {
+            const string objName = "bluediamond";
+            if (this.config.isDebug == 1)
+            {
+                var fp = this.GetFpByIndex(targetFpIndex);
+                var rootPath = System.IO.Directory.GetCurrentDirectory();
+                var fpDictionary = $"{rootPath}\\DBPublish\\objplace\\{fp.fPCode}{fp.Height}{objName}.json";
+                if (File.Exists(fpDictionary))
+                {
+                    var json = File.ReadAllText(fpDictionary);
+                    return Newtonsoft.Json.JsonConvert.DeserializeObject<CompassPosition>(json);
+                }
+            }
+            else
+            {
+
+                var fp = this.GetFpByIndex(targetFpIndex);
+
+                var rootPath = System.IO.Directory.GetCurrentDirectory();
+                var fpDictionary = $"{rootPath}\\DBPublish\\objplace\\{fp.fPCode}{fp.Height}{objName}.json";
+                if (this.objPlaceWhereWhetherHasValue.ContainsKey(fpDictionary))
+                {
+                    if (this.objPlaceWhereWhetherHasValue[fpDictionary])
+                    {
+                        return this.objPlaceWhereValue[fpDictionary];
+                    }
+                }
+                else
+                {
+                    if (File.Exists(fpDictionary))
+                    {
+                        var json = File.ReadAllText(fpDictionary);
+
+                        var p = Newtonsoft.Json.JsonConvert.DeserializeObject<CompassPosition>(json);
+                        this.objPlaceWhereValue.Add(fpDictionary, p);
+                        this.objPlaceWhereWhetherHasValue.Add(fpDictionary, true);
+                        return p;
+                    }
+                    else
+                    {
+                        this.objPlaceWhereWhetherHasValue.Add(fpDictionary, false);
+                    }
+
+                }
+
+            }
+            return new CompassPosition()
+            {
+                x = 12,
+                y = 0,
+                z = 16,
+                rx = 0,
+                ry = 0,
+                rz = 0,
+                s = 0.4
             };
         }
 

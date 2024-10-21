@@ -131,6 +131,94 @@ namespace HMMain6.RoomMainF
             };
             return obj;
         }
-      
+
+        private void UpdateRedDiamond(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
+        {
+            if (this._Groups.ContainsKey(groupKey))
+            {
+                var group = this._Groups[groupKey];
+                if (group._PlayerInGroup.ContainsKey(key))
+                {
+                    var player = group._PlayerInGroup[key];
+                    var targetFpIndex = player.getCar().targetFpIndex;
+                    //  var target = getRandomPosObj.GetSelections(targetFpIndex);
+                    // if (targetFpIndex == player.StartFPIndex)
+                    {
+                        var position = grp.GetRedDiamond(targetFpIndex);
+                        var obj = GetItemBattery(player.WebSocketID, position);
+                        obj.hasValue = targetFpIndex == group.promoteMilePosition;
+                        if (player.BTCAddress == AdministratorAddr)
+                        {
+                            if (grp.GetFpByIndex(targetFpIndex).CanGetScore)
+                                obj.hasValue = true;
+                        }
+                        var url = player.FromUrl;
+                        var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                        notifyMsgs.Add(url);
+                        notifyMsgs.Add(sendMsg);
+                    }
+
+                    //if (group.HasGold(targetFpIndex))
+                    //{
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                }
+            }
+        }
+
+        private BradCastBattery GetItemBattery(int webSocketID, CompassPosition position)
+        {
+            var obj = new BradCastBattery
+            {
+                c = "BradCastBattery",
+                WebSocketID = webSocketID,
+                position = position
+            };
+            return obj;
+        }
+
+        private void UpdateBlueDiamond(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
+        {
+            return;
+            if (this._Groups.ContainsKey(groupKey))
+            {
+                var group = this._Groups[groupKey];
+                if (group._PlayerInGroup.ContainsKey(key))
+                {
+                    var player = group._PlayerInGroup[key];
+                    var targetFpIndex = player.getCar().targetFpIndex;
+                    //  var target = getRandomPosObj.GetSelections(targetFpIndex);
+                    // if (targetFpIndex == player.StartFPIndex)
+                    {
+                        var position = grp.GetBlueDiamond(targetFpIndex);
+                        var obj = GetItemBattery(player.WebSocketID, position);
+                        obj.hasValue = targetFpIndex == group.promoteMilePosition;
+                        if (player.BTCAddress == AdministratorAddr)
+                        {
+                            if (grp.GetFpByIndex(targetFpIndex).CanGetScore)
+                                obj.hasValue = true;
+                        }
+                        var url = player.FromUrl;
+                        var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                        notifyMsgs.Add(url);
+                        notifyMsgs.Add(sendMsg);
+                    }
+
+                    //if (group.HasGold(targetFpIndex))
+                    //{
+
+                    //}
+                    //else
+                    //{
+
+                    //}
+                }
+            }
+        }
+
     }
 }

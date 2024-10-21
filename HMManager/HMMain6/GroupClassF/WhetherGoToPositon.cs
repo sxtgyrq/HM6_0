@@ -52,8 +52,8 @@ namespace HMMain6.GroupClassF
                     var volumePosition = gp.GetFpByIndex(this.promoteVolumePosition);
                     setBoundry(volumePosition, ref minX, ref minY, ref maxX, ref maxY);
 
-                    var speedPosition = gp.GetFpByIndex(this.promoteSpeedPosition);
-                    setBoundry(speedPosition, ref minX, ref minY, ref maxX, ref maxY);
+                    //var speedPosition = gp.GetFpByIndex(this.promoteSpeedPosition);
+                    //setBoundry(speedPosition, ref minX, ref minY, ref maxX, ref maxY);
                 }
 
 
@@ -144,7 +144,7 @@ namespace HMMain6.GroupClassF
             {
                 AddPath(ref smallMap, player.getCar().targetFpIndex, this.promoteMilePosition, "mile", gp);
                 AddPath(ref smallMap, player.getCar().targetFpIndex, this.promoteVolumePosition, "volume", gp);
-                AddPath(ref smallMap, player.getCar().targetFpIndex, this.promoteSpeedPosition, "speed", gp);
+                // AddPath(ref smallMap, player.getCar().targetFpIndex, this.promoteSpeedPosition, "speed", gp);
                 var rank = (from cItem in this._collectPosition
                             orderby this.getLength(gp.GetFpByIndex(cItem.Value), gp.GetFpByIndex(player.getCar().targetFpIndex)) ascending
                             select cItem.Key).ToList();
@@ -159,7 +159,7 @@ namespace HMMain6.GroupClassF
             {
                 AddPath(ref smallMap, player.StartFPIndex, this.promoteMilePosition, "mile", gp);
                 AddPath(ref smallMap, player.StartFPIndex, this.promoteVolumePosition, "volume", gp);
-                AddPath(ref smallMap, player.StartFPIndex, this.promoteSpeedPosition, "speed", gp);
+                //  AddPath(ref smallMap, player.StartFPIndex, this.promoteSpeedPosition, "speed", gp);
 
                 var rank = (from cItem in this._collectPosition
                             orderby this.getLength(gp.GetFpByIndex(cItem.Value), gp.GetFpByIndex(player.StartFPIndex)) ascending
@@ -266,12 +266,12 @@ namespace HMMain6.GroupClassF
                                 selection.Add("volume");
                             }
 
-                            var speedPosition = gp.GetFpByIndex(this.promoteSpeedPosition);
-                            if (isInRegion(smc, speedPosition))
-                            {
-                                fps.Add(speedPosition);
-                                selection.Add("speed");
-                            }
+                            //var speedPosition = gp.GetFpByIndex(this.promoteSpeedPosition);
+                            //if (isInRegion(smc, speedPosition))
+                            //{
+                            //    fps.Add(speedPosition);
+                            //    selection.Add("speed");
+                            //}
                         }
                         if (fps.Count == 0)
                         {
@@ -352,12 +352,12 @@ namespace HMMain6.GroupClassF
                                 selection.Add("volume");
                             }
 
-                            var speedPosition = gp.GetFpByIndex(this.promoteSpeedPosition);
-                            if (isInRegion(smc, speedPosition))
-                            {
-                                fps.Add(speedPosition);
-                                selection.Add("speed");
-                            }
+                            //var speedPosition = gp.GetFpByIndex(this.promoteSpeedPosition);
+                            //if (isInRegion(smc, speedPosition))
+                            //{
+                            //    fps.Add(speedPosition);
+                            //    selection.Add("speed");
+                            //}
 
                             var homePositon = gp.GetFpByIndex(player.StartFPIndex);
                             if (isInRegion(smc, homePositon))

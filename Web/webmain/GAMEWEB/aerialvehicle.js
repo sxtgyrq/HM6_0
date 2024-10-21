@@ -565,6 +565,20 @@ var drawStatelite = function (inputObj) {
         objMain.getOutGroup.add(copyObj);
     }
 };
+
+var drawBattery = function (inputObj) {
+    console.log('需要绘制', inputObj);
+
+    objMain.mainF.removeF.clearGroup(objMain.batteryGroup);
+    if (inputObj.hasValue) {
+        var copyObj = objMain.ModelInput.battery.clone();
+        copyObj.rotation.set(inputObj.position.rx, inputObj.position.ry, inputObj.position.rz, 'XYZ');
+        copyObj.position.set(inputObj.position.x, inputObj.position.y, inputObj.position.z);
+        copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
+        objMain.batteryGroup.add(copyObj);
+    }
+};
+
 var objPlaceSystemObj = function () {
     var obj =
     {
@@ -579,7 +593,7 @@ var objPlaceSystemObj = function () {
             }
         },
         operateIndex: 0,
-        operateGroups: [objMain.collectGroup, objMain.getOutGroup, objMain.buildingGroup, objMain.directionGroup, objMain.bitcoinCharacterGroup],
+        operateGroups: [objMain.collectGroup, objMain.getOutGroup, objMain.buildingGroup, objMain.directionGroup, objMain.bitcoinCharacterGroup, objMain.batteryGroup],
         indexAdd: function () {
             this.operateIndex++;
             this.operateIndex %= this.operateGroups.length;
@@ -1142,5 +1156,32 @@ function createText(font, inputObj) {
 
     //}
 
-}
+};
+let loadBattery = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/battery/battery.obj';
+        mtlUrl = 'http://127.0.0.1:11001/battery/battery.mtl';
+        picUrl = 'http://127.0.0.1:11001/battery/battery.png';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.png';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+};
 

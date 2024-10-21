@@ -91,6 +91,7 @@ namespace WsOfWebClient
             app.Map("/turbine", turbine);
 
             app.Map("/satelite", satelite);
+            app.Map("/battery", battery);
             //satelite
             //app.Map("/douyindata", douyindata);
             //app.Map("/roaddata", roaddata);//此接口只对调试时开放
@@ -1684,6 +1685,46 @@ namespace WsOfWebClient
                     {
                         context.Response.ContentType = "image/png";
                         var bytes = File.ReadAllBytes("E:\\DB\\model\\satelite\\satelite.png");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+
+        internal static void battery(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/battery.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\battery\\battery.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/battery.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\battery\\battery.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/battery.png")
+                    {
+                        context.Response.ContentType = "image/png";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\battery\\battery.png");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
                     }
                 }

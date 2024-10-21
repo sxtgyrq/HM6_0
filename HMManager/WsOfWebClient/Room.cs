@@ -438,6 +438,13 @@ namespace WsOfWebClient
                     return s;
                 }
 
+                SetBattery sbb = new SetBattery();
+                if (SetModelCopy(sbb, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
                 result = setState(s, connectInfoDetail, LoginState.OnLine);
 
                 {
@@ -979,6 +986,11 @@ namespace WsOfWebClient
         class SetSatelite : interfaceTag.modelForCopy
         {
             public string Command { get { return "SetSatelite"; } }
+        }
+
+        class SetBattery : interfaceTag.modelForCopy
+        {
+            public string Command { get { return "SetBattery"; } }
         }
 
         private static bool SetModelCopy(interfaceTag.modelForCopy mp, ConnectInfo.ConnectInfoDetail connectInfoDetail)

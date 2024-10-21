@@ -409,9 +409,9 @@ namespace CommonClass
         public long costValue { get; set; }
         public long sumValue { get; set; }
     }
-    public class BradCastGroupAbility : CommandNotify 
+    public class BradCastGroupAbility : CommandNotify
     {
-        public string pType { get; set; }  
+        public string pType { get; set; }
         public long showValue { get; set; }
     }
     public class BradCarState : CommandNotify
@@ -593,7 +593,8 @@ namespace CommonClass
     };
     public class BradCastTurbine : BradCastGoldObj { }
     public class BradCastSatelite : BradCastGoldObj { }
-    public class BradCastBitcoinAddr : BradCastGoldObj 
+    public class BradCastBattery : BradCastGoldObj { }
+    public class BradCastBitcoinAddr : BradCastGoldObj
     {
         public string bitcoinAddr { get; set; }
     }
@@ -1462,7 +1463,7 @@ namespace CommonClass
         public string Key { get; set; }
         public string GroupKey { get; set; }
     }
-    public class UploadPositionJson : CommonClass.Command 
+    public class UploadPositionJson : CommonClass.Command
     {
         public string fileName { get; set; }
         public string jsonString { get; set; }

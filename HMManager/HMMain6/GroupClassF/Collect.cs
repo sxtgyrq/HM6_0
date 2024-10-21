@@ -146,6 +146,18 @@ namespace HMMain6.GroupClassF
                     {
                         this._collectPosition[collectIndex] = this.GetRandomPosition(false, grp);
                         player.getCar().ability.setCostVolume(player.getCar().ability.costVolume + 100, player, player.getCar(), ref notifyMsg);
+
+                        int k = 0; 
+                        while (IsOutTheAbility(grp))
+                        {
+                            k++;
+                            this.promoteMilePosition = GetRandomPosition(true, grp);
+                            if (k < 10) 
+                            {
+                                continue;
+                            }
+                            else { break; }
+                        }
                         return true;
                     }
                 }

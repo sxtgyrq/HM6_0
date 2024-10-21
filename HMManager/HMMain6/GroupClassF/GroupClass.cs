@@ -216,7 +216,7 @@ namespace HMMain6.GroupClassF
                 }
                 // StartFPIndex = now % gp.GetFpCount(); // this.GetRandomPosition(false, gp);
                 _collectPosition = new Dictionary<int, int>();
-                //   SetLookForPromote(gp);
+                SetLookForPromote(gp);
                 SetLookForMoney(gp);
             }
         }
