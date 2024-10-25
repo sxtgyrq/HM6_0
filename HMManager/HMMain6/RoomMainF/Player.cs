@@ -266,7 +266,23 @@ namespace HMMain6.RoomMainF
 
         public void DiamondInCarChanged(Player player, Car car, ref List<string> notifyMsgs, string value)
         {
-            throw new NotImplementedException();
+            foreach (var item in player.Group._PlayerInGroup)
+            {
+                if (item.Value.playerType == Player.PlayerType.player)
+                {
+                    var playerNeedToTold = (Player)item.Value;
+                    var obj = new BradCastPromoteDiamondInCar
+                    {
+                        c = "BradCastPromoteDiamondOnCar",
+                        WebSocketID = playerNeedToTold.WebSocketID,
+                        pType = car.ability.diamondInCar,
+                        roleID = player.Key
+                    };
+                    var json = Newtonsoft.Json.JsonConvert.SerializeObject(obj);
+                    notifyMsgs.Add(playerNeedToTold.FromUrl);
+                    notifyMsgs.Add(json);
+                }
+            }
         }
 
         public void DriverSelected(Player player, Car car, ref List<string> notifyMsgs)

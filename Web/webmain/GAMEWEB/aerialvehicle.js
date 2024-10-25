@@ -577,6 +577,10 @@ var drawBattery = function (inputObj) {
         copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
         objMain.batteryGroup.add(copyObj);
     }
+    else
+    {
+
+    }
 };
 
 var objPlaceSystemObj = function () {

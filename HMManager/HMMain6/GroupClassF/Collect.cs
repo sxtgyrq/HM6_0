@@ -142,23 +142,43 @@ namespace HMMain6.GroupClassF
                 int collectIndex;
                 if (HasGold(player.getCar().targetFpIndex, out collectIndex))
                 {
-                    if (player.getCar().ability.leftVolume >= 100)
+                    if (string.IsNullOrEmpty(player.getCar().ability.diamondInCar))
                     {
-                        this._collectPosition[collectIndex] = this.GetRandomPosition(false, grp);
-                        player.getCar().ability.setCostVolume(player.getCar().ability.costVolume + 100, player, player.getCar(), ref notifyMsg);
-
-                        int k = 0; 
-                        while (IsOutTheAbility(grp))
+                        if (player.getCar().ability.leftVolume >= 100)
                         {
-                            k++;
-                            this.promoteMilePosition = GetRandomPosition(true, grp);
-                            if (k < 10) 
+                            this._collectPosition[collectIndex] = this.GetRandomPosition(false, grp);
+                            player.getCar().ability.setCostVolume(player.getCar().ability.costVolume + 100, player, player.getCar(), ref notifyMsg);
+
+                            player.collectMagicChanged(player, ref notifyMsg);
+
+                            int k = 0;
+                            if (IsOutTheAbility(grp))
                             {
-                                continue;
+                                while (IsOutTheAbility(grp))
+                                {
+                                    k++;
+                                    this.promoteMilePosition = GetRandomPosition(true, grp);
+                                    if (k < 10)
+                                    {
+                                        continue;
+                                    }
+                                    else { break; }
+                                }
+                                foreach (var item in this._PlayerInGroup)
+                                {
+                                    item.Value.rm.UpdateRedDiamond(item.Key, this.GroupKey, grp, ref notifyMsg);
+                                }
                             }
-                            else { break; }
+                            return true;
                         }
-                        return true;
+                        else 
+                        {
+                            this.that.WebNotify(player, "无人已满载，回基地点击分车复命！");
+                        }
+                    }
+                    else
+                    {
+                        this.that.WebNotify(player, "无人机栽有其他设备或物品，不能执行收集任务！");
                     }
                 }
             }

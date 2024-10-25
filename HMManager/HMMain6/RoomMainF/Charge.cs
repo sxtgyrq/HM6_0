@@ -42,6 +42,38 @@ namespace HMMain6.RoomMainF
 
                 }
 
+
+
+                if (group._PlayerInGroup.ContainsKey(cpd.Key))
+                {
+
+                    var player = group._PlayerInGroup[cpd.Key];
+                    var car = player.getCar();
+
+                    if (!string.IsNullOrEmpty(car.ability.diamondInCar))
+                    {
+                        switch (car.ability.diamondInCar)
+                        {
+                            case "mile":
+                                {
+                                    this.SetAbility(new SetAbility()
+                                    {
+                                        c = "SetAbility",
+                                        count = 1,
+                                        GroupKey = group.GroupKey,
+                                        Key = player.Key,
+                                        pType = car.ability.diamondInCar
+                                    });
+                                    //   car.ability.setDiamondInCar("mile")
+                                }; break;
+                        }
+                    }
+
+                    car.ability.Refresh(player, car, ref notifyMsgs);
+                }
+
+                // group._PlayerInGroup[cpd.Key].getCar().ability.Refresh
+
                 Startup.sendSeveralMsgs(notifyMsgs);
             }
             return "";

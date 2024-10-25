@@ -69,16 +69,16 @@ namespace HMMain6
                             }
 
                         }; break;
-                    case "speed":
-                        {
-                            if (role.playerType == Player.PlayerType.player)
-                            {
-                                var player = (Player)role;
-                                this.SpeedChanged(player, car, ref notifyMsg, pType);
-                                ChangeTheUnder(player, this.SpeedChanged, ref notifyMsg, pType);
-                            }
+                    //case "speed":
+                    //    {
+                    //        if (role.playerType == Player.PlayerType.player)
+                    //        {
+                    //            var player = (Player)role;
+                    //            this.SpeedChanged(player, car, ref notifyMsg, pType);
+                    //            ChangeTheUnder(player, this.SpeedChanged, ref notifyMsg, pType);
+                    //        }
 
-                        }; break;
+                    //    }; break;
                 }
             }
         }
@@ -273,16 +273,16 @@ namespace HMMain6
             //this.Data["volume"].RemoveAll(item => (item - this.CreateTime).TotalMinutes > 120);
             //this.Data["speed"].RemoveAll(item => (item - this.CreateTime).TotalMinutes > 120);
             this._costMiles = 0;
-            this._costBusiness = 0;
+            // this._costBusiness = 0;
             this._costVolume = 0;
             if (player.playerType == Player.PlayerType.player)
             {
                 MileChanged((Player)player, car, ref notifyMsg, "mile");
                 //   BusinessChanged((Player)player, car, ref notifyMsg, "business");
                 VolumeChanged((Player)player, car, ref notifyMsg, "volume");
-                SpeedChanged((Player)player, car, ref notifyMsg, "speed");
+                // SpeedChanged((Player)player, car, ref notifyMsg, "speed");
             }
-            this.setCostMiles(this.mile, player, car, ref notifyMsg);
+            this.setCostMiles(0, player, car, ref notifyMsg);
             // this.costMiles = 0;
             //this.setCostBusiness(0, player, car, ref notifyMsg);
             //this.set

@@ -293,14 +293,7 @@ namespace HMMain6.GroupClassF
                                     }; break;
                                 case "mile":
                                     {
-                                        // PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
-                                        //that.updatePromote(new SetPromote()
-                                        //{
-                                        //    c = "SetPromote",
-                                        //    GroupKey = smc.GroupKey,
-                                        //    Key = smc.Key,
-                                        //    pType = "mile"
-                                        //}, gp);
+                                        PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs); 
                                     }; break;
                                 case "speed":
                                     {
@@ -395,7 +388,7 @@ namespace HMMain6.GroupClassF
                                     }; break;
                                 case "mile":
                                     {
-                                        //   PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
+                                        PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
                                     }; break;
                                 case "speed":
                                     {

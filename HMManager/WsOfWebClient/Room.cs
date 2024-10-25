@@ -716,6 +716,24 @@ namespace WsOfWebClient
                 }
             }
         }
+
+        internal static string setPromote(State s, Promote promote)
+        {
+            if (promote.pType == "mile")// || promote.pType == "volume" || promote.pType == "speed")
+            {
+                var getPosition = new SetPromote()
+                {
+                    c = "SetPromote",
+                    Key = s.Key,
+                    GroupKey = s.GroupKey,
+                    pType = promote.pType,
+                    Uid = ""
+                };
+                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(getPosition);
+                Startup.sendInmationToUrlAndGetRes(Room.roomUrls[s.roomIndex], msg);
+            }
+            return "";
+        }
     }
     public class Team
     {

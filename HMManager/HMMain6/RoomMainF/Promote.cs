@@ -51,7 +51,7 @@ namespace HMMain6.RoomMainF
             CheckPromoteState(key, groupKey, "mile");
             //   CheckPromoteState(key, "business");
             CheckPromoteState(key, groupKey, "volume");
-            CheckPromoteState(key, groupKey, "speed");
+            // CheckPromoteState(key, groupKey, "speed");
         }
         private void CheckPromoteState(string key, string groupKey, string promoteType)
         {
@@ -132,7 +132,7 @@ namespace HMMain6.RoomMainF
             return obj;
         }
 
-        private void UpdateRedDiamond(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
+        public void UpdateRedDiamond(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
         {
             if (this._Groups.ContainsKey(groupKey))
             {
@@ -218,6 +218,27 @@ namespace HMMain6.RoomMainF
                     //}
                 }
             }
+        }
+
+        public string updatePromote(SetPromote sp, GetRandomPos grp)
+        {
+            if (this._Groups.ContainsKey(sp.GroupKey))
+            {
+                List<string> notifyMsgs = new List<string>();
+                var group = this._Groups[sp.GroupKey];
+                var promoteMileSuccess = group.updateRedDiamond(sp, grp, ref notifyMsgs);
+
+                if (promoteMileSuccess)
+                {
+                    foreach (var item in group._PlayerInGroup)
+                    {
+                        UpdateRedDiamond(item.Key, group.GroupKey, grp, ref notifyMsgs);
+                    }
+                }
+
+                Startup.sendSeveralMsgs(notifyMsgs);
+            }
+            return "";
         }
 
     }

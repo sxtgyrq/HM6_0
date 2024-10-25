@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonClass;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,5 +19,7 @@ namespace HMMain6.GroupClassF
 
             return true;
         }
+
+       
     }
 }

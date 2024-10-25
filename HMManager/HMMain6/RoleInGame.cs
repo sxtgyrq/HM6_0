@@ -858,7 +858,7 @@ namespace HMMain6
         // public Engine_MagicEngine.SpeedMagicChanged nitrogenValueChanged;
 
         //  public Engine_MagicEngine.AttackMagicChanged attackMagicChanged;
-        // public Engine_MagicEngine.CollectCountChanged collectMagicChanged;
+        public Engine_MagicEngine.CollectCountChanged collectMagicChanged;
         // public Engine_MagicEngine.DefenceMagicChanged defenceMagicChanged;
 
         // public Engine_MagicEngine.ConfusePrepareMagicChanged confusePrepareMagicChanged;

@@ -714,6 +714,9 @@ var objMain =
             vehicle.name = 'vehicle_' + objMain.indexKey;
             objMain.carGroup.add(vehicle);
 
+
+            // carAbility.drawChanel()；
+            carAbility.drawPanel('car');
             //if (objMain.debug == 0) {
             //    path = 'http://127.0.0.1:11001/pic/' + inputObj.fp.fPCode + '/' + inputObj.fp.Height + '/';
             //}
@@ -1605,7 +1608,7 @@ var objMain =
                 }; break;
             case 'SetBattery':
                 {
-                    loadSatelite(function (objectInput) {
+                    loadBattery(function (objectInput) {
                         console.log('SetBattery', objectInput);
                         objMain.ws.send('SetBattery');
                         objMain.ModelInput.battery = objectInput;
@@ -2670,7 +2673,7 @@ var objMain =
                 }; break;
             case 'BradCastDouyinReward1':
                 {
-                    douyinPanleShow.add(received_obj.DetailInfo);
+                    //      douyinPanleShow.add(received_obj.DetailInfo);
                 }; break;
             case 'BradCastAllDouyinPlayerIsWaiting':
                 {
@@ -4411,6 +4414,7 @@ var set3DHtml = function () {
         var turbineIsClicked = false;
         var sateliteIsClicked = false;
         var btcAddrIsCLicked = false;
+        var batteryIsClicked = false;
 
         if (event.clientX != undefined && event.clientX != null) {
             //此处对应鼠标
@@ -4442,6 +4446,10 @@ var set3DHtml = function () {
             if (!isSelected) {
                 btcAddrIsCLicked = btcAddrClicked();
                 isSelected = isSelected || btcAddrIsCLicked;
+            }
+            if (!isSelected) {
+                batteryIsClicked = batteryClicked();
+                isSelected = isSelected || batteryIsClicked;
             }
         }
         else if (event.changedTouches && event.changedTouches.length > 0) {
@@ -4475,6 +4483,10 @@ var set3DHtml = function () {
             if (!isSelected) {
                 btcAddrIsCLicked = btcAddrClicked();
                 isSelected = isSelected || btcAddrIsCLicked;
+            }
+            if (!isSelected) {
+                batteryIsClicked = batteryClicked();
+                isSelected = isSelected || batteryIsClicked;
             }
         }
 
@@ -6472,32 +6484,45 @@ var stateSet =
         add: function (roleID, diamondName) {
             if (diamondName == '') {
                 this.clear(roleID, 'mile');
-                this.clear(roleID, 'business');
+                // this.clear(roleID, 'business');
                 this.clear(roleID, 'volume');
-                this.clear(roleID, 'speed');
+                // this.clear(roleID, 'speed');
             }
             else {
-                var diamond = objMain.promoteDiamond.getObjectByName('diamond_' + diamondName);
-                if (diamond) {
-                    var diamondOnCar = objMain.promoteDiamond.getObjectByName('diamond_' + diamondName).clone();
-                    diamondOnCar.name = 'car_' + diamondName + '_' + roleID;
-                    diamondOnCar.position.set(9, 35, 0);
-                    diamondOnCar.scale.set(10, 11, 10);
-                    var car = objMain.carGroup.getObjectByName('car_' + roleID);
-                    if (car)
-                        if (!car.getObjectByName(diamondOnCar.name)) {
-                            car.add(diamondOnCar);
-                            if (roleID == objMain.indexKey) {
-                                stateSet.diamond.updateHeight(roleID);
+                if (diamondName == 'mile') {
+                    var battery = objMain.ModelInput.battery.clone();
+                    battery.name = 'vehicle_' + diamondName + '_' + roleID;
+                    battery.name = 'vehicle_' + diamondName + '_' + roleID;
+                    battery.position.set(0, 0, -0.14);
+                    battery.scale.set(0.05, 0.05, 0.05);
+                    battery.rotateX(Math.PI / 2);
+                    var car = objMain.carGroup.getObjectByName('vehicle_' + roleID);
+                    car.add(battery);
+                    stateSet.diamond.updateHeight(roleID);
+                }
+                if (false) {
+                    var diamond = objMain.promoteDiamond.getObjectByName('diamond_' + diamondName);
+                    if (diamond) {
+                        var diamondOnCar = objMain.promoteDiamond.getObjectByName('diamond_' + diamondName).clone();
+                        diamondOnCar.name = 'vehicle_' + diamondName + '_' + roleID;
+                        diamondOnCar.position.set(9, 35, 0);
+                        diamondOnCar.scale.set(10, 11, 10);
+                        var car = objMain.carGroup.getObjectByName('car_' + roleID);
+                        if (car)
+                            if (!car.getObjectByName(diamondOnCar.name)) {
+                                car.add(diamondOnCar);
+                                if (roleID == objMain.indexKey) {
+                                    stateSet.diamond.updateHeight(roleID);
+                                }
                             }
-                        }
+                    }
                 }
             }
         },
         clear: function (roleID, diamondName) {
-            var car = objMain.carGroup.getObjectByName('car_' + roleID);
+            var car = objMain.carGroup.getObjectByName('vehicle_' + roleID);
             if (car) {
-                var name = 'car_' + diamondName + '_' + roleID;
+                var name = 'vehicle_' + diamondName + '_' + roleID;
                 var diamondOnCar = car.getObjectByName(name);
                 if (diamondOnCar) {
                     car.remove(diamondOnCar);
@@ -6505,15 +6530,31 @@ var stateSet =
             }
         },
         updateHeight: function (roleID) {
-            var diamondNames = ['mile', 'business', 'volume', 'speed'];
+
+            var goldCount = function (roleID) {
+                var result = 0;
+                var car = objMain.carGroup.getObjectByName('vehicle_' + roleID);
+                for (var i = 0; i < 10000; i++) {
+                    var oIcon = car.getObjectByName('collectCoinIcon_' + i.toString());
+                    if (oIcon) {
+                        result++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                return result;
+            }(roleID);
+            var diamondNames = ['mile', 'volume'];
             for (var i = 0; i < diamondNames.length; i++) {
                 var diamondName = diamondNames[i];
-                var diamondOnCarName = 'car_' + diamondName + '_' + roleID;
-                var car = objMain.carGroup.getObjectByName('car_' + roleID);
+                var diamondOnCarName = 'vehicle_' + diamondName + '_' + roleID;
+                var car = objMain.carGroup.getObjectByName('vehicle_' + roleID);
                 if (car)
                     if (car.getObjectByName(diamondOnCarName)) {
+                        var positionY = 0.13;
                         var singleDiamond = car.getObjectByName(diamondOnCarName);
-                        singleDiamond.position.y = 35 + stateSet.coinIcon.iconCount * 4;
+                        singleDiamond.position.y = positionY - goldCount * 0.1;
                     }
             }
         }
@@ -6555,11 +6596,12 @@ var stateSet =
     {
         iconCount: 0,
         add: function (iconCount) {
-            var car = objMain.carGroup.getObjectByName('car_' + objMain.indexKey);
+            stateSet.coinIcon.iconCount = iconCount;
+            var car = objMain.carGroup.getObjectByName('vehicle_' + objMain.indexKey);
             if (car) {
                 stateSet.coinIcon.iconCount = iconCount;
-                var positionX = 13;
-                var positionY = 32;
+                var positionX = 0;
+                var positionY = 0.07;
                 var positionZ = 0;
                 for (var i = 0; i < 10000; i++) {
                     var oIcon = car.getObjectByName('collectCoinIcon_' + i.toString());
@@ -6571,11 +6613,11 @@ var stateSet =
                     }
                 }
                 for (var i = 0; i < iconCount; i++) {
-                    var objAdd = objMain.ModelInput.CollectCoinIcon.obj.clone();
+                    var objAdd = objMain.ModelInput.GoldIngotIcon.children[0].clone();
                     objAdd.name = 'collectCoinIcon_' + i.toString();
-                    objAdd.scale.set(3, 3, 3);
-                    objAdd.rotateX(Math.PI / 2);
-                    objAdd.position.set(positionX, positionY + i * 4, positionZ);
+                    objAdd.scale.set(0.1, 0.1, 0.1);
+                    objAdd.rotateY(Math.PI / 2);
+                    objAdd.position.set(positionX, positionY - i * 0.1, positionZ);
                     car.add(objAdd);
 
                 }
@@ -6583,7 +6625,7 @@ var stateSet =
             }
         },
         addWithKey: function (operateKey, iconCount) {
-            var car = objMain.carGroup.getObjectByName('car_' + operateKey);
+            var car = objMain.carGroup.getObjectByName('vehicle_' + operateKey);
             if (car) {
                 stateSet.coinIcon.iconCount = iconCount;
                 var positionX = 13;
@@ -6599,7 +6641,7 @@ var stateSet =
                     }
                 }
                 for (var i = 0; i < iconCount; i++) {
-                    var objAdd = objMain.ModelInput.CollectCoinIcon.obj.clone();
+                    var objAdd = objMain.ModelInput.GoldIngotIcon.children[0];
                     objAdd.name = 'collectCoinIcon_' + operateKey + '_' + i.toString();
                     objAdd.scale.set(3, 3, 3);
                     objAdd.rotateX(Math.PI / 2);
@@ -7392,7 +7434,32 @@ var sataliteClicked = function () {
     return false;
 }
 
+var batteryClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    for (var i = 0; i < objMain.batteryGroup.children.length; i++) {
+        var itemGroup = objMain.batteryGroup.children[i];
+        for (var j = 0; j < itemGroup.children.length; j++) {
+            var intersection = objMain.raycaster.intersectObject(itemGroup.children[j]);
 
+            if (intersection.length > 0) {
+                var userData = itemGroup.userData;
+                //alert('点击了比特币地址');
+                objMain.ws.send(JSON.stringify({ c: 'Promote', pType: 'mile' }));
+                //setTransactionHtml.editRootContainer();
+                //setTransactionHtml.drawAddr(userData.btc);
+                //setTransactionHtml.drawAgreementEditor();
+                //setTransactionHtml.drawStockTable();
+                //setTransactionHtml.drawTradeTable();
+                //setTransactionHtml.originalTable();
+                //transactionBussiness().showAuthor('https://www.nyrq123.com');
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
 //////////
 /*
  * 手柄类，此游戏只支持单手柄操作。

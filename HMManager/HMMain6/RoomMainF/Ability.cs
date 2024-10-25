@@ -64,11 +64,11 @@ namespace HMMain6.RoomMainF
             {
                 return $"wrong pType:{sa.pType}";
             }
-            else if (!(sa.pType == "mile" || sa.pType == "volume" || sa.pType == "speed"))
+            else if (!(sa.pType == "mile" || sa.pType == "volume"))
             {
                 return $"wrong pType:{sa.pType}"; ;
             }
-            else if (sa.count != 1 && sa.count != 2 && sa.count != 5 && sa.count != 10 && sa.count != 20 && sa.count != 50)
+            else if (sa.count != 1)
             {
                 return $"wrong count:{sa.count}"; ;
             }
@@ -110,7 +110,7 @@ namespace HMMain6.RoomMainF
                                 {
                                     case "mile":
                                     case "volume":
-                                    case "speed":
+                                        // case "speed":
                                         {
                                             car.ability.AbilityAdd(sa.pType, sa.count, player, car, ref notifyMsg);
 

@@ -192,6 +192,15 @@ namespace HMMain6
                         CommonClass.ModelStock sa = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.ModelStock>(notifyJson);
                         objI.UpdateModelStock(sa);
                     }; break;
+                case "SetPromote":
+                    {
+                        //有了Player.Ts,此方法在后台调用！
+                        //后台调用需要有后台调用的放发。先设置Player.Ts，再调用！
+                        CommonClass.SetPromote sp = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.SetPromote>(notifyJson);
+                        var result = objI.updatePromote(sp, Program.dt);
+                        outPut = "ok";
+                        //await context.Response.WriteAsync("ok");
+                    }; break;
             }
             return outPut;
         }

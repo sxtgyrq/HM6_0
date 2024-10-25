@@ -609,7 +609,7 @@ namespace WsOfWebClient
                                             if (s.Ls == LoginState.OnLine)
                                             {
                                                 Promote promote = Newtonsoft.Json.JsonConvert.DeserializeObject<Promote>(returnResult.result);
-                                                //   Room.setPromote(s, promote);
+                                                Room.setPromote(s, promote);
                                             }
                                         }; break;
                                     //case "Collect":
@@ -1745,6 +1745,10 @@ namespace WsOfWebClient
         }
         string StartTcpDealWithF(string notifyJson, int tcpPort)
         {
+            if (string.IsNullOrEmpty(notifyJson))
+            {
+                return "";
+            }
             try
             {
                 CommonClass.CommandNotify c = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.CommandNotify>(notifyJson);

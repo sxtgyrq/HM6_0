@@ -181,73 +181,73 @@ namespace HMMain6.GroupClassF
             }
         }
 
-        internal BradCastPromoteInfoDetail GetPromoteInfomation(int webSocketID, string resultType)
-        {
-            //  throw new Exception();
-            switch (resultType)
-            {
-                case "mile":
-                    {
-                        var obj = new BradCastPromoteInfoDetail
-                        {
-                            c = "BradCastPromoteInfoDetail",
-                            WebSocketID = webSocketID,
-                            resultType = resultType,
-                            Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
-                            Price = this.promotePrice[resultType]
-                        };
-                        return obj;
-                    };
-                //case "business":
-                //    {
-                //        var obj = new BradCastPromoteInfoDetail
-                //        {
-                //            c = "BradCastPromoteInfoDetail",
-                //            WebSocketID = webSocketID,
-                //            resultType = resultType,
-                //            Fp = Program.dt.GetFpByIndex(this.promoteBusinessPosition),
-                //            Price = this.promotePrice[resultType]
-                //        };
-                //        return obj;
-                //    };
-                case "volume":
-                    {
-                        var obj = new BradCastPromoteInfoDetail
-                        {
-                            c = "BradCastPromoteInfoDetail",
-                            WebSocketID = webSocketID,
-                            resultType = resultType,
-                            Fp = Program.dt.GetFpByIndex(this.promoteVolumePosition),
-                            Price = this.promotePrice[resultType]
-                        };
-                        return obj;
-                    };
-                case "speed":
-                    {
-                        var obj = new BradCastPromoteInfoDetail
-                        {
-                            c = "BradCastPromoteInfoDetail",
-                            WebSocketID = webSocketID,
-                            resultType = resultType,
-                            Fp = Program.dt.GetFpByIndex(this.promoteSpeedPosition),
-                            Price = this.promotePrice[resultType]
-                        };
-                        return obj;
-                    };
-                default:
-                    {
-                        var obj = new BradCastPromoteInfoDetail
-                        {
-                            c = "BradCastPromoteInfoDetail",
-                            WebSocketID = webSocketID,
-                            resultType = "mile",
-                            Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
-                            Price = this.promotePrice["mile"]
-                        };
-                        return obj;
-                    };
-            }
-        }
+        //internal BradCastPromoteInfoDetail GetPromoteInfomation(int webSocketID, string resultType)
+        //{
+        //    //  throw new Exception();
+        //    switch (resultType)
+        //    {
+        //        case "mile":
+        //            {
+        //                var obj = new BradCastPromoteInfoDetail
+        //                {
+        //                    c = "BradCastPromoteInfoDetail",
+        //                    WebSocketID = webSocketID,
+        //                    resultType = resultType,
+        //                    // Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
+        //                    Price = this.promotePrice[resultType]
+        //                };
+        //                return obj;
+        //            };
+        //        //case "business":
+        //        //    {
+        //        //        var obj = new BradCastPromoteInfoDetail
+        //        //        {
+        //        //            c = "BradCastPromoteInfoDetail",
+        //        //            WebSocketID = webSocketID,
+        //        //            resultType = resultType,
+        //        //            Fp = Program.dt.GetFpByIndex(this.promoteBusinessPosition),
+        //        //            Price = this.promotePrice[resultType]
+        //        //        };
+        //        //        return obj;
+        //        //    };
+        //        case "volume":
+        //            {
+        //                var obj = new BradCastPromoteInfoDetail
+        //                {
+        //                    c = "BradCastPromoteInfoDetail",
+        //                    WebSocketID = webSocketID,
+        //                    resultType = resultType,
+        //                    //  Fp = Program.dt.GetFpByIndex(this.promoteVolumePosition),
+        //                    Price = this.promotePrice[resultType]
+        //                };
+        //                return obj;
+        //            };
+        //        case "speed":
+        //            {
+        //                var obj = new BradCastPromoteInfoDetail
+        //                {
+        //                    c = "BradCastPromoteInfoDetail",
+        //                    WebSocketID = webSocketID,
+        //                    resultType = resultType,
+        //                    // Fp = Program.dt.GetFpByIndex(this.promoteSpeedPosition),
+        //                    Price = this.promotePrice[resultType]
+        //                };
+        //                return obj;
+        //            };
+        //        default:
+        //            {
+        //                var obj = new BradCastPromoteInfoDetail
+        //                {
+        //                    c = "BradCastPromoteInfoDetail",
+        //                    WebSocketID = webSocketID,
+        //                    resultType = "mile",
+        //                    //    Fp = Program.dt.GetFpByIndex(this.promoteMilePosition),
+        //                    Price = this.promotePrice["mile"]
+        //                };
+        //                return obj;
+        //            };
+        //    }
+        //}
 
         void PromoteClickFunctionWhenAuto(Player player, string pType, GetRandomPos gp, string Uid)
         {
@@ -319,31 +319,33 @@ namespace HMMain6.GroupClassF
             //int promotePosition;
             //string diamondName;
             //HouseManager5_0.TargetForSelect.TargetForSelectType tsType;
-            //switch (pType)
-            //{
-            //    case "mile":
-            //        {
-            //            promotePosition = this.promoteMilePosition;
-            //            diamondName = "红宝石";
-            //            tsType = TargetForSelect.TargetForSelectType.mile;
-            //        }; break;
-            //    case "volume":
-            //        {
-            //            promotePosition = this.promoteVolumePosition;
-            //            diamondName = "蓝宝石";
-            //            tsType = TargetForSelect.TargetForSelectType.volume;
-            //        }; break;
-            //    case "speed":
-            //        {
-            //            promotePosition = this.promoteSpeedPosition;
-            //            diamondName = "黑宝石";
-            //            tsType = TargetForSelect.TargetForSelectType.speed;
-            //        }; break;
-            //    default:
-            //        {
-            //            throw new Exception($"wrong parameter \"{pType}\"");
-            //        }
-            //};
+            switch (pType)
+            {
+                case "mile":
+                    {
+                        //promotePosition = this.promoteMilePosition;
+                        //diamondName = "红宝石";
+                        //tsType = TargetForSelect.TargetForSelectType.mile;
+                        var fp = gp.GetFpByIndex(this.promoteMilePosition);
+                        player.rm.WebNotify(player, $"{fp.fPName}处有电池装置可以提升续航能力。");
+                    }; break;
+                case "volume":
+                    {
+                        //promotePosition = this.promoteVolumePosition;
+                        //diamondName = "蓝宝石";
+                        //tsType = TargetForSelect.TargetForSelectType.volume;
+                    }; break;
+                case "speed":
+                    {
+                        //promotePosition = this.promoteSpeedPosition;
+                        //diamondName = "黑宝石";
+                        //tsType = TargetForSelect.TargetForSelectType.speed;
+                    }; break;
+                default:
+                    {
+                        //throw new Exception($"wrong parameter \"{pType}\"");
+                    }; break;
+            };
             //OssModel.FastonPosition fpResult;
             //var car = player.getCar();
             //var distanceIsEnoughToStart = that.theNearestToDiamondIsCarNotMoney(player, car, pType, Program.dt, out fpResult);
@@ -626,7 +628,57 @@ namespace HMMain6.GroupClassF
             //  this.promotePrice[changeType] = this.GetPriceOfPromotePosition(changeType);
         }
 
+        internal bool updateRedDiamond(SetPromote sp, GetRandomPos grp, ref List<string> notifyMsgs)
+        {
+            bool success = false;
+            if (this._PlayerInGroup.ContainsKey(sp.Key))
+            {
+                var player = this._PlayerInGroup[sp.Key];
+                if (this.promoteMilePosition == player.getCar().targetFpIndex)
+                {
+                    // if (player.getCar().ability.costVolume == 0)
+                    {
+                        if (string.IsNullOrEmpty(player.getCar().ability.diamondInCar))
+                        {
+                            player.getCar().ability.setDiamondInCar("mile", player, player.getCar(), ref notifyMsgs);
+                            success = true;
+                        }
+                        else
+                        {
+                            this.that.WebNotify(player, "已经装载宝石了，请回基地复命。");
+                        }
+                    }
+                    // else
+                    {
+                        //  this.that.WebNotify(player, "宝石");
+                    }
+                }
+            }
+            if (success)
+            {
+                {
+                    int k = 0;
+                    do
+                    {
+                        this.promoteMilePosition = GetRandomPosition(true, grp);
+                        k++;
+                        if (k < 10) { }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    while (IsOutTheAbility(grp));
+                    // var from = this.GetFromWhenUpdateCollect(player, sc.cType, car);
+                    //var to = getCollectPositionTo(sc.collectIndex, player.Group);//  this.promoteMilePosition;
+                    //var fp1 = grp.GetFpByIndex(from);
 
+                    //this.MaxMile
+                } 
+            } 
+            return success;
+            //  throw new NotImplementedException();
+        }
 
         //private long GetPriceOfPromotePosition(string changeType)
         //{

@@ -388,16 +388,18 @@ namespace HMMain6
                 }
 
             }
-            return new CompassPosition()
-            {
-                x = 12,
-                y = 0,
-                z = 16,
-                rx = 0,
-                ry = 0,
-                rz = 0,
-                s = 0.4
-            };
+
+            return GetGoldOjb(targetFpIndex);
+            // return new CompassPosition()
+            //{
+            //    x = 12,
+            //    y = 0,
+            //    z = 16,
+            //    rx = 0,
+            //    ry = 0,
+            //    rz = 0,
+            //    s = 0.4
+            //};
         }
 
         public CompassPosition GetBlueDiamond(int targetFpIndex)

@@ -209,7 +209,7 @@ namespace HMMain6.RoomMainF
 
         //public Engine_Attach attachE;
 
-        //public Engine_MagicEngine magicE;
+        public Engine_MagicEngine magicE;
 
         //public Engine_Check checkE;
         //以上为Engine
@@ -249,7 +249,7 @@ namespace HMMain6.RoomMainF
             //this.promoteE = new Engine_PromoteEngine(this);
             //this.diamondOwnerE = new Engine_DiamondOwnerEngine(this);
             //this.attachE = new Engine_Attach(this);
-            //this.magicE = new Engine_MagicEngine(this);
+            this.magicE = new Engine_MagicEngine(this);
             //this.checkE = new Engine_Check(this);
             //  this.npcc = new NPCControle();
 

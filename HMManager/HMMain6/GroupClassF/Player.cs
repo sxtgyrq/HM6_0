@@ -232,7 +232,7 @@ namespace HMMain6.GroupClassF
                 //  newPlayer.ShowLevelOfPlayerF = that.ShowLevelOfPlayerF;
                 newPlayer.beforeBroke = that.BeforePlayerBroken;
                 // newPlayer.driverSelected = this.driverSelected;
-                // that.ConfigMagic(newPlayer);
+                that.ConfigMagic(newPlayer);
                 // newPlayer.updateStockScoreInfoDelegateF = that.updateStockScore;
                 ((Player)this._PlayerInGroup[addItem.Key]).direcitonAndID =
                     new Player.DirecitonAndSelectID()

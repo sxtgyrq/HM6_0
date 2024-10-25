@@ -514,7 +514,8 @@ namespace HMMain6.RoomMainF
                                 PlayerName = playerName,
                                 positionInStation = gc._PlayerInGroup[getPosition.Key].positionInStation,
                                 fPIndex = gc._PlayerInGroup[getPosition.Key].StartFPIndex,
-                                groupNumber = gc.groupNumber
+                                groupNumber = gc.groupNumber,
+                                 
                             };
 
                             if (OpenMore == 0)
@@ -673,10 +674,7 @@ namespace HMMain6.RoomMainF
 
 
 
-        string interfaceOfHM.ListenInterface.updatePromote(SetPromote sp, GetRandomPos grp)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         string interfaceOfHM.ListenInterface.updateView(View v)
         {
