@@ -18,7 +18,7 @@ namespace HMMain6
         }
         private static string DealWith(string notifyJson, int port)
         {
-            Console.WriteLine(notifyJson);
+            // Console.WriteLine(notifyJson);
             CommonClass.Command c = Newtonsoft.Json.JsonConvert.DeserializeObject<CommonClass.Command>(notifyJson);
             return DealWithInterfaceAndObj(Program.rm, c, notifyJson);
 

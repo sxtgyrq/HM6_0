@@ -51,7 +51,7 @@ namespace HMMain6.GroupClassF
             {
                 var selections = grp.GetSelections(goFpIndex[i]);
                 var selectionIndex = selections.FindIndex(item => item == goFpIndex[i + 1]);
-                Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(selections));
+                //   Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(selections));
                 goEnergy += grp.GetEnegy(goFpIndex[i])[selectionIndex];
             }
 
@@ -674,8 +674,8 @@ namespace HMMain6.GroupClassF
                     //var fp1 = grp.GetFpByIndex(from);
 
                     //this.MaxMile
-                } 
-            } 
+                }
+            }
             return success;
             //  throw new NotImplementedException();
         }

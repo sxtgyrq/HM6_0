@@ -163,8 +163,8 @@ namespace HMMain6.RoomMainF
 
         public bool GetConnectionF(Player player)
         {
-            throw new Exception();
-            // return this.modelC.IsOnline(player);
+            //  throw new Exception();
+            return this.modelC.IsOnline(player);
         }
 
         private System.Numerics.Complex getComplex(View v, System.Numerics.Complex direciton)

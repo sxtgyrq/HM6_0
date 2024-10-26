@@ -221,7 +221,7 @@ namespace HMMain6.RoomMainF
         //public Manager_GoodsReward goodsM;
         //public Manager_Model modelM;
         //public Manager_Resistance modelR;
-        //public Manager_Connection modelC;
+        public Manager_Connection modelC;
         //public Manager_Level modelL;
         // public Manager_TaskCopy taskM;
         //public Manager_FileSave fileSM;
@@ -259,7 +259,7 @@ namespace HMMain6.RoomMainF
             //this.goodsM = new Manager_GoodsReward(this, this.DrawGoodsSelection);
             //this.modelM = new Manager_Model(this);
             //this.modelR = new Manager_Resistance(this);
-            //this.modelC = new Manager_Connection(this);
+            this.modelC = new Manager_Connection(this);
             //this.modelL = new Manager_Level(this);
             ////  this.taskM = new Manager_TaskCopy(this);
             //this.fileSM = new Manager_FileSave(this);
