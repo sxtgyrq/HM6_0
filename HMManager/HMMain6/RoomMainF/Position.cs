@@ -515,7 +515,7 @@ namespace HMMain6.RoomMainF
                                 positionInStation = gc._PlayerInGroup[getPosition.Key].positionInStation,
                                 fPIndex = gc._PlayerInGroup[getPosition.Key].StartFPIndex,
                                 groupNumber = gc.groupNumber,
-                                 
+
                             };
 
                             if (OpenMore == 0)
@@ -674,7 +674,7 @@ namespace HMMain6.RoomMainF
 
 
 
-       
+
 
         string interfaceOfHM.ListenInterface.updateView(View v)
         {
@@ -703,9 +703,17 @@ namespace HMMain6.RoomMainF
                         UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateRedDiamond(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
 
+                        //this.GetRewardFromBuildingF(new GetRewardFromBuildingM()
+                        //{
+                        //    c = "GetRewardFromBuildingM",
+                        //    GroupKey = wspd.Key,
+                        //    Key = wspd.Key,
+                        //});
                     }
-                    GetBackground(player, ref notifyMsg);
-
+                    else
+                    {
+                        GetBackground(player, ref notifyMsg);
+                    }
                     this.frequencyM.addFrequencyRecord();
                 }
                 Startup.sendSeveralMsgs(notifyMsg);

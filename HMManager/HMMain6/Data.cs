@@ -52,6 +52,7 @@ namespace HMMain6
         CompassPosition GetBtcPosition(int targetFpIndex);
         CompassPosition GetRedDiamond(int targetFpIndex);
         CompassPosition GetBlueDiamond(int targetFpIndex);
+        long GetSatoshi(string bTCAddress, int targetFpIndex);
         //  void LoadStock(ModelStock sa);
     }
     public partial class Data
@@ -635,6 +636,28 @@ namespace HMMain6
                 rz = 0,
                 s = 0.3
             };
+        }
+
+        public long GetSatoshi(string bTCAddress, int targetFpIndex)
+        {
+            var fp = this.GetFpByIndex(targetFpIndex);
+            if (string.IsNullOrEmpty(fp.BitcoinAddr))
+            {
+                return 0;
+            }
+            else if (this.modelsStocks.ContainsKey(fp.BitcoinAddr))
+            {
+                if (this.modelsStocks[fp.BitcoinAddr].stocks.ContainsKey(bTCAddress))
+                {
+                    return this.modelsStocks[fp.BitcoinAddr].stocks[bTCAddress];
+                }
+                else return 0;
+            }
+            else
+            {
+                return 0;
+            }
+            //  throw new NotImplementedException();
         }
 
         //  object modelStockLock = new object();

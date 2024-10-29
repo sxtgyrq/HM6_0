@@ -39,10 +39,31 @@ namespace HMMain6
         {
             this.roomMain = roomMain;
         }
+        public delegate void AttackMagicChanged(Player role, ref List<string> notifyMsgs);
         public delegate void CollectCountChanged(Player role, ref List<string> notifyMsgs);
         // public Engine_MagicEngine.CollectCountChanged collectMagicChanged;
 
+        //internal void ConfigMagic(Player role)
+        //{
+        //    // role.confuseRecord = new Manager_Driver.ConfuseManger();
+        //    role.improvementRecord = new Manager_Driver.ImproveManager();
+        //    //role.speedMagicChanged = this.speedMagicChanged;
+        //    //role.nitrogenValueChanged = this.nitrogenValueChanged;
+        //    //role.attackMagicChanged = this.attackMagicChanged;
+        //    //role.collectMagicChanged = this.collectMoneyCountMagicChanged;
+        //    //role.defenceMagicChanged = this.defenceMagicChanged;
+        //    //role.confusePrepareMagicChanged = this.confusePrepareMagicChanged;
+        //    //role.lostPrepareMagicChanged = this.lostPrepareMagicChanged;
+        //    //role.ambushPrepareMagicChanged = this.ambushPrepareMagicChanged;
+        //    //role.controlPrepareMagicChanged = this.controlPrepareMagicChanged;
 
+        //    //role.confuseMagicChanged = this.confuseMagicChanged;
+        //    //role.loseMagicChanged = this.loseMagicChanged;
+
+        //    //role.fireMagicChanged = this.fireMagicChanged;
+        //    //role.waterMagicChanged = this.waterMagicChanged;
+        //    //role.electricMagicChanged = this.electricMagicChanged;
+        //}
     }
 
 }

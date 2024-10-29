@@ -335,5 +335,10 @@ namespace HMMain6.RoomMainF
             return "";
         }
 
+        public string GetRewardFromBuildingF(GetRewardFromBuildingM m, GetRandomPos grp)
+        {
+            return this.modelM.GetRewardFromBuildingF(m, grp);
+        }
+
     }
 }

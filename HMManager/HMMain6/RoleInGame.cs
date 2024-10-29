@@ -849,7 +849,7 @@ namespace HMMain6
         //   public Manager_Driver.ConfuseManger confuseRecord;
 
 
-        // public Manager_Driver.ImproveManager improvementRecord;
+        public Manager_Driver.ImproveManager improvementRecord;
         ///// <summary>
         ///// 混乱记录器，主要用于主动混乱
         ///// </summary>
@@ -857,7 +857,7 @@ namespace HMMain6
         // public Engine_MagicEngine.SpeedMagicChanged speedMagicChanged;
         // public Engine_MagicEngine.SpeedMagicChanged nitrogenValueChanged;
 
-        //  public Engine_MagicEngine.AttackMagicChanged attackMagicChanged;
+        public Engine_MagicEngine.AttackMagicChanged attackMagicChanged;
         public Engine_MagicEngine.CollectCountChanged collectMagicChanged;
         // public Engine_MagicEngine.DefenceMagicChanged defenceMagicChanged;
 

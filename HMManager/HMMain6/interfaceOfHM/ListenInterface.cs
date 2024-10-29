@@ -187,7 +187,8 @@ namespace HMMain6.interfaceOfHM
         //  string GetAllModelPosition();
         //  string GetModelByID(ModelTranstraction.GetModelByID gmbid);
         string TradeIndex(ModelTranstraction.TradeIndex tc);
-        // string GetRewardFromBuildingF(GetRewardFromBuildingM m);
+        string GetRewardFromBuildingF(GetRewardFromBuildingM m, GetRandomPos grp);
+
         string GetAllBuiisnessAddr(GetRandomPos grp);
         // string GetAllStockAddr(AllStockAddr ss);
         //  string GetRewardInfomationByStartDate(ModelTranstraction.RewardInfomation ri);

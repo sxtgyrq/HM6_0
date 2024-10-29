@@ -108,7 +108,8 @@ var objMain =
         compass: null,
         turbine: null,
         satelite: null,
-        battery: null
+        battery: null,
+        doubleRewardIcon: null
     },
     shieldGroup: null,
     confusePrepareGroup: null,
@@ -1548,15 +1549,22 @@ var objMain =
                 }; break;
             case 'SetSpeedIcon':
                 {
-                    ModelOperateF.f(received_obj, {
-                        bind: function (objectInput) {
-                            objMain.ModelInput.speed = objectInput;
+                    //    loadSpeedIcon(function () { });
+                    loadSpeedIcon(function (objectInput) {
+                        //   console.log('SetDoubleRewardIcon', objectInput);
+                        objMain.ws.send('SetSpeedIcon');
+                        objMain.ModelInput.speed = objectInput;
+                        //   objMain.ModelInput.doubleRewardIcon = objectInput;
+                    })
+                    //ModelOperateF.f(received_obj, {
+                    //    bind: function (objectInput) {
+                    //        objMain.ModelInput.speed = objectInput;
 
-                        },
-                        transparent: { opacity: 0.7 },
-                        color: { r: 2, g: 1, b: 2 }
-                    });
-                    objMain.ws.send('SetSpeedIcon');
+                    //    },
+                    //    transparent: { opacity: 0.7 },
+                    //    color: { r: 2, g: 1, b: 2 }
+                    //});
+                    //objMain.ws.send('SetSpeedIcon');
                 }; break;
             case 'SetVehicle':
                 {
@@ -1614,6 +1622,15 @@ var objMain =
                         objMain.ModelInput.battery = objectInput;
                     })
                 }; break;
+            case 'SetDoubleRewardIcon':
+                {
+                    loadDoubleRewardIcon(function (objectInput) {
+                        //   console.log('SetDoubleRewardIcon', objectInput);
+                        objMain.ws.send('SetDoubleRewardIcon');
+                        objMain.ModelInput.doubleRewardIcon = objectInput;
+                    })
+                }; break;
+
             case 'SetAttackIcon':
                 {
                     ModelOperateF.f(received_obj, {
@@ -2321,8 +2338,9 @@ var objMain =
                 }; break;
             case 'AttackNotify':
                 {
-                    if (received_obj.On) { stateSet.attck.add(received_obj.Key); }
-                    else { stateSet.attck.clear(received_obj.Key); }
+                    //if (received_obj.On) { stateSet.attck.add(received_obj.Key); }
+                    //else { stateSet.attck.clear(received_obj.Key); }
+                    stateSet.attck.add(received_obj.Key);
                 }; break;
             case 'DefenceNotify':
                 {
@@ -5793,15 +5811,16 @@ var stateSet =
     {
         add: function (carId) {
             {
-                var meshCopy = objMain.ModelInput.attack.children[0].clone();
+
+                var meshCopy = objMain.ModelInput.doubleRewardIcon.clone();
                 meshCopy.name = 'fist_' + carId;
-                meshCopy.position.x = -0;//97.11
-                meshCopy.position.y = -30;
+                meshCopy.position.x = 0;//97.11
+                meshCopy.position.y = 0;
                 meshCopy.position.z = 0;
                 meshCopy.rotateX(Math.PI / 2);
-                meshCopy.rotateY(Math.PI);
-                meshCopy.scale.set(5, 5, 5);// = 2;//3
-                var car = objMain.carGroup.getObjectByName('car_' + carId);
+                //meshCopy.rotateY(Math.PI);
+                meshCopy.scale.set(0, 0, 0);// = 2;//3
+                var car = objMain.carGroup.getObjectByName('vehicle_' + carId);
                 if (car)
                     if (!car.getObjectByName(meshCopy.name))
                         car.add(meshCopy);

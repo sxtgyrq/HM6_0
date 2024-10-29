@@ -92,6 +92,8 @@ namespace WsOfWebClient
 
             app.Map("/satelite", satelite);
             app.Map("/battery", battery);
+            app.Map("/doublerewardicon", doubleRewardIcon);
+            app.Map("/speedicon", speedicon);
             //satelite
             //app.Map("/douyindata", douyindata);
             //app.Map("/roaddata", roaddata);//此接口只对调试时开放
@@ -1725,6 +1727,85 @@ namespace WsOfWebClient
                     {
                         context.Response.ContentType = "image/png";
                         var bytes = File.ReadAllBytes("E:\\DB\\model\\battery\\battery.png");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+        internal static void doubleRewardIcon(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/doubleReward.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\doubleReward\\doubleReward.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/doubleReward.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\doubleReward\\doubleReward.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/doubleReward.png")
+                    {
+                        context.Response.ContentType = "image/png";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\doubleReward\\doubleReward.png");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                }
+                catch (Exception e)
+                {
+                    //throw e;
+                }
+            });
+        }
+
+        //speedicon
+        internal static void speedicon(IApplicationBuilder app)
+        {
+            app.UseCors("AllowAny");
+            app.Run(async context =>
+            {
+                try
+                {
+                    //$.get("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/d/d")
+                    //$.getJSON("http://127.0.0.1:11001/objdata/04FF6C83E093F15D5E844ED94838D761/3/2")
+                    // throw new NotImplementedException();
+
+                    var pathValue = context.Request.Path.Value;
+
+                    if (pathValue == "/speedicon.obj")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\speedicon\\speedicon.obj");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/speedicon.mtl")
+                    {
+                        context.Response.ContentType = "text/plain";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\speedicon\\speedicon.mtl");
+                        await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
+                    }
+                    else if (pathValue == "/speedicon.png")
+                    {
+                        context.Response.ContentType = "image/png";
+                        var bytes = File.ReadAllBytes("E:\\DB\\model\\speedicon\\speedicon.png");
                         await context.Response.Body.WriteAsync(bytes, 0, bytes.Length);
                     }
                 }

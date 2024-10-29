@@ -577,8 +577,7 @@ var drawBattery = function (inputObj) {
         copyObj.scale.set(inputObj.position.s, inputObj.position.s, inputObj.position.s);
         objMain.batteryGroup.add(copyObj);
     }
-    else
-    {
+    else {
 
     }
 };
@@ -1183,6 +1182,61 @@ let loadBattery = function (fFinished) {
             new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
                 console.log('obj', object);
                 console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+};
+let loadDoubleRewardIcon = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.obj';
+        mtlUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.mtl';
+        picUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.png';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.png';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                fFinished(object);
+            })
+        })
+    })
+};
+let loadSpeedIcon = function (fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.obj';
+        mtlUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.mtl';
+        picUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.png';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.png';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                object.children[0].material.opacity = 0.7;
                 fFinished(object);
             })
         })

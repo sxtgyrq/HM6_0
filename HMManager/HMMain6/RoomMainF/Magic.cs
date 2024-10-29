@@ -12,10 +12,10 @@ namespace HMMain6.RoomMainF
         internal void ConfigMagic(Player role)
         {
             //role.confuseRecord = new Manager_Driver.ConfuseManger();
-            //role.improvementRecord = new Manager_Driver.ImproveManager();
+            role.improvementRecord = new Manager_Driver.ImproveManager();
             //role.speedMagicChanged = this.speedMagicChanged;
             //role.nitrogenValueChanged = this.nitrogenValueChanged;
-            //role.attackMagicChanged = this.attackMagicChanged;
+            role.attackMagicChanged = this.attackMagicChanged;
             role.collectMagicChanged = this.collectMoneyCountMagicChanged;
             //role.defenceMagicChanged = this.defenceMagicChanged;
             //role.confusePrepareMagicChanged = this.confusePrepareMagicChanged;
@@ -60,6 +60,30 @@ namespace HMMain6.RoomMainF
                         notifyMsgs.Add(url);
                         notifyMsgs.Add(sendMsg);
                     }
+                }
+            }
+        }
+
+        internal void attackMagicChanged(Player role, ref List<string> notifyMsgs)
+        {
+            //  throw new Exception("");
+            var group = role.Group;
+            foreach (var item in group._PlayerInGroup)
+            {
+                if (item.Value.playerType == Player.PlayerType.player)
+                {
+                    var player = (Player)item.Value;
+                    var url = player.FromUrl;
+                    AttackNotify an = new AttackNotify()
+                    {
+                        c = "AttackNotify",
+                        WebSocketID = player.WebSocketID,
+                        Key = role.Key,
+                        On = role.improvementRecord.CollectIsDouble
+                    };
+                    var sendMsg = Newtonsoft.Json.JsonConvert.SerializeObject(an);
+                    notifyMsgs.Add(url);
+                    notifyMsgs.Add(sendMsg);
                 }
             }
         }

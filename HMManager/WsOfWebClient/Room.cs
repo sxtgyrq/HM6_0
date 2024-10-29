@@ -445,6 +445,20 @@ namespace WsOfWebClient
                     return s;
                 }
 
+                SetDoubleRewardIcon sdri = new SetDoubleRewardIcon();
+                if (SetModelCopy(sdri, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
+                SetSpeedIcon spi = new SetSpeedIcon();
+                if (SetModelCopy(spi, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
                 result = setState(s, connectInfoDetail, LoginState.OnLine);
 
                 {
@@ -975,65 +989,5 @@ namespace WsOfWebClient
         }
     }
 
-    internal partial class Room
-    {
-        class SetVehicle : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetVehicle"; } }
-        }
-        class SetCubeCore : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetCubeCore"; } }
-        }
 
-        class SetGoldBaby : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetGoldBaby"; } }
-        }
-
-        class SetCompass : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetCompass"; } }
-        }
-
-        class SetTurbine : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetTurbine"; } }
-        }
-
-        class SetSatelite : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetSatelite"; } }
-        }
-
-        class SetBattery : interfaceTag.modelForCopy
-        {
-            public string Command { get { return "SetBattery"; } }
-        }
-
-        private static bool SetModelCopy(interfaceTag.modelForCopy mp, ConnectInfo.ConnectInfoDetail connectInfoDetail)
-        {
-
-            {
-                var msg = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    c = mp.Command,
-                });
-                CommonF.SendData(msg, connectInfoDetail, 0);
-                {
-                    #region 校验响应
-                    var checkIsOk = CheckRespon(connectInfoDetail, mp.Command);
-                    if (checkIsOk)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                    #endregion
-                }
-            }
-        }
-    }
 }
