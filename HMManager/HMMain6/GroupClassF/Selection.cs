@@ -59,7 +59,7 @@ namespace HMMain6.GroupClassF
                         player.LastActionTime = DateTime.Now;
 
                         //   Set
-                        if (true)
+                        if ((!player.improvementRecord.CollectIsDouble) && RewardDouble(player, targetFind, grp) > Program.rm.rm.NextDouble())
                         {
                             player.improvementRecord.addAttack(player, ref notifyMsg);
                         }

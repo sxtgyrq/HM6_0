@@ -147,9 +147,13 @@ namespace HMMain6.GroupClassF
                         if (player.getCar().ability.leftVolume >= 100)
                         {
                             this._collectPosition[collectIndex] = this.GetRandomPosition(false, grp);
-                            player.getCar().ability.setCostVolume(player.getCar().ability.costVolume + 100, player, player.getCar(), ref notifyMsg);
+                            player.getCar().ability.setCostVolume(player.getCar().ability.costVolume + (player.improvementRecord.CollectIsDouble ? 200 : 100), player, player.getCar(), ref notifyMsg);
 
                             player.collectMagicChanged(player, ref notifyMsg);
+                            if (player.improvementRecord.CollectIsDouble)
+                            {
+                                player.improvementRecord.reduceAttack(player, ref notifyMsg);
+                            }
 
                             int k = 0;
                             if (IsOutTheAbility(grp))
@@ -171,7 +175,7 @@ namespace HMMain6.GroupClassF
                             }
                             return true;
                         }
-                        else 
+                        else
                         {
                             this.that.WebNotify(player, "无人已满载，回基地点击分车复命！");
                         }

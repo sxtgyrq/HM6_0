@@ -2340,7 +2340,10 @@ var objMain =
                 {
                     //if (received_obj.On) { stateSet.attck.add(received_obj.Key); }
                     //else { stateSet.attck.clear(received_obj.Key); }
-                    stateSet.attck.add(received_obj.Key);
+                    if (received_obj.On)
+                        stateSet.attck.add(received_obj.Key);
+                    else
+                        stateSet.attck.clear(received_obj.Key);
                 }; break;
             case 'DefenceNotify':
                 {
@@ -3521,7 +3524,7 @@ function animate() {
                         //    objMain.carGroup.children[i].scale.set(scale, scale, scale);
                         //    objMain.carGroup.children[1].name.split('_')[1]
                         //    stateSet.speed.Animate(objMain.carGroup.children[i].name.split('_')[1]);
-                        //    stateSet.attck.Animate(objMain.carGroup.children[i].name.split('_')[1]);
+                        stateSet.attck.Animate(objMain.carGroup.children[i].name.split('_')[1]);
                         //    stateSet.confuse.Animate(objMain.carGroup.children[i].name.split('_')[1]);
                         //    stateSet.lost.Animate(objMain.carGroup.children[i].name.split('_')[1]);
 
@@ -5815,11 +5818,11 @@ var stateSet =
                 var meshCopy = objMain.ModelInput.doubleRewardIcon.clone();
                 meshCopy.name = 'fist_' + carId;
                 meshCopy.position.x = 0;//97.11
-                meshCopy.position.y = 0;
+                meshCopy.position.y = 0.15;
                 meshCopy.position.z = 0;
-                meshCopy.rotateX(Math.PI / 2);
+                //  meshCopy.rotateX(Math.PI / 2);
                 //meshCopy.rotateY(Math.PI);
-                meshCopy.scale.set(0, 0, 0);// = 2;//3
+                meshCopy.scale.set(0.008, 0.008, 0.008);// = 2;//3
                 var car = objMain.carGroup.getObjectByName('vehicle_' + carId);
                 if (car)
                     if (!car.getObjectByName(meshCopy.name))
@@ -5828,24 +5831,17 @@ var stateSet =
         },
         Animate: function (carId) {
             //input Is group
-            var car = objMain.carGroup.getObjectByName('car_' + carId);
+            var car = objMain.carGroup.getObjectByName('vehicle_' + carId);
             if (car) {
                 var name = 'fist_' + carId;
                 var fist = car.getObjectByName(name);
                 if (fist) {
-                    var percent = (Date.now() % 500) / 500;
-                    if (percent < 0.3) {
-                        percent = percent / 0.3;
-                    }
-                    else {
-                        percent = (1 - percent) / 0.7;
-                    }
-                    fist.position.x = -40 + (-35 - (-40)) * percent;
+                    fist.rotation.y = Date.now() % 1000 / 1000 * Math.PI * 2;
                 }
             }
         },
         clear: function (carId) {
-            var car = objMain.carGroup.getObjectByName('car_' + carId);
+            var car = objMain.carGroup.getObjectByName('vehicle_' + carId);
             if (car) {
                 var name = 'fist_' + carId;
                 var fist = car.getObjectByName(name);

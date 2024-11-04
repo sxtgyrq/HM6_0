@@ -176,7 +176,7 @@ namespace HMMain6
                 CollectIsDouble = false;
                 // if (CollectIsDouble)
                 {
-                    //  role.attackMagicChanged(role, ref notifyMsg);
+                    role.attackMagicChanged(role, ref notifyMsg);
                 }
             }
         }
