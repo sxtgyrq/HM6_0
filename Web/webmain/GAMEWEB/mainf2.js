@@ -51,6 +51,7 @@ TaskClass.prototype.__defineSetter__("carSelect", function (val) {
     //ShowSetInfo("Age");
 });
 
+import { gearRecive, gearShow } from './modelShow/gear.js';
 
 var objMain =
 {
@@ -109,7 +110,8 @@ var objMain =
         turbine: null,
         satelite: null,
         battery: null,
-        doubleRewardIcon: null
+        doubleRewardIcon: null,
+        gearIcon: null
     },
     shieldGroup: null,
     confusePrepareGroup: null,
@@ -717,7 +719,7 @@ var objMain =
 
 
             // carAbility.drawChanel()；
-            carAbility.drawPanel('car');
+            carAbility.drawPanel(stateSet, 'car');
             //if (objMain.debug == 0) {
             //    path = 'http://127.0.0.1:11001/pic/' + inputObj.fp.fPCode + '/' + inputObj.fp.Height + '/';
             //}
@@ -1550,7 +1552,7 @@ var objMain =
             case 'SetSpeedIcon':
                 {
                     //    loadSpeedIcon(function () { });
-                    loadSpeedIcon(function (objectInput) {
+                    loadSpeedIcon(objMain, function (objectInput) {
                         //   console.log('SetDoubleRewardIcon', objectInput);
                         objMain.ws.send('SetSpeedIcon');
                         objMain.ModelInput.speed = objectInput;
@@ -1568,7 +1570,7 @@ var objMain =
                 }; break;
             case 'SetVehicle':
                 {
-                    loadAerialVehicle(function (objectInput) {
+                    loadAerialVehicle(objMain, function (objectInput) {
                         console.log('objectInput', objectInput);
                         objMain.ws.send('SetVehicle');
                         objMain.ModelInput.vehicle = objectInput;
@@ -1576,7 +1578,7 @@ var objMain =
                 }; break;
             case 'SetCubeCore':
                 {
-                    loadCore(function (objectInput) {
+                    loadCore(objMain, function (objectInput) {
                         console.log('objectInput', objectInput);
                         objMain.ws.send('SetCubeCore');
                         objMain.ModelInput.cubeCore = objectInput;
@@ -1584,7 +1586,7 @@ var objMain =
                 }; break;
             case 'SetGoldBaby':
                 {
-                    loadGoldBaby(function (objectInput) {
+                    loadGoldBaby(objMain, function (objectInput) {
                         console.log('SetGoldBaby', objectInput);
                         objMain.ws.send('SetGoldBaby');
                         objMain.ModelInput.GoldIngotIcon = objectInput;
@@ -1592,7 +1594,7 @@ var objMain =
                 }; break;
             case 'SetTurbine':
                 {
-                    loadTurbine(function (objectInput) {
+                    loadTurbine(objMain, function (objectInput) {
                         console.log('SetTurbine', objectInput);
                         objMain.ws.send('SetTurbine');
                         objMain.ModelInput.turbine = objectInput;
@@ -1600,7 +1602,7 @@ var objMain =
                 }; break;
             case 'SetCompass':
                 {
-                    loadCompass(function (objectInput) {
+                    loadCompass(objMain, function (objectInput) {
                         console.log('SetCompass', objectInput);
                         objMain.ws.send('SetCompass');
                         objMain.ModelInput.compass = objectInput;
@@ -1608,7 +1610,7 @@ var objMain =
                 }; break;
             case 'SetSatelite':
                 {
-                    loadSatelite(function (objectInput) {
+                    loadSatelite(objMain, function (objectInput) {
                         console.log('SetSatelite', objectInput);
                         objMain.ws.send('SetSatelite');
                         objMain.ModelInput.satelite = objectInput;
@@ -1616,7 +1618,7 @@ var objMain =
                 }; break;
             case 'SetBattery':
                 {
-                    loadBattery(function (objectInput) {
+                    loadBattery(objMain, function (objectInput) {
                         console.log('SetBattery', objectInput);
                         objMain.ws.send('SetBattery');
                         objMain.ModelInput.battery = objectInput;
@@ -1624,13 +1626,21 @@ var objMain =
                 }; break;
             case 'SetDoubleRewardIcon':
                 {
-                    loadDoubleRewardIcon(function (objectInput) {
+                    loadDoubleRewardIcon(objMain, function (objectInput) {
                         //   console.log('SetDoubleRewardIcon', objectInput);
                         objMain.ws.send('SetDoubleRewardIcon');
                         objMain.ModelInput.doubleRewardIcon = objectInput;
                     })
                 }; break;
-
+            case 'SetGearIcon':
+                {
+                    loadGearIcon(objMain, function (objectInput) {
+                        //   console.log('SetDoubleRewardIcon', objectInput);
+                        objMain.ws.send('SetGearIcon');
+                        objMain.ModelInput.gearIcon = objectInput;
+                        //objMain.ModelInput.doubleRewardIcon = objectInput;
+                    })
+                }; break;
             case 'SetAttackIcon':
                 {
                     ModelOperateF.f(received_obj, {
@@ -1988,10 +1998,10 @@ var objMain =
                 }; break;
             case 'BradCastAbility':
                 {
-                    carAbility.drawPanel('car');
+                    carAbility.drawPanel(stateSet, 'car');
                     carAbility.setData(received_obj);
 
-                    carAbility.drawChanel(received_obj.carIndexStr);
+                    carAbility.drawChanel(stateSet, received_obj.carIndexStr);
                     carAbility.refreshPosition();
                     //carAbility.updateNotify();
                 }; break;
@@ -2301,7 +2311,7 @@ var objMain =
                 }; break;
             case 'BradCastBackground':
                 {
-                    ChangeBG(received_obj);
+                    ChangeBG(received_obj, objMain);
                     //objMain.background.path = received_obj.path;
                     //objMain.background.change();
                 }; break;
@@ -2792,13 +2802,13 @@ var objMain =
             case 'BradCastSelections':
                 {
                     console.log('BradCastSelections', received_obj);
-                    drawLineOfSelections(received_obj);
+                    drawLineOfSelections(received_obj, objMain);
                     // objMain.targetGroup
                 }; break;
             case 'BradCastCompass':
                 {
                     console.log('BradCastSelections', received_obj);
-                    drawCompass(received_obj);
+                    drawCompass(received_obj, objMain);
                 }; break;
             case 'BradCastGoldObj':
                 {
@@ -2831,7 +2841,12 @@ var objMain =
                 }; break;
             default:
                 {
-                    console.log('命令未注册', received_obj.c + "__没有注册。");
+                    if (gearRecive(received_obj.c)) {
+                        gearShow();
+                    }
+                    else {
+                        console.log('命令未注册', received_obj.c + "__没有注册。");
+                    }
                 }; break;
         }
         moneyOperator.updateSaveMoneyNotify();
@@ -3612,62 +3627,19 @@ function animate() {
                     else {
                         //sceneYUpdate(objMain.heightLevel);
                     }
-                    moneyAbsorb.animate();
-                    targetShow.animate();
+                    moneyAbsorb.animate(objMain);
+                    targetShow.animate(objMain);
                     objMain.animation.animateCameraByCarAndTask();
 
                     //   theLagestHoderKey.animate();
                     objMain.renderer.render(objMain.scene, objMain.camera);
                     objMain.labelRenderer.render(objMain.scene, objMain.camera);
                     objMain.light1.position.set(objMain.camera.position.x + lengthOfCC / 3, objMain.camera.position.y, objMain.camera.position.z + lengthOfCC / 3);
-                    //if (objMain.directionGroup.visible) {
-                    //    var minAngle = Math.PI / 20;
-                    //    var selectIndex = -1;
-                    //    for (var i = 1; i < objMain.directionGroup.children.length; i++) {
-                    //        if (i == 1)
-                    //            objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowA.oldM;
-                    //        else if (i == 2)
-                    //            objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowB.oldM;
-                    //        else if (i == 3)
-                    //            objMain.directionGroup.children[i].children[0].material = objMain.ModelInput.directionArrowC.oldM;
-                    //        var delta = (objMain.directionGroup.children[i].rotation.y - (objMain.controls.getAzimuthalAngle() + Math.PI / 2) + Math.PI * 2) % (Math.PI * 2);
-                    //        if (delta < minAngle) {
-                    //            minAngle = delta;
-                    //            selectIndex = i;
-                    //        }
-                    //        else {
-                    //            continue;
-                    //        }
-                    //    }
-                    //    if (selectIndex == 1) {
-                    //        objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowA.newM;
-                    //    }
-                    //    else if (selectIndex == 2) {
-                    //        objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowB.newM;
-                    //    }
-                    //    else if (selectIndex == 3) {
-                    //        objMain.directionGroup.children[selectIndex].children[0].material = objMain.ModelInput.directionArrowC.newM;
-                    //    }
-                    //    else {
-                    //        objMain.selection.initialize();
-                    //    }
-                    //}
-
-                    //for (var i = 0; i < objMain.marketGroup.children.length; i++) {
-                    //    var itemLength = objMain.mainF.getLength(objMain.marketGroup.children[i].position, objMain.controls.target);
-                    //    if (itemLength > 40) {
-                    //        objMain.marketGroup.children[i].visible = false;
-                    //    }
-                    //    else {
-                    //        objMain.marketGroup.children[i].visible = true;
-                    //    }
-                    //}
-                    douyinPanleShow.animate();
 
                     if (objMain.animateParameter.loopCount % 5000 == 0) {
                         onWindowResize();
                     }
-                    animateAerialVehicle();
+                    animateAerialVehicle(objMain);
                 }; break;
             case 'LookForBuildings':
                 {
@@ -4436,14 +4408,24 @@ var set3DHtml = function () {
         var sateliteIsClicked = false;
         var btcAddrIsCLicked = false;
         var batteryIsClicked = false;
+        var selfVehicleIsClicked = false;
 
         if (event.clientX != undefined && event.clientX != null) {
+
+            if (whetherGo.isMask()) {
+                return;
+            }
             //此处对应鼠标
             objMain.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             objMain.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
             // lookInfoForCar();
-            roadLineSelected = lookInfoForSelect();
-            isSelected = isSelected || roadLineSelected;
+            selfVehicleIsClicked = selfVehicleClicked();
+            isSelected = isSelected || selfVehicleIsClicked;
+
+            if (!isSelected) {
+                roadLineSelected = lookInfoForSelect();
+                isSelected = isSelected || roadLineSelected;
+            }
             if (!isSelected) {
                 targetSelected = confirmSelect();
                 isSelected = isSelected || targetSelected;
@@ -4474,13 +4456,22 @@ var set3DHtml = function () {
             }
         }
         else if (event.changedTouches && event.changedTouches.length > 0) {
+            if (whetherGo.isMask()) {
+                return;
+            }
             // 获取第一个触摸点。这个对应手机触摸屏。
             var touch = event.changedTouches[0];
             objMain.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
             objMain.mouse.y = - (touch.clientY / window.innerHeight) * 2 + 1;
             // lookInfoForCar();
-            roadLineSelected = lookInfoForSelect();
-            isSelected = isSelected || roadLineSelected;
+
+            selfVehicleIsClicked = selfVehicleClicked();
+            isSelected = isSelected || selfVehicleIsClicked;
+
+            if (!isSelected) {
+                roadLineSelected = lookInfoForSelect();
+                isSelected = isSelected || roadLineSelected;
+            }
             if (!isSelected) {
                 targetSelected = confirmSelect();
                 isSelected = isSelected || targetSelected;
@@ -6515,6 +6506,9 @@ var stateSet =
                     car.add(battery);
                     stateSet.diamond.updateHeight(roleID);
                 }
+                else if (diamondName == 'volume') {
+
+                }
                 if (false) {
                     var diamond = objMain.promoteDiamond.getObjectByName('diamond_' + diamondName);
                     if (diamond) {
@@ -7276,7 +7270,7 @@ var OperateHelp =
         waitAtBaseStation: 0
     }
 };
-setInterval("OperateHelp.f();", 12000);
+//setInterval("OperateHelp.f();", 12000);
 
 document.addEventListener('gesturestart', function (e) {
     e.preventDefault();
@@ -7475,6 +7469,25 @@ var batteryClicked = function () {
         return false;
     }
 }
+
+var selfVehicleClicked = function () {
+    objMain.raycaster.setFromCamera(objMain.mouse, objMain.camera);
+    //objMain.targetGroup.children[0].children[0]
+    //objMain.carGroup.getObjectByName('vehicle_'+objMain.indexKey).children[0].isMesh
+    var selfObj = objMain.carGroup.getObjectByName('vehicle_' + objMain.indexKey);
+
+    for (var i = 0; i < selfObj.children.length; i++) {
+        var childObj = selfObj.children[i];
+        if (childObj.isMesh) {
+            var intersection = objMain.raycaster.intersectObject(childObj);
+            if (intersection.length > 0) {
+                objMain.ws.send(JSON.stringify({ 'c': 'Navigate' }));
+                return true;
+            }
+        }
+    }
+    return false;
+}
 //////////
 /*
  * 手柄类，此游戏只支持单手柄操作。
@@ -7573,3 +7586,8 @@ window.c = Complex;
 // 示例代码
 
 ////////////
+window.buttonClick = buttonClick;
+window.objMain = objMain;
+//export function mainObjBtnClick(v) {
+//    buttonClick(v)
+//}

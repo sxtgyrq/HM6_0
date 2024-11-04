@@ -212,7 +212,7 @@
         document.body.appendChild(frag);
 
         var imageOfSmallMap = document.getElementById('imageOfSmallMap');
-        imageOfSmallMap.addEventListener('mousedown', function (event) {
+        imageOfSmallMap.addEventListener('mouseup', function (event) {
             var rect = imageOfSmallMap.getBoundingClientRect();
             var x = event.clientX - rect.left;
             var y = event.clientY - rect.top;
@@ -236,11 +236,41 @@
             if (objMain.state == 'OnLine') {
                 objMain.ws.send(JSON.stringify({ 'c': 'SmallMapClick', 'lon': lon, 'lat': lat, 'radius': radius }));
                 var that = whetherGo;
+                that.lastClick = Date.now();
                 document.getElementById(that.operateID).remove();
+                //setTimeout(function () {
+
+                //    // delete objMain.buildingModel[amodel];
+                //    // 这里放置要延迟执行的代码
+                //    console.log('调试日志：关闭时间：' + Date.now());
+                //}, 20);
+
+
+
             }
             else {
                 $.notify('此状态点击无效', 'warn');
             }
         });
-    }
+    },
+    isMask: function () {
+        var pPanel = document.getElementById('panelToAskWhetherGoto');
+        if (pPanel == null || pPanel == undefined) {
+            return false;
+        }
+        else if (pPanel.style.maxHeight == '1.5em') {
+            return false;
+        }
+        else {
+            if (Math.abs(Date.now() - whetherGo.lastClick) < 1000) {
+                return false;
+            }
+            else {
+                //  console.log('调试日志：正在被遮挡：' + Date.now());
+                return true;
+
+            }
+        }
+    },
+    lastClick: 0
 }

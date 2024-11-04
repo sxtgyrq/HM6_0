@@ -110,7 +110,7 @@
             obj[i].userData['sum'] = indexOfModel;
         }
     },
-    animate: function () {
+    animate: function (objMain) {
         const deltaT = 10000;
         var l = objMain.absorbGroup.children.length;
         var selfCar = objMain.carGroup.getObjectByName('car_' + objMain.indexKey);
@@ -151,9 +151,9 @@
                     objMain.absorbGroup.children[i].rotation.z = i / objCount * 2 * Math.PI + percent * 2 * Math.PI;
                 }
             }
-        this.animate2();
+        this.animate2(objMain);
     },
-    animate2: function () {
+    animate2: function (objMain) {
         const deltaT = 10000 / 2;
         if (Date.now() - this.startT < 500) {
             objMain.light1.color.r = 1;

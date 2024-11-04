@@ -51,6 +51,11 @@ namespace WsOfWebClient
             public string Command { get { return "SetSpeedIcon"; } }
         }
 
+        class SetGearIcon : interfaceTag.modelForCopy 
+        {
+            public string Command { get { return "SetGearIcon"; } }
+        }
+
         private static bool SetModelCopy(interfaceTag.modelForCopy mp, ConnectInfo.ConnectInfoDetail connectInfoDetail)
         {
 

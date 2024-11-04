@@ -61,7 +61,12 @@ namespace HMMain6.GroupClassF
                         //   Set
                         if ((!player.improvementRecord.CollectIsDouble) && RewardDouble(player, targetFind, grp) > Program.rm.rm.NextDouble())
                         {
-                            player.improvementRecord.addAttack(player, ref notifyMsg);
+                            var fp = grp.GetFpByIndex(targetFind);
+                            if (player.improvementRecord.addUsedCode(fp.fPCode))
+                                player.improvementRecord.addAttack(player, ref notifyMsg);
+                            else
+                                this.that.WebNotify(player, $"本次航行，【{fp.fPName}】已经提供一次双倍收集服务！");
+
                         }
 
 

@@ -165,11 +165,11 @@ namespace MarketConsoleApp
                 Thread.Sleep(60 * 1000);
             }
         }
-        internal void sendInteview()
-        {
-            Thread th = new Thread(() => this.sendInteview(true));
-            th.Start();
-        }
+        //internal void sendInteview()
+        //{
+        //    Thread th = new Thread(() => this.sendInteview(true));
+        //    th.Start();
+        //}
 
         Dictionary<string, Dictionary<string, long>> ModelInputSatoshi = new Dictionary<string, Dictionary<string, long>>();
         object ModelInputLock = new object();
@@ -383,14 +383,14 @@ namespace MarketConsoleApp
             //$"E:\\DB\\DBPublish\\fpindex\\fp_{i}.txt";
         }
 
-        internal void sendInteview(bool waitT)
-        {
-            while (true)
-            {
-                Thread.Sleep(1000 * 60 * 5);
-                tellMarketIsOn();
-            }
-        }
+        //internal void sendInteview(bool waitT)
+        //{
+        //    while (true)
+        //    {
+        //        Thread.Sleep(1000 * 60 * 5);
+        //        tellMarketIsOn();
+        //    }
+        //}
 
         string IP = "127.0.0.1";
         int Port = 12630;

@@ -334,6 +334,8 @@ namespace HMMain6.GroupClassF
                         //promotePosition = this.promoteVolumePosition;
                         //diamondName = "蓝宝石";
                         //tsType = TargetForSelect.TargetForSelectType.volume;
+                        var fp = gp.GetFpByIndex(this.promoteVolumePosition);
+                        player.rm.WebNotify(player, $"{fp.fPName}处有此轮可以提升装载能力。");
                     }; break;
                 case "speed":
                     {
@@ -641,6 +643,58 @@ namespace HMMain6.GroupClassF
                         if (string.IsNullOrEmpty(player.getCar().ability.diamondInCar))
                         {
                             player.getCar().ability.setDiamondInCar("mile", player, player.getCar(), ref notifyMsgs);
+                            success = true;
+                        }
+                        else
+                        {
+                            this.that.WebNotify(player, "已经装载宝石了，请回基地复命。");
+                        }
+                    }
+                    // else
+                    {
+                        //  this.that.WebNotify(player, "宝石");
+                    }
+                }
+            }
+            if (success)
+            {
+                {
+                    int k = 0;
+                    do
+                    {
+                        this.promoteMilePosition = GetRandomPosition(true, grp);
+                        k++;
+                        if (k < 10) { }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    while (IsOutTheAbility(grp));
+                    // var from = this.GetFromWhenUpdateCollect(player, sc.cType, car);
+                    //var to = getCollectPositionTo(sc.collectIndex, player.Group);//  this.promoteMilePosition;
+                    //var fp1 = grp.GetFpByIndex(from);
+
+                    //this.MaxMile
+                }
+            }
+            return success;
+            //  throw new NotImplementedException();
+        }
+
+        internal bool updateBlueDiamond(SetPromote sp, GetRandomPos grp, ref List<string> notifyMsgs)
+        {
+            bool success = false;
+            if (this._PlayerInGroup.ContainsKey(sp.Key))
+            {
+                var player = this._PlayerInGroup[sp.Key];
+                if (this.promoteVolumePosition == player.getCar().targetFpIndex)
+                {
+                    // if (player.getCar().ability.costVolume == 0)
+                    {
+                        if (string.IsNullOrEmpty(player.getCar().ability.diamondInCar))
+                        {
+                            player.getCar().ability.setDiamondInCar("volume", player, player.getCar(), ref notifyMsgs);
                             success = true;
                         }
                         else

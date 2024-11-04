@@ -28,7 +28,7 @@
         }
 
     },
-    animate: function () {
+    animate: function (objMain) {
         const deltaT = 5000;
         var l = objMain.absorbGroup.children.length;
         var selfCar = objMain.carGroup.getObjectByName('car_' + objMain.indexKey);

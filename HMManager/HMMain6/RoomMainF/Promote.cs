@@ -183,7 +183,7 @@ namespace HMMain6.RoomMainF
 
         private void UpdateBlueDiamond(string key, string groupKey, GetRandomPos grp, ref List<string> notifyMsgs)
         {
-            return;
+            // return;
             if (this._Groups.ContainsKey(groupKey))
             {
                 var group = this._Groups[groupKey];
@@ -195,8 +195,8 @@ namespace HMMain6.RoomMainF
                     // if (targetFpIndex == player.StartFPIndex)
                     {
                         var position = grp.GetBlueDiamond(targetFpIndex);
-                        var obj = GetItemBattery(player.WebSocketID, position);
-                        obj.hasValue = targetFpIndex == group.promoteMilePosition;
+                        var obj = GetItemGear(player.WebSocketID, position);
+                        obj.hasValue = targetFpIndex == group.promoteVolumePosition;
                         if (player.BTCAddress == AdministratorAddr)
                         {
                             if (grp.GetFpByIndex(targetFpIndex).CanGetScore)
@@ -220,6 +220,17 @@ namespace HMMain6.RoomMainF
             }
         }
 
+        private BradCastGear GetItemGear(int webSocketID, CompassPosition position)
+        {
+            var obj = new BradCastGear
+            {
+                c = "BradCastGear",
+                WebSocketID = webSocketID,
+                position = position
+            };
+            return obj;
+        }
+
         public string updatePromote(SetPromote sp, GetRandomPos grp)
         {
             if (this._Groups.ContainsKey(sp.GroupKey))
@@ -233,6 +244,17 @@ namespace HMMain6.RoomMainF
                     foreach (var item in group._PlayerInGroup)
                     {
                         UpdateRedDiamond(item.Key, group.GroupKey, grp, ref notifyMsgs);
+                    }
+                }
+                else
+                {
+                    var promoteVolumeSuccess = group.updateBlueDiamond(sp, grp, ref notifyMsgs);
+                    if (promoteVolumeSuccess)
+                    {
+                        foreach (var item in group._PlayerInGroup)
+                        {
+                            UpdateBlueDiamond(item.Key, group.GroupKey, grp, ref notifyMsgs);
+                        }
                     }
                 }
 

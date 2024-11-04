@@ -48,7 +48,7 @@ namespace MarketConsoleApp
                 m.startStatictis();
                 // m.loadCountInMarket();
                 m.tellMarketIsOn();
-                m.sendInteview();
+                //   m.sendInteview();
                 m.getAllBitcoinThread();
                 m.GetDetailOfPayer();
                 m.StockCenterTrade();

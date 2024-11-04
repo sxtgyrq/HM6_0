@@ -293,7 +293,7 @@ namespace HMMain6.GroupClassF
                                     }; break;
                                 case "mile":
                                     {
-                                        PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs); 
+                                        PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
                                     }; break;
                                 case "speed":
                                     {
@@ -308,7 +308,7 @@ namespace HMMain6.GroupClassF
                                     }; break;
                                 case "volume":
                                     {
-                                        //     PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
+                                        PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
                                     }; break;
 
                             }
@@ -396,7 +396,7 @@ namespace HMMain6.GroupClassF
                                     }; break;
                                 case "volume":
                                     {
-                                        // PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
+                                        PromoteClickFunction(player, fps, selection[0], gp, ref notifyMsgs);
                                     }; break;
 
                             }

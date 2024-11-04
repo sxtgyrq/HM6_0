@@ -1,7 +1,7 @@
 ﻿var selectSingleTeamJoinHtmlF =
 {
     drawHtml: function () {
-        var html = ` <div>
+        var html = ` <div> 
             <div class="animateOfBlockBtn delay3" style="width: calc(100% - 22px); height: calc((100% - 80px - 1em)/3); border: solid 1px green; left: 10px; top: calc(20px); position: absolute; text-align: center;overflow:hidden;" onclick="buttonClick('single')">
                 <div class="carRaceLine carLine1MainPage"></div>
                 <div class="carRaceLine carLine2MainPage"></div>

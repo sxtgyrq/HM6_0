@@ -1,4 +1,4 @@
-﻿let loadAerialVehicle = function (fFinished) {
+﻿let loadAerialVehicle = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
 
@@ -50,7 +50,7 @@
     //// 将物体的四元数旋转状态设置为这个四元数
     //object.quaternion.copy(quaternion);
 };
-var animateAerialVehicle = function () {
+var animateAerialVehicle = function (objMain) {
     for (var i = 0; i < objMain.carGroup.children.length; i++) {
         var vehicle = objMain.carGroup.children[i];
 
@@ -89,7 +89,7 @@ var animateAerialVehicle = function () {
 
 };
 
-let ChangeBG = function (inputObj) {
+let ChangeBG = function (inputObj, objMain) {
     var fp = inputObj.fp;
     var fPCode = fp.fPCode;
     var Height = fp.Height;
@@ -108,7 +108,7 @@ let ChangeBG = function (inputObj) {
     //rotateOthers
 };
 
-let loadCore = function (fFinished) {
+let loadCore = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -138,7 +138,7 @@ let loadCore = function (fFinished) {
     // new THREE.MTLLoader(manager).load.load(mtlUrl, );
 };
 
-let loadGoldBaby = function (fFinished) {
+let loadGoldBaby = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -168,7 +168,7 @@ let loadGoldBaby = function (fFinished) {
     // new THREE.MTLLoader(manager).load.load(mtlUrl, );
 };
 
-let loadCompass = function (fFinished) {
+let loadCompass = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -198,7 +198,7 @@ let loadCompass = function (fFinished) {
     // new THREE.MTLLoader(manager).load.load(mtlUrl, );
 };
 
-let loadTurbine = function (fFinished) {
+let loadTurbine = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -226,7 +226,7 @@ let loadTurbine = function (fFinished) {
     })
 };
 
-let loadSatelite = function (fFinished) {
+let loadSatelite = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -490,7 +490,7 @@ var drawCoreObj = function (inputData) {
     }
 };
 
-var drawLineOfSelections = function (inputObj) {
+var drawLineOfSelections = function (inputObj, objMain) {
     console.log('需要绘制', inputObj);
     var color = 0x00ff00;
     var selections = inputObj.selections;
@@ -511,7 +511,7 @@ var drawLineOfSelections = function (inputObj) {
     }
 };
 
-var drawCompass = function (inputObj) {
+var drawCompass = function (inputObj, objMain) {
     console.log('需要绘制', inputObj);
     var color = 0x00ff00;
     var selections = inputObj.selections;
@@ -1160,7 +1160,7 @@ function createText(font, inputObj) {
     //}
 
 };
-let loadBattery = function (fFinished) {
+let loadBattery = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -1187,7 +1187,7 @@ let loadBattery = function (fFinished) {
         })
     })
 };
-let loadDoubleRewardIcon = function (fFinished) {
+let loadDoubleRewardIcon = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
@@ -1197,9 +1197,9 @@ let loadDoubleRewardIcon = function (fFinished) {
         picUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.png';
     }
     else {
-        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.obj';
-        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.mtl';
-        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.png';
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/doublerewardicon/doubleReward.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/doublerewardicon/doubleReward.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/doublerewardicon/doubleReward.png';
     }
     $.get(mtlUrl, function (txt) {
         // console.log('t', txt)
@@ -1214,19 +1214,19 @@ let loadDoubleRewardIcon = function (fFinished) {
         })
     })
 };
-let loadSpeedIcon = function (fFinished) {
+let loadSpeedIcon = function (objMain, fFinished) {
     var mtlUrl = '';
     var objUrl = '';
     var picUrl = '';
     if (objMain.debug == 0) {
-        objUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.obj';
-        mtlUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.mtl';
-        picUrl = 'http://127.0.0.1:11001/doublerewardicon/doubleReward.png';
+        objUrl = 'http://127.0.0.1:11001/speedicon/speedicon.obj';
+        mtlUrl = 'http://127.0.0.1:11001/speedicon/speedicon.mtl';
+        picUrl = 'http://127.0.0.1:11001/speedicon/speedicon.png';
     }
     else {
-        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.obj';
-        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.mtl';
-        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/battery/battery.png';
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/doublerewardicon/doubleReward.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/doublerewardicon/doubleReward.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/doublerewardicon/doubleReward.png';
     }
     $.get(mtlUrl, function (txt) {
         // console.log('t', txt)
@@ -1242,4 +1242,32 @@ let loadSpeedIcon = function (fFinished) {
         })
     })
 };
+let loadGearIcon = function (objMain, fFinished) {
+    var mtlUrl = '';
+    var objUrl = '';
+    var picUrl = '';
+    if (objMain.debug == 0) {
+        objUrl = 'http://127.0.0.1:11001/gearicon/gearicon.obj';
+        mtlUrl = 'http://127.0.0.1:11001/gearicon/gearicon.mtl';
+        picUrl = 'http://127.0.0.1:11001/gearicon/gearicon.jpg';
+    }
+    else {
+        objUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/gearicon/gearicon.obj';
+        mtlUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/gearicon/gearicon.mtl';
+        picUrl = 'https://yrqmodeldata.oss-cn-beijing.aliyuncs.com/h6_0/model/gearicon/gearicon.jpg';
+    }
+    $.get(mtlUrl, function (txt) {
+        // console.log('t', txt)
+        var manager = new THREE.LoadingManager();
+        new THREE.MTLLoader(manager).loadTextWithImageUrl(txt, picUrl, function (materials) {
+            materials.preload();
+            new THREE.OBJLoader(manager).setMaterials(materials).load(objUrl, function (object) {
+                console.log('obj', object);
+                console.log('mtl', materials);
+                object.children[0].material.opacity = 0.7;
+                fFinished(object);
+            })
+        })
+    })
+}
 

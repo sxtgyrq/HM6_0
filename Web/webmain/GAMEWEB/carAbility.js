@@ -14,7 +14,7 @@
         this.data[inputData.carIndexStr][inputData.pType].costValue = inputData.costValue;
         this.data[inputData.carIndexStr][inputData.pType].sumValue = inputData.sumValue;
     },
-    drawPanel: function (carIndexStr) {
+    drawPanel: function (stateSet, carIndexStr) {
         this.clear();
 
         var abilityCanvasContainer = document.createElement('div');
@@ -69,9 +69,9 @@
 
         document.body.appendChild(abilityCanvasContainer);
 
-        this.drawChanel(carIndexStr);
+        this.drawChanel(stateSet, carIndexStr);
     },
-    drawChanel: function (carIndexStr) {
+    drawChanel: function (stateSet, carIndexStr) {
         var c = document.getElementById("chanleOfCarAbility");
         if (c == null) {
             return;

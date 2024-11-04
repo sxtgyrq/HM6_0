@@ -290,6 +290,8 @@ namespace HMMain6
             this.setCostVolume(0, player, car, ref notifyMsg);
             //this.costVolume = 0;
             this.setDiamondInCar("", player, car, ref notifyMsg);
+
+            player.improvementRecord.fpIsUsedClear();
             //  this.diamondInCar = "";
             //  this.setSubsidize(0, player, car, ref notifyMsg);
             //   this.subsidize = 0;

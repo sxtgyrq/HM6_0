@@ -594,6 +594,7 @@ namespace CommonClass
     public class BradCastTurbine : BradCastGoldObj { }
     public class BradCastSatelite : BradCastGoldObj { }
     public class BradCastBattery : BradCastGoldObj { }
+    public class BradCastGear : BradCastGoldObj { }
     public class BradCastBitcoinAddr : BradCastGoldObj
     {
         public string bitcoinAddr { get; set; }

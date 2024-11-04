@@ -581,6 +581,7 @@ namespace HMMain6.RoomMainF
 
             UpdateBitcoinAddr(key, groupKey, getRandomPosObj, ref notifyMsgs);
             UpdateRedDiamond(key, groupKey, getRandomPosObj, ref notifyMsgs);
+            UpdateBlueDiamond(key, groupKey, getRandomPosObj, ref notifyMsgs);
 
             Startup.sendSeveralMsgs(notifyMsgs);
             //   GetBackground()
@@ -702,7 +703,7 @@ namespace HMMain6.RoomMainF
                         UpdataSatelite(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateBitcoinAddr(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         UpdateRedDiamond(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
-
+                        UpdateBlueDiamond(wspd.Key, wspd.GroupKey, grp, ref notifyMsg);
                         //this.GetRewardFromBuildingF(new GetRewardFromBuildingM()
                         //{
                         //    c = "GetRewardFromBuildingM",
@@ -753,6 +754,7 @@ namespace HMMain6.RoomMainF
                     UpdataSatelite(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateBitcoinAddr(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                     UpdateRedDiamond(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
+                    UpdateBlueDiamond(rhpd.Key, rhpd.GroupKey, grp, ref notifyMsgs);
                 }
 
                 Startup.sendSeveralMsgs(notifyMsgs);

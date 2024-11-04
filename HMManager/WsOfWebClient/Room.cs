@@ -459,6 +459,13 @@ namespace WsOfWebClient
                     return s;
                 }
 
+                SetGearIcon sgi = new SetGearIcon();
+                if (SetModelCopy(sgi, connectInfoDetail)) { }
+                else
+                {
+                    return s;
+                }
+
                 result = setState(s, connectInfoDetail, LoginState.OnLine);
 
                 {

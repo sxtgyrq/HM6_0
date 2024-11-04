@@ -103,6 +103,7 @@ namespace HMMain6
             {
                 this._speedValue = 0;
                 // LastTimeOfSpeedImproved = DateTime.Now.AddDays(10);
+                this.fpIsUsed = new Dictionary<string, bool>();
             }
             internal void addSpeed(Player role, int addValue, ref List<string> notifyMsg)
             {
@@ -141,7 +142,7 @@ namespace HMMain6
             }
 
 
-
+            public Dictionary<string, bool> fpIsUsed = new Dictionary<string, bool>();
             bool _CollectIsDouble_p = false;
             public bool CollectIsDouble
             {
@@ -178,6 +179,25 @@ namespace HMMain6
                 {
                     role.attackMagicChanged(role, ref notifyMsg);
                 }
+            }
+
+            internal bool addUsedCode(string fPCode)
+            {
+                if (this.fpIsUsed.ContainsKey(fPCode))
+                {
+                    return false;
+                }
+                else
+                {
+                    this.fpIsUsed.Add(fPCode, true);
+                    return true;
+                }
+                //  throw new NotImplementedException();
+            }
+
+            internal void fpIsUsedClear()
+            {
+                this.fpIsUsed.Clear(); 
             }
         }
 
